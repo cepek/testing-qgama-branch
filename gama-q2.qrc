@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>lib/gama/xml/gama-local-schema.sql</file>
+        <file>lib/gama/configure.ac</file>
+    </qresource>
+</RCC>

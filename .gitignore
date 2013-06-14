@@ -7,6 +7,12 @@
 *~
 \#*\#
 .keepme
+*.pro.user
+qrc_lib.*
+Makefile
+gama-q2
+gama-q2.exe
+
 
 # GNU Gama source codes are located at the subdirectory lib/gama #
 ##################################################################
