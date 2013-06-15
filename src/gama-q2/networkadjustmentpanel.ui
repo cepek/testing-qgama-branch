@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NetworkAdjustmentPanel</class>
+ <widget class="QMainWindow" name="NetworkAdjustmentPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout"/>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_Save_into_database"/>
+    <addaction name="actionSave_As"/>
+    <addaction name="actionSave_as_SQL_file"/>
+    <addaction name="separator"/>
+    <addaction name="actionPrint"/>
+    <addaction name="actionPrint_as_PDF"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_XML_adjustment_results"/>
+    <addaction name="actionSave_adjustment_results_as_HTML_file"/>
+    <addaction name="actionSave_adjustment_results_as_plain_text"/>
+    <addaction name="actionSave_network_configuration_outline"/>
+    <addaction name="separator"/>
+    <addaction name="action_Close"/>
+   </widget>
+   <widget class="QMenu" name="menu_Adjustment">
+    <property name="title">
+     <string>&amp;Adjustment</string>
+    </property>
+    <addaction name="action_Run"/>
+   </widget>
+   <widget class="QMenu" name="menu_Settings">
+    <property name="title">
+     <string>&amp;Settings</string>
+    </property>
+    <addaction name="actionOutline_draw"/>
+   </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actionParameters"/>
+    <addaction name="action_Points"/>
+    <addaction name="actionObservations"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_Adjustment"/>
+   <addaction name="menu_View"/>
+   <addaction name="menu_Edit"/>
+   <addaction name="menu_Settings"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSave_XML_adjustment_results">
+   <property name="text">
+    <string>Save &amp;XML adjustment results</string>
+   </property>
+  </action>
+  <action name="action_Close">
+   <property name="text">
+    <string>&amp;Close</string>
+   </property>
+  </action>
+  <action name="actionSave_adjustment_results_as_plain_text">
+   <property name="text">
+    <string>Save adjustment results as plain &amp;text</string>
+   </property>
+  </action>
+  <action name="actionSave_XML_network_configuration_input_file">
+   <property name="text">
+    <string>Save XML network configuration &amp;input file</string>
+   </property>
+  </action>
+  <action name="action_Save_into_database">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+  </action>
+  <action name="actionSave_as_SQL_file">
+   <property name="text">
+    <string>&amp;Export as SQL file</string>
+   </property>
+  </action>
+  <action name="actionSave_As">
+   <property name="text">
+    <string>Save &amp;As ...</string>
+   </property>
+  </action>
+  <action name="action_Run">
+   <property name="text">
+    <string>&amp;Run</string>
+   </property>
+  </action>
+  <action name="actionSave_network_configuration_outline">
+   <property name="text">
+    <string>Save network configuration &amp;outline</string>
+   </property>
+  </action>
+  <action name="actionOutline_draw">
+   <property name="text">
+    <string>Outline &amp;draw</string>
+   </property>
+  </action>
+  <action name="action_Points">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Points</string>
+   </property>
+  </action>
+  <action name="actionParameters">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Parameters</string>
+   </property>
+  </action>
+  <action name="actionObservations">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Observations</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Print</string>
+   </property>
+  </action>
+  <action name="actionPrint_as_PDF">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Print as PD&amp;F</string>
+   </property>
+  </action>
+  <action name="actionSave_adjustment_results_as_HTML_file">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Save adjustment results as &amp;HTML file</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

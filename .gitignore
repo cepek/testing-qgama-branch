@@ -8,7 +8,9 @@
 \#*\#
 .keepme
 *.pro.user
-qrc_lib.*
+moc_*
+qrc_gama*
+ui_*.h
 Makefile
 gama-q2
 gama-q2.exe
