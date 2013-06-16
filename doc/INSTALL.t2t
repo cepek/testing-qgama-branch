@@ -1,0 +1,18 @@
+Download source codes from GIT server 
+
+ git clone git://git.sv.gnu.org/gama/qt.git
+
+and GNU Gama library as
+
+ cd qt
+ git clone git://git.sv.gnu.org/gama.git lib/gama
+
+* Open gama-qt.pro file in qtcreator and build the project
+
+or run
+
+ qmake
+ make
+
+
+  
