@@ -158,8 +158,8 @@ void GamaQ2ControlPanel::on_action_Connect_to_database_triggered()
 {
     DBConnectDialog* d = new DBConnectDialog(GamaQ2::connection_implicit_db, this);
     connect(d, SIGNAL(input_data_open(bool)), this, SLOT(disable_input_data(bool)));
-
     d->exec();
+    delete d;
 }
 
 void GamaQ2ControlPanel::disable_input_data(bool yes)

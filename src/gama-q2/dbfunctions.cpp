@@ -77,6 +77,7 @@ void DropDeleteBase::exec()
     DBConnectDialog* dbc = new DBConnectDialog(GamaQ2::connection_dbf_drop_tables);
     connect(dbc, SIGNAL(input_data_open(bool)), this, SLOT(drop_or_delete_schema_tables(bool)));
     dbc->exec();
+    delete dbc;
 
     close();
 }

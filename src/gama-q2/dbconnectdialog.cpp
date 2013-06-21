@@ -61,6 +61,8 @@ void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
     if (!fileDialog.exec()) return;
 
     ui->lineEdit_DatabaseFile->setText( fileDialog.selectedFiles()[0] );
+    on_buttonBox_accepted();
+    hide();
 }
 
 void DBConnectDialog::create_missing_tables(QSqlDatabase& db)
