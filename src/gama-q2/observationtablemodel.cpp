@@ -128,6 +128,8 @@ ObservationTableModel::ObservationTableModel(GNU_gama::local::LocalNetwork *loca
 void ObservationTableModel::initObsMap()
 {
     obsMap.clear();
+    columnCountMax = 0;
+
     ClusterList::const_iterator ic = obsData.clusters.begin();
     ClusterList::const_iterator ec = obsData.clusters.end();
     for ( ; ic!=ec; ++ic)
@@ -152,14 +154,12 @@ void ObservationTableModel::initObsMap()
         {
              info.clusterName = "vec";
         }
-        else
-        {
-            // ....
-        }
+
         obsMap.push_back(info);
 
         ObservationList::const_iterator i = (*ic)->observation_list.begin();
         ObservationList::const_iterator e = (*ic)->observation_list.end();
+        int tmpCount = 0;
         int clusterIndex = 1;
         for ( ; i!=e; ++i)
         {
@@ -222,18 +222,19 @@ void ObservationTableModel::initObsMap()
             {
                 obs.observationNameIndex = indZ;
             }
-            else
-            {
-                qDebug() << "undetected observation type";
-            }
 
             obsMap.push_back(obs);
+            tmpCount++;
         }
+
+        if (tmpCount > columnCountMax) columnCountMax = tmpCount;
 
         ObsInfo tail;
         tail.rowType = clusterTail;
         obsMap.push_back(tail);
     }
+
+    columnCountMax += indColumnCount;
 }
 
 // QAbstractTableModel functions
@@ -245,7 +246,7 @@ int ObservationTableModel::rowCount(const QModelIndex &parent) const
 
 int ObservationTableModel::columnCount(const QModelIndex &parent) const
 {
-    return indColumnCount;
+    return columnCountMax;
 }
 
 QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
@@ -299,6 +300,15 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
 
     if (!(role == Qt::DisplayRole || role == Qt::EditRole)) return QVariant();
 
+    if (info.rowType == clusterHeader && col >= indColumnCount)
+    {
+        if (col == indColumnCount) return tr("Cov");
+
+        int N = info.cluster->size();
+        int K = col - indColumnCount;
+        if (K < N) return QString("%1").arg(K);
+    }
+
     if (info.rowType == obsRow)
     {
         switch(col)
@@ -312,6 +322,18 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
         case indFromDh: return info.fromDh();
         case indToDh  : return info.toDh();
         case indHdist : return info.Hdist();
+        }
+
+        if (col >= indColumnCount)
+        {
+            int i = info.clusterIndex;
+            int j = i+col-indColumnCount;
+            if (j <= info.cluster->covariance_matrix.cols())
+            {
+               double c = info.cluster->covariance_matrix(i, j);
+               if (c) return c;
+            }
+            return QVariant();
         }
     }
     else if (info.rowType == clusterHeader && info.clusterName == "obs")

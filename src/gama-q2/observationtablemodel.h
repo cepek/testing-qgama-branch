@@ -99,6 +99,7 @@ private:
     };
 
     QVector<ObsInfo> obsMap;
+    int columnCountMax;
 
     void initObsMap();
 
