@@ -23,6 +23,7 @@
 #include <gnu_gama/gon2deg.h>
 
 #include <QBrush>
+#include <QFont>
 #include <QDebug>
 
 typedef GNU_gama::local::LocalNetwork    LocalNetwork;
@@ -76,6 +77,43 @@ QVariant ObservationTableModel::ObsInfo::stdDev(LocalNetwork* lnet)
     if(angular && lnet->degrees()) stdev *= 0.324;
     return QString::number(stdev, 'g', 3);
 }
+QString ObservationTableModel::ObsInfo::active()
+{
+    return observation->active() ? "1" : "0";
+}
+QVariant ObservationTableModel::ObsInfo::fromDh()
+{
+    if (double d = observation->from_dh()) return d;
+    return QVariant();
+}
+QVariant ObservationTableModel::ObsInfo::toDh()
+{
+    double d1 = observation->to_dh();
+    if (const Angle* angle = dynamic_cast<const Angle*>(observation))
+    {
+        double d2 = angle->fs_dh();
+        if (d1 > 0 || d2 > 0) return QString("%1; %2").arg(d1).arg(d2);
+    }
+    else
+    {
+        if (d1 > 0) return QString("%1").arg(d1);
+    }
+
+    return QVariant();
+}
+QVariant ObservationTableModel::ObsInfo::Hdist()
+{
+    if (const H_Diff* hd = dynamic_cast<const H_Diff*>(observation))
+    {
+        if (double dist = hd->dist())
+        {
+           return QVariant(dist);
+        }
+    }
+
+    return QVariant();
+}
+
 // -------------------------------------------------------------------------------
 
 ObservationTableModel::ObservationTableModel(GNU_gama::local::LocalNetwork *localNetwork,
@@ -118,7 +156,7 @@ void ObservationTableModel::initObsMap()
         {
             // ....
         }
-        //obsMap.push_back(info);
+        obsMap.push_back(info);
 
         ObservationList::const_iterator i = (*ic)->observation_list.begin();
         ObservationList::const_iterator e = (*ic)->observation_list.end();
@@ -147,6 +185,47 @@ void ObservationTableModel::initObsMap()
                 obs.angle = a;
                 obs.angular = true;
             }
+            else if (dynamic_cast<const GNU_gama::local::H_Diff*>(*i))
+            {
+                obs.observationNameIndex = indHdiff;
+            }
+            else if (dynamic_cast<const GNU_gama::local::S_Distance*>(*i))
+            {
+                obs.observationNameIndex = indSdist;
+            }
+            else if (dynamic_cast<const GNU_gama::local::Z_Angle*>(*i))
+            {
+                obs.observationNameIndex = indZangle;
+                obs.angular = true;
+            }
+            else if (dynamic_cast<const GNU_gama::local::Xdiff*>(*i))
+            {
+                obs.observationNameIndex = indXdiff;
+            }
+            else if (dynamic_cast<const GNU_gama::local::Ydiff*>(*i))
+            {
+                obs.observationNameIndex = indYdiff;
+            }
+            else if (dynamic_cast<const GNU_gama::local::Zdiff*>(*i))
+            {
+                obs.observationNameIndex = indZdiff;
+            }
+            else if (dynamic_cast<const GNU_gama::local::X*>(*i))
+            {
+                obs.observationNameIndex = indX;
+            }
+            else if (dynamic_cast<const GNU_gama::local::Y*>(*i))
+            {
+                obs.observationNameIndex = indY;
+            }
+            else if (dynamic_cast<const GNU_gama::local::Z*>(*i))
+            {
+                obs.observationNameIndex = indZ;
+            }
+            else
+            {
+                qDebug() << "undetected observation type";
+            }
 
             obsMap.push_back(obs);
         }
@@ -173,12 +252,18 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) return QVariant();
 
-    int r = index.row();
-    int c = index.column();
-    ObsInfo info = obsMap[r];
+    int row = index.row();
+    int col = index.column();
+    ObsInfo info = obsMap[row];
 
     if (role == Qt::BackgroundRole)
     {        
+        if (info.rowType == clusterHeader)
+        {
+            //return QBrush(Qt::lightGray);
+            return QBrush(QColor(210,210,210));
+        }
+
         if (info.observation && !info.observation->active())
         {
             QBrush passiveBackground(QColor(240,240,240));// Qt::lightGray is too dark
@@ -187,13 +272,27 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
+    /*if (role == Qt::FontRole)
+    {
+        if (info.rowType == clusterHeader)
+        {
+            QFont  f;
+            f.setBold(true);
+            return f;
+        }
+    }*/
+
     if (role == Qt::TextAlignmentRole)
     {
-        switch (c)
+        if (info.rowType == clusterHeader) return Qt::AlignCenter;
+
+        switch (col)
         {
         case indVal:
         case indStdev:
-            return Qt::AlignRight;
+            return (Qt::AlignVCenter + Qt::AlignRight);
+        case indActive:
+            return (Qt::AlignVCenter + Qt::AlignHCenter);
         }
         return QVariant();
     }
@@ -202,18 +301,74 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
 
     if (info.rowType == obsRow)
     {
-        switch(c)
+        switch(col)
         {
-        case indAdj  : return QVariant();
-        case indFrom : return info.from();
-        case indTo   : return info.to();
-        case indName : return info.name();
-        case indVal  : return info.value(lnet);
-        case indStdev: return info.stdDev(lnet);
+        case indFrom  : return info.from();
+        case indTo    : return info.to();
+        case indName  : return info.name();
+        case indVal   : return info.value(lnet);
+        case indStdev : return info.stdDev(lnet);
+        case indActive: return info.active();
+        case indFromDh: return info.fromDh();
+        case indToDh  : return info.toDh();
+        case indHdist : return info.Hdist();
+        }
+    }
+    else if (info.rowType == clusterHeader && info.clusterName == "obs")
+    {
+        switch(col)
+        {
+        case indFrom  : return tr("From");
+        case indTo    : return tr("To");
+        case indName  : return tr("Obs");
+        case indVal   : return lnet->gons() ? tr("Value [m|g]")   : tr("Value [m|d]");
+        case indStdev : return lnet->gons() ? tr("Stdev [mm|cc]") : tr("Stdev [mm|ss]");
+        case indActive: return tr("Active");
+        case indFromDh: return tr("From dh");
+        case indToDh  : return tr("To dh");
+        case indHdist : return tr("Hdiff dist [km]");
+        }
+    }
+    else if (info.rowType == clusterHeader && info.clusterName == "hdf")
+    {
+        switch(col)
+        {
+        case indFrom  : return tr("From");
+        case indTo    : return tr("To");
+        case indName  : return tr("Obs");
+        case indVal   : return tr("Value [m]");
+        case indStdev : return tr("Stdev [mm]");
+        case indActive: return tr("Active");
+        case indHdist : return tr("Hdiff dist [km]");
+        }
+    }
+    else if (info.rowType == clusterHeader && info.clusterName == "vec")
+    {
+        switch(col)
+        {
+        case indFrom  : return tr("From");
+        case indTo    : return tr("To");
+        case indName  : return tr("Obs");
+        case indVal   : return tr("Value [m]");
+        case indStdev : return tr("Stdev [mm]");
+        case indActive: return tr("Active");
+        case indFromDh: return tr("From dh");
+        case indToDh  : return tr("To dh");
+        }
+    }
+    else if (info.rowType == clusterHeader && info.clusterName == "xyz")
+    {
+        switch(col)
+        {
+        case indFrom  : return tr("Id");
+        case indName  : return tr("Obs");
+        case indVal   : return tr("Value [m]");
+        case indStdev : return tr("Stdev [mm]");
+        case indActive: return tr("Active");
         }
     }
 
-    return QVariant("");
+    return QVariant();
 }
 
 // implementation of header section
@@ -222,26 +377,17 @@ QVariant ObservationTableModel::headerData(int section, Qt::Orientation orientat
 {
     if (role != Qt::DisplayRole) return QVariant();
 
-    if (orientation == Qt::Horizontal)
-    {
-        switch (section)
-        {
-        case indAdj  : return QString("i");
-        case indFrom : return QString("From");
-        case indTo   : return QString("To");
-        case indVal  : return lnet->gons() ? QString("Value [m|g]")   : QString("Value [m|d]");
-        case indStdev: return lnet->gons() ? QString("Stdev [mm|cc]") : QString("Stdev [mm|ss]");
-        }
-    }
-    else if (orientation == Qt::Vertical)
+    if (orientation == Qt::Vertical)
     {
         ObsInfo info = obsMap[section];
-        if (info.rowType == clusterTail) return QVariant("");
-
-        QString vh = "%2 %1";
-        return QVariant(vh.arg(info.clusterName).arg(info.clusterIndex));
+        switch (info.rowType)
+        {
+        case clusterHeader: return QVariant(info.clusterName);
+        case obsRow       : return QVariant(QString("%1").arg(info.clusterIndex));
+        case clusterTail  : return QVariant("");
+        }
     }
 
-   return QVariant("");
+   return QVariant();
 }
 

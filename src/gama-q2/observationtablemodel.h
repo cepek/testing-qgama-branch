@@ -27,6 +27,7 @@
 
 typedef GNU_gama::local::Observation     Observation;
 typedef GNU_gama::local::Angle           Angle;
+typedef GNU_gama::local::H_Diff          H_Diff;
 typedef GNU_gama::Cluster<Observation>   Cluster;
 typedef GNU_gama::List<Cluster*>         ClusterList;
 typedef GNU_gama::local::ObservationList ObservationList;
@@ -63,7 +64,8 @@ private:
     GNU_gama::local::ObservationData& obsData;
 
     enum RowType  { clusterHeader, clusterTail, obsRow };
-    enum ColIndx  { indAdj, indFrom, indTo, indName, indVal, indStdev,
+    enum ColIndx  { indFrom, indTo, indName, indVal, indStdev,
+                    indActive, indFromDh, indToDh, indHdist,
                     indColumnCount };
     enum ObsNames { indDist,  indDir,   indAngle, indHdiff,
                     indXdiff, indYdiff, indZdiff, indX, indY, indZ,
@@ -73,11 +75,15 @@ private:
     {
         ObsInfo();
 
-        QString from();
-        QString to();
-        QString name();
+        QString  from();
+        QString  to();
+        QString  name();
         QVariant value(LocalNetwork* lnet);
         QVariant stdDev(LocalNetwork* lnet);
+        QString  active();
+        QVariant fromDh();
+        QVariant toDh();
+        QVariant Hdist();
 
         static QStringList obsNames;
 
