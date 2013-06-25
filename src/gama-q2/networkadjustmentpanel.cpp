@@ -195,6 +195,7 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
     connect(par,  SIGNAL(angular_units_changed()), res,  SLOT(update_adjustment_results()));
 
     connect(ped,  SIGNAL(warning(QString)), this,  SLOT(status_bar(QString)));
+    connect(obs,  SIGNAL(warning(QString)), this,  SLOT(status_bar(QString)));
 
     connect(&adj, SIGNAL(acord_signal()),          this, SLOT(update_point_editor_table()));
     connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(draw_network_configuration(bool)));

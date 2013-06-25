@@ -136,7 +136,7 @@ void ObservationTableModel::initObsMap()
     {
         ObsInfo info;
         info.rowType = clusterHeader;
-        info.cluster = *ic;
+        info.cluster = const_cast<Cluster*>(*ic);
 
         if (dynamic_cast<const GNU_gama::local::StandPoint*>(*ic))
         {
@@ -165,7 +165,7 @@ void ObservationTableModel::initObsMap()
         {
             ObsInfo obs      = info;
             info.clusterName = "";
-            obs.observation  = *i;
+            obs.observation  = const_cast<Observation*>(*i);
             obs.clusterIndex = clusterIndex++;
             obs.rowType      = obsRow;
 
@@ -394,6 +394,7 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
 }
 
 // implementation of header section
+
 QVariant ObservationTableModel::headerData(int section, Qt::Orientation orientation,
            int role) const
 {
@@ -413,3 +414,118 @@ QVariant ObservationTableModel::headerData(int section, Qt::Orientation orientat
    return QVariant();
 }
 
+// resizeable data
+
+bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!index.isValid() || role != Qt::EditRole) return false;
+
+    int row = index.row();
+    int col = index.column();
+    ObsInfo info = obsMap[row];
+    if (info.rowType != obsRow) return false;
+
+    if (col == indVal)
+    {
+        bool ok;
+        double val = value.toDouble(&ok);
+        if (!ok)
+        {
+            ok = GNU_gama::deg2gon(value.toString().toStdString(), val);
+            if (!ok)
+            {
+                warning(tr("Non-numeric format of value %1").arg(value.toString()));
+                return false;
+            }
+        }
+
+        Observation* obs = const_cast<Observation*>(info.observation);
+
+        if (info.angular) val /= R2G;
+        obs->set_value(val);
+
+        return true;
+    }
+
+    if (col == indStdev)
+    {
+        bool ok;
+        double std = value.toDouble(&ok);
+        if (!ok)
+        {
+            warning(tr("Non-numeric format of StdDev %1").arg(value.toString()));
+            return false;
+        }
+
+        bool angular = info.angular;
+        if(angular && lnet->degrees()) std /= 0.324;
+
+        int i = info.clusterIndex;
+        Cluster* cluster = const_cast<Cluster*>(info.cluster);
+        cluster->covariance_matrix(i,i) = std*std;
+
+        return true;
+    }
+
+    if (col == indActive)
+    {
+        QString val = value.toString().simplified();
+        if (val.isEmpty()) val = "0";
+
+        Observation* obs = const_cast<Observation*>(info.observation);
+
+        if      (val == "1") obs->set_active();
+        else if (val == "0") obs->set_passive();
+        else {
+            emit warning(tr("Active values can be 1 or 0 only"));
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+Qt::ItemFlags ObservationTableModel::ObservationTableModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid()) return Qt::NoItemFlags;
+
+    int row = index.row();
+    int col = index.column();
+    ObsInfo info = obsMap[row];
+
+    if (info.rowType == obsRow)
+    {
+        switch (col)
+        {
+        case indVal:
+        case indStdev:
+        case indActive:
+            return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+        }
+    }
+
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+/*
+bool ObservationTableModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+
+}
+
+bool ObservationTableModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+
+}
+
+bool ObservationTableModel::insertColumns(int column, int count, const QModelIndex &parent)
+{
+
+}
+
+bool ObservationTableModel::removeColumns(int column, int count, const QModelIndex &parent)
+{
+
+}
+*/

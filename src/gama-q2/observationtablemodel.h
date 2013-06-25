@@ -48,16 +48,18 @@ public:
     // implementation of header section
     QVariant   headerData (int section, Qt::Orientation orientation,
                            int role = Qt::DisplayRole) const;
-/*
+
     // resizeable data
+
     bool       setData (const QModelIndex &index,
                         const QVariant &value, int role);
     Qt::ItemFlags flags(const QModelIndex &index) const;
-
-    // columns are static in GamaLocalPointModel, only rows
-    // operations need to be implemented
+   /*
     bool insertRows(int row, int count, const QModelIndex &parent);
     bool removeRows(int row, int count, const QModelIndex &parent);
+
+    bool insertColumns(int column, int count, const QModelIndex &parent);
+    bool removeColumns(int column, int count, const QModelIndex &parent);
 */
 private:
     GNU_gama::local::LocalNetwork*    lnet;
