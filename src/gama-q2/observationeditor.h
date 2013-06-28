@@ -44,7 +44,8 @@ public:
     ~ObservationEditor();
 
     void connectObservationData(GNU_gama::local::LocalNetwork* lnet);
-    
+    void enableEdit(bool edit);
+
 private:
     Ui::ObservationEditor *ui;
     ObservationTableModel* model;

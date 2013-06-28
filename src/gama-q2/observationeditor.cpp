@@ -29,6 +29,8 @@ ObservationEditor::ObservationEditor(QWidget *parent) :
     model(0), readonly(true)
 {
     ui->setupUi(this);
+
+    enableEdit(false);
 }
 
 ObservationEditor::~ObservationEditor()
@@ -44,4 +46,18 @@ void ObservationEditor::connectObservationData(GNU_gama::local::LocalNetwork *ln
     delete old;
 
     connect(model, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
+}
+
+void ObservationEditor::enableEdit(bool edit)
+{
+    readonly = !edit;
+    if (edit)
+    {
+        // implicit behaviour is "double click for editing"
+        ui->tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    }
+    else
+    {
+        ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    }
 }

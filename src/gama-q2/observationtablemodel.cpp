@@ -19,6 +19,7 @@
 */
 
 #include "observationtablemodel.h"
+#include "constants.h"
 #include <gnu_gama/local/gamadata.h>
 #include <gnu_gama/gon2deg.h>
 
@@ -28,7 +29,7 @@
 
 typedef GNU_gama::local::LocalNetwork    LocalNetwork;
 
-/* implementation of private structure ObsInfo */
+/* implementation of private structure ObsInfo - information on an Observation */
 // -------------------------------------------------------------------------------
 QStringList ObservationTableModel::ObsInfo::obsNames;
 
@@ -114,6 +115,7 @@ QVariant ObservationTableModel::ObsInfo::Hdist()
     return QVariant();
 }
 
+
 // -------------------------------------------------------------------------------
 
 ObservationTableModel::ObservationTableModel(GNU_gama::local::LocalNetwork *localNetwork,
@@ -136,7 +138,7 @@ void ObservationTableModel::initObsMap()
     {
         ObsInfo info;
         info.rowType = clusterHeader;
-        info.cluster = const_cast<Cluster*>(*ic);
+        info.cluster = *ic;
 
         if (dynamic_cast<const GNU_gama::local::StandPoint*>(*ic))
         {
@@ -165,7 +167,7 @@ void ObservationTableModel::initObsMap()
         {
             ObsInfo obs      = info;
             info.clusterName = "";
-            obs.observation  = const_cast<Observation*>(*i);
+            obs.observation  = *i;
             obs.clusterIndex = clusterIndex++;
             obs.rowType      = obsRow;
 
@@ -259,17 +261,17 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::BackgroundRole)
     {        
-        if (info.rowType == clusterHeader)
+        if (info.rowType == obsRow && col >= indColumnCount)
         {
-            //return QBrush(Qt::lightGray);
-            return QBrush(QColor(210,210,210));
+            int r = info.clusterIndex;
+            int b = col - indColumnCount;
+            if (r+b > info.cluster->covariance_matrix.cols())      return GamaQ2::colorOutsideCovMat;
+            if ( b  > info.cluster->covariance_matrix.bandWidth()) return GamaQ2::colorPassiveBackground;
         }
 
-        if (info.observation && !info.observation->active())
-        {
-            QBrush passiveBackground(QColor(240,240,240));// Qt::lightGray is too dark
-            return passiveBackground;
-        }
+        if (info.rowType == clusterHeader) return GamaQ2::colorClusterHeader;
+        if (info.observation && !info.observation->active()) return GamaQ2::colorPassiveBackground;
+
         return QVariant();
     }
 
@@ -295,6 +297,9 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
         case indActive:
             return (Qt::AlignVCenter + Qt::AlignHCenter);
         }
+
+        if (col >= indColumnCount) return (Qt::AlignVCenter + Qt::AlignRight);
+
         return QVariant();
     }
 
@@ -307,6 +312,8 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
         int N = info.cluster->size();
         int K = col - indColumnCount;
         if (K < N) return QString("%1").arg(K);
+
+        return QVariant();
     }
 
     if (info.rowType == obsRow)
@@ -328,10 +335,21 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
         {
             int i = info.clusterIndex;
             int j = i+col-indColumnCount;
+
             if (j <= info.cluster->covariance_matrix.cols())
             {
                double c = info.cluster->covariance_matrix(i, j);
-               if (c) return c;
+               if (c == 0) return QVariant();
+
+               if (lnet->degrees())
+               {
+                  ObsInfo inf2 = obsMap[row + col - indColumnCount];
+                  if (info.angular) c *= 0.324;
+                  if (inf2.angular) c *= 0.324;
+               }
+
+               return QVariant(c).toString();
+               // return c; !!! results in doblespinbox editor for the item !!!
             }
             return QVariant();
         }
@@ -484,6 +502,39 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
         return true;
     }
 
+    if (col >= indColumnCount)
+    {
+        int b = col - indColumnCount;
+        if (b > info.cluster->covariance_matrix.bandWidth())
+        {
+            emit warning("you cannot edit elements outside the bandwidth in the current version");
+            return false;
+        }
+
+        bool ok;
+        double val = value.toDouble(&ok);
+        if (!ok)
+        {
+            emit warning(tr("Bad numeric format of data"));
+            return false;
+        }
+
+        ObsInfo inf2 = obsMap[row + b];
+
+        if (lnet->degrees())
+        {
+            if (info.angular) val /= 0.324;
+            if (inf2.angular) val /= 0.324;
+        }
+
+        int i = info.clusterIndex;
+        int j = inf2.clusterIndex;
+        Cluster* cluster = const_cast<Cluster*>(info.cluster);
+        cluster->covariance_matrix(i,j) = val;
+
+        return true;
+    }
+
     return false;
 }
 
@@ -491,6 +542,7 @@ Qt::ItemFlags ObservationTableModel::ObservationTableModel::flags(const QModelIn
 {
     if (!index.isValid()) return Qt::NoItemFlags;
 
+    const Qt::ItemFlags itemIsEditable = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     int row = index.row();
     int col = index.column();
     ObsInfo info = obsMap[row];
@@ -502,12 +554,24 @@ Qt::ItemFlags ObservationTableModel::ObservationTableModel::flags(const QModelIn
         case indVal:
         case indStdev:
         case indActive:
-            return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+            return itemIsEditable;
+        }
+
+        if (col >= indColumnCount)
+        {
+            int r = info.clusterIndex;
+            int b = col - indColumnCount;
+            if (r+b > info.cluster->covariance_matrix.cols()) return Qt::NoItemFlags;
+
+            return itemIsEditable;
         }
     }
 
+    if (info.rowType == clusterTail) return Qt::NoItemFlags;
+
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
+
 /*
 bool ObservationTableModel::insertRows(int row, int count, const QModelIndex &parent)
 {

@@ -500,7 +500,7 @@ void NetworkAdjustmentPanel::on_actionObservations_changed()
     {
         text = tr("Editing of Observations is disabled");
     }
-    //obs->enableEdit(edit);
+    obs->enableEdit(edit);
 
     status_bar(text);
 }

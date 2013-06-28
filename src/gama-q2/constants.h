@@ -22,7 +22,7 @@
 #define CONSTANTS_H
 
 #include <QStringList>
-
+#include <QColor>
 
 namespace GamaQ2
 {
@@ -30,11 +30,16 @@ namespace GamaQ2
     extern QString version;
     extern QString gnu_gama_version;
 
-    extern const QString connection_implicit_db;
-    extern const QString connection_dbf_drop_tables;
 
     extern QStringList gama_local_schema;
     extern QStringList gama_local_schema_table_names;
+
+    extern const QString connection_implicit_db;
+    extern const QString connection_dbf_drop_tables;
+
+    extern const QColor colorClusterHeader;
+    extern const QColor colorPassiveBackground;
+    extern const QColor colorOutsideCovMat;
 }
 
 #endif // CONSTANTS_H

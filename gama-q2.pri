@@ -1,7 +1,6 @@
 SOURCES  += $$GAMAQ2SRC/main.cpp\
     $$GAMAQ2SRC/gamaq2controlpanel.cpp \
     $$GAMAQ2SRC/constants.cpp \
-    $$GAMAQ2SRC/covariancematrixeditor.cpp \
     $$GAMAQ2SRC/importconfigurationfile.cpp \
     $$GAMAQ2SRC/networkadjustmentpanel.cpp \
     $$GAMAQ2SRC/selectconfiguration.cpp \
@@ -21,7 +20,6 @@ SOURCES  += $$GAMAQ2SRC/main.cpp\
 
 HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
     $$GAMAQ2SRC/constants.h \
-    $$GAMAQ2SRC/covariancematrixeditor.h \
     $$GAMAQ2SRC/importconfigurationfile.h \
     $$GAMAQ2SRC/networkadjustmentpanel.h \
     $$GAMAQ2SRC/selectconfiguration.h \
@@ -41,7 +39,6 @@ HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
     $$GAMAQ2SRC/observationtablemodel.h
 
 FORMS    += $$GAMAQ2SRC/gamaq2controlpanel.ui \
-    $$GAMAQ2SRC/covariancematrixeditor.ui \
     $$GAMAQ2SRC/importconfigurationfile.ui \
     $$GAMAQ2SRC/networkadjustmentpanel.ui \
     $$GAMAQ2SRC/selectconfiguration.ui \
