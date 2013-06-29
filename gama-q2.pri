@@ -16,7 +16,8 @@ SOURCES  += $$GAMAQ2SRC/main.cpp\
     $$GAMAQ2SRC/observationeditor.cpp \
     $$GAMAQ2SRC/parametereditor.cpp \
     $$GAMAQ2SRC/pointtablemodel.cpp \
-    $$GAMAQ2SRC/observationtablemodel.cpp
+    $$GAMAQ2SRC/observationtablemodel.cpp \
+    $$GAMAQ2SRC/shrinkbandwidth.cpp
 
 HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
     $$GAMAQ2SRC/constants.h \
@@ -36,7 +37,9 @@ HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
     $$GAMAQ2SRC/observationeditor.h \
     $$GAMAQ2SRC/parametereditor.h \
     $$GAMAQ2SRC/pointtablemodel.h \
-    $$GAMAQ2SRC/observationtablemodel.h
+    $$GAMAQ2SRC/observationtablemodel.h \
+    $$GAMAQ2SRC/shrinkbandwidth.h
+
 
 FORMS    += $$GAMAQ2SRC/gamaq2controlpanel.ui \
     $$GAMAQ2SRC/importconfigurationfile.ui \
@@ -54,4 +57,3 @@ RESOURCES += \
 
 OTHER_FILES += \
     TODO.txt
-

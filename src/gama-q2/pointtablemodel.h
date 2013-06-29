@@ -68,6 +68,13 @@ private:
     QStringList                 coordinate_types;
     int                         dprec;
 
+    enum PointColIndx { indPointId,  indPointX,  indPointY,  indPointTxy,
+                        indPointZ,   indPointTz, indPointColumnCount  };
+    enum PointNames   { namePointId, namePointX, namePointY, namePointTxy,
+                        namePointZ,  namePointTz };
+
+    QStringList pointNames;
+
     void insertPoint(GNU_gama::local::PointID id,
                      GNU_gama::local::LocalPoint point = GNU_gama::local::LocalPoint());
     void warning(int row, int col, QString text, QString value=QString(), bool ok=false);

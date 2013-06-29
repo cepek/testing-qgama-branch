@@ -15,3 +15,4 @@ DEFINES   += VERSION=\\\"configure.ac\\\"
 
 include(libgama.pri)
 include(gama-q2.pri)
+

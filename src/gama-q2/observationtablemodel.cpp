@@ -20,11 +20,13 @@
 
 #include "observationtablemodel.h"
 #include "constants.h"
+#include "shrinkbandwidth.h"
 #include <gnu_gama/local/gamadata.h>
 #include <gnu_gama/gon2deg.h>
 
 #include <QBrush>
 #include <QFont>
+#include <QMessageBox>
 #include <QDebug>
 
 typedef GNU_gama::local::LocalNetwork    LocalNetwork;
@@ -507,8 +509,19 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
         int b = col - indColumnCount;
         if (b > info.cluster->covariance_matrix.bandWidth())
         {
-            emit warning("you cannot edit elements outside the bandwidth in the current version");
-            return false;
+            //emit warning("elements outside the bandwidth");
+            Cluster *cluster = const_cast<Cluster*>(info.cluster);
+            GNU_gama::CovMat<>& C = cluster->covariance_matrix;
+            int N = C.rows();
+            int B = C.bandWidth();
+            GNU_gama::CovMat<> cm(N, b);
+            cm.set_zero();
+            for (int i=1; i<=N; i++)
+                for (int j=i; j<=i+B; j++)
+                {
+                    cm(i,j) = C(i,j);
+                }
+            C = cm;
         }
 
         bool ok;
@@ -531,6 +544,8 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
         int j = inf2.clusterIndex;
         Cluster* cluster = const_cast<Cluster*>(info.cluster);
         cluster->covariance_matrix(i,j) = val;
+
+        if (val == 0) shrinkBandWidth(cluster->covariance_matrix);
 
         return true;
     }
