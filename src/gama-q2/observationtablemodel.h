@@ -54,18 +54,24 @@ public:
     bool       setData (const QModelIndex &index,
                         const QVariant &value, int role);
     Qt::ItemFlags flags(const QModelIndex &index) const;
-   /*
-    bool insertRows(int row, int count, const QModelIndex &parent);
-    bool removeRows(int row, int count, const QModelIndex &parent);
 
-    bool insertColumns(int column, int count, const QModelIndex &parent);
-    bool removeColumns(int column, int count, const QModelIndex &parent);
-*/
+    bool removeRows(int row, int count, const QModelIndex &parent);
+    bool insertRows(int row, int count, const QModelIndex &parent);
+
+    //bool insertColumns(int column, int count, const QModelIndex &parent);
+    //bool removeColumns(int column, int count, const QModelIndex &parent);
+
+    // Gama interface
+
+    void deleteCluster (int logicalIndex);
+    void insertCluster (int position, QString clusterName);
+    bool clusterIndexes(int logicalIndex, int& minIndex, int& maxIndex);
+
 private:
     GNU_gama::local::LocalNetwork*    lnet;
     GNU_gama::local::ObservationData& obsData;
 
-    enum RowType  { clusterHeader, clusterTail, obsRow };
+    enum RowType  { clusterHeader, clusterTail, obsRow, tableTail };
     enum ColIndx  { indFrom, indTo, indName, indVal, indStdev,
                     indActive, indFromDh, indToDh, indHdist,
                     indColumnCount };

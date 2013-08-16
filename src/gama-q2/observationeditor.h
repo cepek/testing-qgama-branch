@@ -34,6 +34,7 @@ namespace GNU_gama { namespace local {
 
 class ObservationTableModel;
 class QMenu;
+class QTableView;
 
 class ObservationEditor : public QWidget
 {
@@ -51,9 +52,27 @@ private:
     ObservationTableModel* model;
     QMenu* observationMenu;
     bool   readonly;
+    int    observationLogicalIndex;
+
+    class SelectCluster {
+    public:
+        SelectCluster(ObservationTableModel* model, QTableView* tableview, int logicalIndex);
+       ~SelectCluster();
+
+        bool isValid() const;
+
+    private:
+        QTableView* tableView;
+        bool        isValid_;
+    };
 
 signals:
     void warning(QString);
+
+private slots:
+    void observationContextMenu(QPoint p);
+    void insertCluster();
+    void deleteCluster();
 };
 
 #endif // OBSERVATIONEDITOR_H

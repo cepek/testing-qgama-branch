@@ -19,6 +19,7 @@
 */
 
 #include "pointtablemodel.h"
+#include <QDebug>
 
 #include <gnu_gama/local/network.h>
 #include <gnu_gama/local/gamadata.h>
@@ -61,7 +62,7 @@ QVariant PointTableModel::data(const QModelIndex &index, int role) const
     int col = index.column();
     LocalPoint lp = pointData[pids[row]];
 
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole || role == Qt::EditRole)
     {
         if (col == indPointId)
         {
@@ -291,7 +292,7 @@ Qt::ItemFlags PointTableModel::flags(const QModelIndex &index) const
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
     }
 
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+    return (Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable);
 }
 
 bool PointTableModel::insertRows(int row, int count,
@@ -328,6 +329,8 @@ bool PointTableModel::removeRows(int row, int count,
 
 void PointTableModel::scan_data()
 {
+    qDebug() << "PointTableModel::scan_data()" << __FILE__ << __LINE__;
+
     pids.clear();
     ptxy.clear(); // 0 - no xy, 1 - x only, 2 - y only, 3 - both xy
     for (PointData::iterator i=pointData.begin(), e=pointData.end(); i!=e; ++i)

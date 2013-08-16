@@ -1,5 +1,6 @@
 #include "adjustment.h"
 #include "constants.h"
+#include <QDebug>
 
 #include <gnu_gama/local/observation.h>
 #include <gnu_gama/local/network_chol.h>
@@ -44,6 +45,8 @@ Adjustment::~Adjustment()
 
 void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
 {
+    qDebug() << "Adjustment::read_configuration" << __FILE__ << __LINE__;
+
     q.exec("select conf_id, algorithm, "
            "       sigma_apr, conf_pr, tol_abs, sigma_act, update_cc,"
            "       axes_xy, angles, epoch, ang_units, "
@@ -449,7 +452,9 @@ void Adjustment::fetch_height_differences(QSqlQuery& q, QString cluster, GNU_gam
 
 void Adjustment::exec()
 {
-    /*if (!solved)*/ try
+    qDebug() << "Adjustment::exec()" << __FILE__ << __LINE__;
+
+    if (!solved) try
     {
         GNU_gama::local::Acord acord(lnet->PD, lnet->OD);
         acord.execute();

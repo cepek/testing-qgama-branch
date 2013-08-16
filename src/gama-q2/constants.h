@@ -34,6 +34,11 @@ namespace GamaQ2
     extern QStringList gama_local_schema;
     extern QStringList gama_local_schema_table_names;
 
+    extern const QString obsClusterName;
+    extern const QString xyzClusterName;
+    extern const QString hdfClusterName;
+    extern const QString vecClusterName;
+
     extern const QString connection_implicit_db;
     extern const QString connection_dbf_drop_tables;
 

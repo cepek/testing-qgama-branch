@@ -30,6 +30,7 @@
 #include <QDebug>
 
 typedef GNU_gama::local::LocalNetwork    LocalNetwork;
+using namespace GamaQ2;
 
 /* implementation of private structure ObsInfo - information on an Observation */
 // -------------------------------------------------------------------------------
@@ -131,6 +132,7 @@ ObservationTableModel::ObservationTableModel(GNU_gama::local::LocalNetwork *loca
 
 void ObservationTableModel::initObsMap()
 {
+    qDebug() << "ObservationTableModel::initObsMap()" << __FILE__ << __LINE__;
     obsMap.clear();
     columnCountMax = 0;
 
@@ -144,19 +146,19 @@ void ObservationTableModel::initObsMap()
 
         if (dynamic_cast<const GNU_gama::local::StandPoint*>(*ic))
         {
-             info.clusterName = "obs";
+             info.clusterName = obsClusterName;
         }
         else if (dynamic_cast<const GNU_gama::local::Coordinates*>(*ic))
         {
-             info.clusterName = "xyz";
+             info.clusterName = xyzClusterName;
         }
         else if (dynamic_cast<const GNU_gama::local::HeightDifferences*>(*ic))
         {
-             info.clusterName = "hdf";
+             info.clusterName = hdfClusterName;
         }
         else  if (dynamic_cast<const GNU_gama::local::Vectors*>(*ic))
         {
-             info.clusterName = "vec";
+             info.clusterName = vecClusterName;
         }
 
         obsMap.push_back(info);
@@ -237,6 +239,10 @@ void ObservationTableModel::initObsMap()
         tail.rowType = clusterTail;
         obsMap.push_back(tail);
     }
+
+    ObsInfo tableEnd;
+    tableEnd.rowType = tableTail;
+    obsMap.push_back(tableEnd);
 
     columnCountMax += indColumnCount;
 }
@@ -428,6 +434,7 @@ QVariant ObservationTableModel::headerData(int section, Qt::Orientation orientat
         case clusterHeader: return QVariant(info.clusterName);
         case obsRow       : return QVariant(QString("%1").arg(info.clusterIndex));
         case clusterTail  : return QVariant("");
+        case tableTail    : return QVariant("   ");
         }
     }
 
@@ -582,22 +589,27 @@ Qt::ItemFlags ObservationTableModel::ObservationTableModel::flags(const QModelIn
         }
     }
 
-    if (info.rowType == clusterTail) return Qt::NoItemFlags;
+    if (info.rowType == clusterTail || info.rowType == tableTail) return Qt::NoItemFlags;
 
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
-/*
 bool ObservationTableModel::insertRows(int row, int count, const QModelIndex &parent)
 {
+    beginInsertRows(parent, row, row + count - 1);
 
+    endInsertRows();
+    return true;
 }
 
 bool ObservationTableModel::removeRows(int row, int count, const QModelIndex &parent)
 {
+    beginRemoveRows(parent, row, row + count - 1);
 
+    endRemoveRows();
+    return true;
 }
-
+/*
 bool ObservationTableModel::insertColumns(int column, int count, const QModelIndex &parent)
 {
 
@@ -608,3 +620,81 @@ bool ObservationTableModel::removeColumns(int column, int count, const QModelInd
 
 }
 */
+
+void ObservationTableModel::deleteCluster(int logicalIndex)
+{
+    ObsInfo obsinfo = obsMap[logicalIndex];
+    if (obsinfo.rowType == tableTail) return;
+
+    int minIndex, maxIndex;
+    if (!clusterIndexes(logicalIndex, minIndex, maxIndex)) return;
+
+    ClusterList cl;
+    int ind = 1;
+    for (ClusterList::iterator
+         i=lnet->OD.clusters.begin(), e=lnet->OD.clusters.end(); i!=e; ++i, ++ind)
+    {
+        if (ind != obsinfo.clusterIndex) cl.push_back(*i);
+    }
+    lnet->OD.clusters.clear();
+    for (ClusterList::iterator i=cl.begin(), e=cl.end(); i!=e; ++i)
+    {
+        lnet->OD.clusters.push_back(*i);
+    }
+
+    lnet->update_observations();
+
+    obsMap.remove(minIndex, maxIndex-minIndex+1);
+    removeRows(minIndex, maxIndex-minIndex+1, QModelIndex());
+}
+
+
+void ObservationTableModel::insertCluster(int position, QString clusterName)
+{
+    Cluster* cluster = 0;
+    if      (clusterName == GamaQ2::obsClusterName) cluster = new GNU_gama::local::StandPoint(&obsData);
+    else if (clusterName == GamaQ2::xyzClusterName) cluster = new GNU_gama::local::Coordinates(&obsData);
+    else if (clusterName == GamaQ2::hdfClusterName) cluster = new GNU_gama::local::HeightDifferences(&obsData);
+    else if (clusterName == GamaQ2::vecClusterName) cluster = new GNU_gama::local::Vectors(&obsData);
+
+    if (cluster == 0) return;
+
+    ObsInfo infoHeader;
+    infoHeader.rowType     = clusterHeader;
+    infoHeader.clusterName = clusterName;
+    infoHeader.cluster     = cluster;
+
+    ObsInfo infoTail;
+    infoTail.rowType = clusterTail;
+
+    // position: 0 - last item / 1 - after current cluster / 2 - before current cluster / 3 - first item
+    if (position == 0)
+    {
+        lnet->OD.clusters.push_back(cluster);
+        infoHeader.clusterIndex = lnet->OD.clusters.size()-1;
+        ObsInfo tableTail = obsMap.back();
+        obsMap.pop_back();
+        obsMap.push_back(infoHeader);
+        obsMap.push_back(infoTail);
+        obsMap.push_back(tableTail);
+        insertRows(obsMap.size()-3, 2, QModelIndex());
+        return;
+    }
+}
+
+bool ObservationTableModel::clusterIndexes(int logicalIndex, int &minIndex, int &maxIndex)
+{
+    if (logicalIndex < 0) return false;
+    if (logicalIndex >= obsMap.size()) return false;
+    if (obsMap[logicalIndex].rowType == tableTail) return false;
+
+    // cluster header row
+    minIndex = logicalIndex;
+    while (obsMap[minIndex].rowType != clusterHeader) minIndex--;
+
+    // cluster sentinel row
+    maxIndex = logicalIndex;
+    while (obsMap[maxIndex].rowType != clusterTail) maxIndex++;
+
+    return true;
+}

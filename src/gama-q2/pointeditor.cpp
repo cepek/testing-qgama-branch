@@ -42,7 +42,7 @@ PointEditor::PointEditor(QWidget *parent) :
     ui->tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     pointMenu = new QMenu(this);
 
-    QAction* pdelete = new QAction(tr("delete point"), this);
+    QAction* pdelete = new QAction(tr("Delete point"), this);
     pointMenu->addAction(pdelete);
     connect(pdelete, SIGNAL(triggered()), this, SLOT(pointDelete()));
 
@@ -68,8 +68,8 @@ void PointEditor::pointDelete()
 
     ui->tableView->selectRow(pointLogicalIndex);
 
-    int q = QMessageBox::warning(this, tr("Deleting Point"),
-             tr("Do you really want to delete point Id %1").arg(ID),
+    int q = QMessageBox::warning(this, tr("Delete Point"),
+             tr("Do you want to delete the point Id %1").arg(ID),
              QMessageBox::Ok|QMessageBox::Cancel);
     if (q != QMessageBox::Ok) return;
 
