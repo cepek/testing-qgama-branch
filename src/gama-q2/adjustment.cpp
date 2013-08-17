@@ -454,7 +454,7 @@ void Adjustment::exec()
 {
     qDebug() << "Adjustment::exec()" << __FILE__ << __LINE__;
 
-    if (!solved) try
+    /*if (!solved)*/ try
     {
         GNU_gama::local::Acord acord(lnet->PD, lnet->OD);
         acord.execute();
@@ -468,6 +468,7 @@ void Adjustment::exec()
         lnet->update_points();
 
         lnet->solve();
+        /* ????????????
         std::set<std::string> adjset;
         pid2indx.clear();
         rcluster.clear();
@@ -497,7 +498,7 @@ void Adjustment::exec()
         {
             adjid.push_back(*i);
         }
-
+*/
         solved = true;
         emit adjustment_signal(solved);
     }

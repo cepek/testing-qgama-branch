@@ -133,6 +133,7 @@ ObservationTableModel::ObservationTableModel(GNU_gama::local::LocalNetwork *loca
 void ObservationTableModel::initObsMap()
 {
     qDebug() << "ObservationTableModel::initObsMap()" << __FILE__ << __LINE__;
+
     obsMap.clear();
     columnCountMax = 0;
 
@@ -623,19 +624,22 @@ bool ObservationTableModel::removeColumns(int column, int count, const QModelInd
 
 void ObservationTableModel::deleteCluster(int logicalIndex)
 {
+    qDebug() << "ObservationTableModel::deleteCluster" << __FILE__ << __LINE__;
+
     ObsInfo obsinfo = obsMap[logicalIndex];
     if (obsinfo.rowType == tableTail) return;
 
     int minIndex, maxIndex;
     if (!clusterIndexes(logicalIndex, minIndex, maxIndex)) return;
 
+    const Cluster* cluster = obsMap[minIndex].cluster;
     ClusterList cl;
-    int ind = 1;
     for (ClusterList::iterator
-         i=lnet->OD.clusters.begin(), e=lnet->OD.clusters.end(); i!=e; ++i, ++ind)
+         i=lnet->OD.clusters.begin(), e=lnet->OD.clusters.end(); i!=e; ++i)
     {
-        if (ind != obsinfo.clusterIndex) cl.push_back(*i);
+        if (cluster != *i) cl.push_back(*i);
     }
+
     lnet->OD.clusters.clear();
     for (ClusterList::iterator i=cl.begin(), e=cl.end(); i!=e; ++i)
     {
@@ -649,8 +653,10 @@ void ObservationTableModel::deleteCluster(int logicalIndex)
 }
 
 
-void ObservationTableModel::insertCluster(int position, QString clusterName)
+void ObservationTableModel::insertCluster(int logicalIndex, int position, QString clusterName)
 {
+    qDebug() << "ObservationTableModel::insertCluster()" << __FILE__ << __LINE__;
+
     Cluster* cluster = 0;
     if      (clusterName == GamaQ2::obsClusterName) cluster = new GNU_gama::local::StandPoint(&obsData);
     else if (clusterName == GamaQ2::xyzClusterName) cluster = new GNU_gama::local::Coordinates(&obsData);
@@ -667,19 +673,60 @@ void ObservationTableModel::insertCluster(int position, QString clusterName)
     ObsInfo infoTail;
     infoTail.rowType = clusterTail;
 
-    // position: 0 - last item / 1 - after current cluster / 2 - before current cluster / 3 - first item
-    if (position == 0)
+    enum {lastItem, afterCurrent, beforeCurrent, firstItem};
+
+    if (position == lastItem || lnet->OD.clusters.empty())
     {
         lnet->OD.clusters.push_back(cluster);
-        infoHeader.clusterIndex = lnet->OD.clusters.size()-1;
-        ObsInfo tableTail = obsMap.back();
-        obsMap.pop_back();
-        obsMap.push_back(infoHeader);
-        obsMap.push_back(infoTail);
-        obsMap.push_back(tableTail);
-        insertRows(obsMap.size()-3, 2, QModelIndex());
+        int N = obsMap.size() - 1;
+        obsMap.insert(N,1,infoTail);
+        obsMap.insert(N,1,infoHeader);
+        insertRows(N, 2, QModelIndex());
+        lnet->update_observations();
         return;
     }
+
+    int minIndex, maxIndex;
+    if (!clusterIndexes(logicalIndex, minIndex, maxIndex)) return;
+
+    const Cluster* selectedCluster = obsMap[minIndex].cluster;
+    if (position == firstItem)
+    {
+        position = beforeCurrent;
+        selectedCluster = obsMap[0].cluster;
+    }
+
+    int N, index = 0;
+    ClusterList cl;
+    for (ClusterList::iterator
+         i=lnet->OD.clusters.begin(), e=lnet->OD.clusters.end(); i!=e; ++i)
+    {
+        if (selectedCluster == *i && position == beforeCurrent)
+        {
+            N = index;
+            cl.push_back(cluster);
+        }
+
+        cl.push_back(*i);
+        index += (*i)->observation_list.size() + 2;
+
+        if (selectedCluster == *i && position == afterCurrent)
+        {
+            N = index;
+            cl.push_back(cluster);
+        }
+    }
+
+    lnet->OD.clusters.clear();
+    for (ClusterList::iterator i=cl.begin(), e=cl.end(); i!=e; ++i)
+    {
+        lnet->OD.clusters.push_back(*i);
+    }
+
+    obsMap.insert(N, 1, infoTail);
+    obsMap.insert(N, 1, infoHeader);
+    insertRows(N, 2, QModelIndex());
+    lnet->update_observations();
 }
 
 bool ObservationTableModel::clusterIndexes(int logicalIndex, int &minIndex, int &maxIndex)

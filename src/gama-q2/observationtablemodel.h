@@ -64,7 +64,7 @@ public:
     // Gama interface
 
     void deleteCluster (int logicalIndex);
-    void insertCluster (int position, QString clusterName);
+    void insertCluster (int logicalIndex, int position, QString clusterName);
     bool clusterIndexes(int logicalIndex, int& minIndex, int& maxIndex);
 
 private:

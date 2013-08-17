@@ -152,8 +152,6 @@ void ObservationEditor::insertCluster()
     InsertClusterDialog dialog;
     if (dialog.exec() == QDialog::Rejected) return;
 
-    model->insertCluster(dialog.position(), dialog.clusterName());
-
-    qDebug() << "insertCluster" << observationLogicalIndex;
+    model->insertCluster(observationLogicalIndex, dialog.position(), dialog.clusterName());
 }
 

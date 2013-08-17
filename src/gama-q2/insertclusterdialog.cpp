@@ -13,10 +13,10 @@ InsertClusterDialog::InsertClusterDialog(QWidget *parent) :
     ui->comboBoxClusterName->addItem(GamaQ2::hdfClusterName);
     ui->comboBoxClusterName->addItem(GamaQ2::vecClusterName);
 
-    ui->comboBoxPosition->addItem("Last item in the combo list");
-    ui->comboBoxPosition->addItem("After selected cluster");
-    ui->comboBoxPosition->addItem("Before selected cluseter");
-    ui->comboBoxPosition->addItem("First item in the cluster list");
+    ui->comboBoxPosition->addItem(tr("Last item in the cluster list"));
+    ui->comboBoxPosition->addItem(tr("After the selected cluster"));
+    ui->comboBoxPosition->addItem(tr("Before the selected cluster"));
+    ui->comboBoxPosition->addItem(tr("First item in the cluster list"));
 }
 
 InsertClusterDialog::~InsertClusterDialog()
