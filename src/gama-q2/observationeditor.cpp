@@ -26,6 +26,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QDebug>
+#include <typeinfo>
 
 #include <gnu_gama/local/network.h>
 
@@ -68,6 +69,14 @@ ObservationEditor::ObservationEditor(QWidget *parent) :
 
     ui->tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     observationMenu = new QMenu(this);
+
+    QAction* menuInsertObservation = new QAction(tr("Insert observation"), this);
+    observationMenu->addAction(menuInsertObservation);
+    connect(menuInsertObservation, SIGNAL(triggered()), this, SLOT(insertObservation()));
+
+    QAction* menuDeleteObservation = new QAction(tr("Delete observation"), this);
+    observationMenu->addAction(menuDeleteObservation);
+    connect(menuDeleteObservation, SIGNAL(triggered()), this, SLOT(deleteObservation()));
 
     observationMenu->addSeparator();
 
@@ -133,7 +142,7 @@ void ObservationEditor::deleteCluster()
     SelectCluster selectCluster(model, ui->tableView, observationLogicalIndex);
     if (!selectCluster.isValid()) return;
 
-    int q = QMessageBox::warning(this, tr("Deleting Cluster"),
+    int q = QMessageBox::warning(this, tr("Delete Cluster"),
              tr("Do you want to delete selected cluster?"),
              QMessageBox::Ok|QMessageBox::Cancel);
 
@@ -155,3 +164,27 @@ void ObservationEditor::insertCluster()
     model->insertCluster(observationLogicalIndex, dialog.position(), dialog.clusterName());
 }
 
+
+void ObservationEditor::deleteObservation()
+{
+    QModelIndex index = model->index(observationLogicalIndex, 0);
+    if (!index.isValid()) return;
+
+    if (!model->isObservationRow(observationLogicalIndex)) return;
+
+    ui->tableView->clearSelection();
+    ui->tableView->selectRow(observationLogicalIndex);
+
+    int q = QMessageBox::warning(this, tr("Delete Observation"),
+             tr("Do you want to delete selected observation?"),
+             QMessageBox::Ok|QMessageBox::Cancel);
+
+    if (q != QMessageBox::Ok) return;
+
+    model->deleteObservation(observationLogicalIndex);
+}
+
+void ObservationEditor::insertObservation()
+{
+
+}

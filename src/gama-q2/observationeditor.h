@@ -71,8 +71,9 @@ signals:
 
 private slots:
     void observationContextMenu(QPoint p);
+    void insertObservation();
+    void deleteObservation();
     void insertCluster();
-    void deleteCluster();
-};
+    void deleteCluster();};
 
 #endif // OBSERVATIONEDITOR_H

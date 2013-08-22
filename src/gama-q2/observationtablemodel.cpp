@@ -28,6 +28,17 @@
 #include <QFont>
 #include <QMessageBox>
 #include <QDebug>
+#include <typeinfo>
+
+/*void qDebugMatrix(const Observation::CovarianceMatrix& cov)
+{
+    for (int r=1; r<=cov.rows(); r++)
+    {
+        QList<double> row;
+        for (int c = 1; c<=cov.cols(); c++) row << cov(r,c);
+        qDebug() << row;
+    }
+}*/
 
 typedef GNU_gama::local::LocalNetwork    LocalNetwork;
 using namespace GamaQ2;
@@ -527,7 +538,7 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
             for (int i=1; i<=N; i++)
                 for (int j=i; j<=i+B; j++)
                 {
-                    cm(i,j) = C(i,j);
+                    if (j<=N) cm(i,j) = C(i,j);
                 }
             C = cm;
         }
@@ -744,4 +755,74 @@ bool ObservationTableModel::clusterIndexes(int logicalIndex, int &minIndex, int 
     while (obsMap[maxIndex].rowType != clusterTail) maxIndex++;
 
     return true;
+}
+
+bool ObservationTableModel::isObservationRow(int logicalIndex) const
+{
+    if (logicalIndex < 0) return false;
+    if (logicalIndex >= obsMap.size()) return false;
+
+    return obsMap[logicalIndex].rowType == obsRow;
+}
+
+void ObservationTableModel::deleteObservation(int logicalIndex)
+{
+    const Observation* observation = obsMap[logicalIndex].observation;
+    Cluster* cluster = const_cast<Cluster*>(observation->ptr_cluster());
+
+    GNU_gama::List<Observation*> obs;
+    int cluster_index = 0, ci = 1;
+    for (ObservationList::iterator i=cluster->observation_list.begin(),
+         e=cluster->observation_list.end(); i!=e; ++i, ++ci)
+    {
+        if (*i == observation) {
+            cluster_index = ci;
+            delete *i;
+        }
+        else obs.push_back(*i);
+    }
+    cluster->observation_list.clear();
+    for (ObservationList::iterator i=obs.begin(), e=obs.end(); i!=e; ++i)
+    {
+        cluster->observation_list.push_back(*i);
+    }
+
+    // reduced band width
+    int cdim  = cluster->covariance_matrix.rows();
+    int cband = cluster->covariance_matrix.bandWidth();
+    int rband = 0;
+    for (int row=1; row<=cdim; row++)
+        if (row != cluster_index) {
+            int maxcol = row + cband;
+            if (maxcol > cdim) maxcol = cdim;
+            for (int col=maxcol; col>row; col--)
+                if (cluster->covariance_matrix(row,col) && col !=cluster_index) {
+                    int b = col-row;
+                    if (row < cluster_index && col > cluster_index) b--;
+                    if (b > rband) rband = b;
+                    break;
+                }
+
+        }
+
+    // reduced covariance matrix
+    Observation::CovarianceMatrix cov(cdim-1,rband);
+    for (int r=1; r<=cov.rows(); r++)
+        for (int b=0; b<=cov.bandWidth(); b++)
+            if (r+b <= cov.cols() ){
+                int rr = ( r <cluster_index) ?  r  : r+1;
+                int cc = (r+b<cluster_index) ? r+b : r+b+1;
+                cov(r, r+b) = cluster->covariance_matrix(rr,cc);
+            }
+
+    cluster->covariance_matrix = cov;
+    cluster->update();
+    lnet->update_points();
+    obsMap.remove(logicalIndex, 1);
+    int k = logicalIndex;
+    while (obsMap[k].rowType != clusterTail)
+    {
+        obsMap[k++].clusterIndex--;
+    }
+    removeRows(logicalIndex, 1, QModelIndex());
 }

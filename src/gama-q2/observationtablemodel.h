@@ -67,6 +67,9 @@ public:
     void insertCluster (int logicalIndex, int position, QString clusterName);
     bool clusterIndexes(int logicalIndex, int& minIndex, int& maxIndex);
 
+    bool isObservationRow (int logicalIndex) const;
+    void deleteObservation(int logicalIndex);
+
 private:
     GNU_gama::local::LocalNetwork*    lnet;
     GNU_gama::local::ObservationData& obsData;
