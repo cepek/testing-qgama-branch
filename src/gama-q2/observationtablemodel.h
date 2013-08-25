@@ -70,6 +70,9 @@ public:
     bool isObservationRow (int logicalIndex) const;
     void deleteObservation(int logicalIndex);
 
+    QString currentClusterName(int logicalIndex) const;
+    void insertObservation(int logicalIndex, int position, const QStringList& obsNames);
+
 private:
     GNU_gama::local::LocalNetwork*    lnet;
     GNU_gama::local::ObservationData& obsData;

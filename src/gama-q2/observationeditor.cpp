@@ -21,6 +21,7 @@
 #include "observationeditor.h"
 #include "ui_observationeditor.h"
 #include "insertclusterdialog.h"
+#include "insertobservationdialog.h"
 #include "constants.h"
 #include <gnu_gama/local/gamadata.h>
 #include <QMenu>
@@ -186,5 +187,16 @@ void ObservationEditor::deleteObservation()
 
 void ObservationEditor::insertObservation()
 {
+    qDebug() << "ObservationEditor::insertObservation()" << __FILE__ << __LINE__;
 
+    QModelIndex index = model->index(observationLogicalIndex, 0);
+    if (!index.isValid()) return;
+
+    ui->tableView->clearSelection();
+    ui->tableView->selectRow(observationLogicalIndex);
+
+    InsertObservationDialog dialog(model->currentClusterName(observationLogicalIndex));
+    if (dialog.exec() == QDialog::Rejected) return;
+
+    model->insertObservation(observationLogicalIndex, dialog.position(), dialog.observationNames());
 }

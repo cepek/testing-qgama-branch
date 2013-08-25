@@ -826,3 +826,17 @@ void ObservationTableModel::deleteObservation(int logicalIndex)
     }
     removeRows(logicalIndex, 1, QModelIndex());
 }
+
+QString ObservationTableModel::currentClusterName(int logicalIndex) const
+{
+    while (obsMap[logicalIndex].rowType != clusterHeader) logicalIndex--;
+
+    return obsMap[logicalIndex].clusterName;
+}
+
+void ObservationTableModel::insertObservation(int logicalIndex, int position, const QStringList &obsNames)
+{
+    qDebug() << "ObservationTableModel::insertObservation(int logicalIndex, int position, const QStringList &ObsNames)"
+             << __FILE__ << __LINE__;
+    qDebug() << ".... insert observation" << position << obsNames;
+}
