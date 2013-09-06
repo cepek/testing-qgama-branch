@@ -39,6 +39,19 @@ namespace GamaQ2
     extern const QString hdfClusterName;
     extern const QString vecClusterName;
 
+    extern const QString distObsName;
+    extern const QString dirObsName;
+    extern const QString angleObsName;
+    extern const QString hdifObsName;
+    extern const QString xdifObsName;
+    extern const QString ydifObsName;
+    extern const QString zdifObsName;
+    extern const QString xObsName;
+    extern const QString yObsName;
+    extern const QString zObsName;
+    extern const QString slopeObsName;
+    extern const QString zangleObsName;
+
     extern const QString connection_implicit_db;
     extern const QString connection_dbf_drop_tables;
 

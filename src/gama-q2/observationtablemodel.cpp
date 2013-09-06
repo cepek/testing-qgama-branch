@@ -52,9 +52,10 @@ ObservationTableModel::ObsInfo::ObsInfo()
 {
     if (obsNames.size() == 0)
     {
-        obsNames << "dist." << "dir." << "angle" << "h dif"
-                 << "x dif" << "y dif" << "z dif" << "x" << "y" << "z"
-                 << "slope" << "zangle";
+        using namespace GamaQ2;
+        obsNames << distObsName  << dirObsName  << angleObsName << hdifObsName    // see constants.cpp
+                 << xdifObsName  << ydifObsName << zdifObsName  << xObsName << yObsName << zObsName
+                 << slopeObsName << zangleObsName;
     }
 }
 
