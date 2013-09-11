@@ -26,12 +26,16 @@
 #include <gnu_gama/local/network.h>
 
 typedef GNU_gama::local::Observation     Observation;
+typedef GNU_gama::local::Direction       Direction;
 typedef GNU_gama::local::Angle           Angle;
+typedef GNU_gama::local::Z_Angle         Z_Angle;
 typedef GNU_gama::local::H_Diff          H_Diff;
 typedef GNU_gama::Cluster<Observation>   Cluster;
 typedef GNU_gama::List<Cluster*>         ClusterList;
 typedef GNU_gama::local::ObservationList ObservationList;
 typedef GNU_gama::local::LocalNetwork    LocalNetwork;
+
+class InsertObservationDialog;
 
 class ObservationTableModel : public QAbstractTableModel
 {
@@ -55,11 +59,11 @@ public:
                         const QVariant &value, int role);
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
-    bool removeRows(int row, int count, const QModelIndex &parent);
-    bool insertRows(int row, int count, const QModelIndex &parent);
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
-    //bool insertColumns(int column, int count, const QModelIndex &parent);
-    //bool removeColumns(int column, int count, const QModelIndex &parent);
+    bool insertColumns(int column, int count, const QModelIndex &parent = QModelIndex());
+    bool removeColumns(int column, int count, const QModelIndex &parent = QModelIndex());
 
     // Gama interface
 
@@ -71,7 +75,7 @@ public:
     void deleteObservation(int logicalIndex);
 
     QString currentClusterName(int logicalIndex) const;
-    void insertObservation(int logicalIndex, int position, const QStringList& obsNames);
+    void insertObservation(int logicalIndex, const InsertObservationDialog& dialog);
 
 private:
     GNU_gama::local::LocalNetwork*    lnet;
@@ -84,6 +88,9 @@ private:
     enum ObsNames { indDist,  indDir,   indAngle, indHdiff,
                     indXdiff, indYdiff, indZdiff, indX, indY, indZ,
                     indSdist, indZangle };
+
+    // InsertObservationDialog returns a list of ObsInfo objects
+    friend class InsertObservationDialog;
 
     struct ObsInfo
     {
@@ -101,21 +108,23 @@ private:
 
         static QStringList obsNames;
 
-        RowType            rowType;
-        const Cluster     *cluster;
-        QString            clusterName;
-        int                clusterIndex;
-        const Observation *observation;
-        int                observationNameIndex;
-        int                adjustmentIndex;
-        const Angle       *angle;
-        bool               angular;
+        RowType      rowType;
+        Cluster*     cluster;
+        QString      clusterName;
+        int          clusterIndex;
+        Observation* observation;
+        int          observationNameIndex;
+        Angle*       angle;
+        bool         angular;
+        bool         positiveDefinite;
     };
 
     QVector<ObsInfo> obsMap;
     int columnCountMax;
 
     void initObsMap();
+    void setColumnCountMax();
+    void testCovarianceMatrix(int LogicalIndex);
 
 signals:
     void warning(QString);

@@ -198,5 +198,6 @@ void ObservationEditor::insertObservation()
     InsertObservationDialog dialog(model->currentClusterName(observationLogicalIndex));
     if (dialog.exec() == QDialog::Rejected) return;
 
-    model->insertObservation(observationLogicalIndex, dialog.position(), dialog.observationNames());
+    model->insertObservation(observationLogicalIndex, dialog);
+    ui->tableView->clearSelection();
 }

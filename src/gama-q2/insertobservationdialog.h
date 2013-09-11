@@ -1,6 +1,7 @@
 #ifndef INSERTOBSERVATIONDIALOG_H
 #define INSERTOBSERVATIONDIALOG_H
 
+#include "observationtablemodel.h"
 #include <QDialog>
 #include <QSet>
 
@@ -9,6 +10,10 @@ class InsertObservationDialog;
 }
 
 class QLineEdit;
+
+namespace GNU_gama { namespace local {
+    class Observation;
+}}
 
 class InsertObservationDialog : public QDialog
 {
@@ -20,7 +25,12 @@ public:
 
     int position() const;
     const QStringList& observationNames() const;
-    
+
+    // InsertObservationDialog is a friend class of ObservationTableMode which defines
+    // private class ObsInfo
+    typedef ObservationTableModel::ObsInfo ObsInfo;
+    const   QList<ObsInfo>& obsInfo;
+
 public slots:
     void accept();
 
@@ -33,9 +43,10 @@ private:
     QLineEdit* lineEditFrom;
     QLineEdit* lineEditTo;
     QLineEdit* lineEditValue;
-    QLineEdit* lineEditStdev;
     QString    standpoint, target1, target2;
-    double     value, stdev;
+    double     value;
+
+    QList<ObsInfo> obsinfo;
 
     bool OK;
     QSet<QString> tags;

@@ -58,6 +58,7 @@ namespace GamaQ2
     extern const QColor colorClusterHeader;
     extern const QColor colorPassiveBackground;
     extern const QColor colorOutsideCovMat;
+    extern const QColor colorSingularCovMat;
 }
 
 #endif // CONSTANTS_H

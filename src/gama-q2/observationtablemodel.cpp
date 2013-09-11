@@ -21,6 +21,7 @@
 #include "observationtablemodel.h"
 #include "constants.h"
 #include "shrinkbandwidth.h"
+#include "insertobservationdialog.h"
 #include <gnu_gama/local/gamadata.h>
 #include <gnu_gama/gon2deg.h>
 
@@ -40,6 +41,16 @@
     }
 }*/
 
+/*
+qDebug() << "rowType cluster clusterName clusterIndex observation ObservationNameIndex angle angular";
+for (int i=0; i<obsMap.size(); i++) {
+    qDebug() << obsMap[i].rowType << obsMap[i].cluster << obsMap[i].clusterName
+             << obsMap[i].clusterIndex << obsMap[i].observation
+             << obsMap[i].observationNameIndex
+             << obsMap[i].angle << obsMap[i].angular;
+}
+*/
+
 typedef GNU_gama::local::LocalNetwork    LocalNetwork;
 using namespace GamaQ2;
 
@@ -48,7 +59,8 @@ using namespace GamaQ2;
 QStringList ObservationTableModel::ObsInfo::obsNames;
 
 ObservationTableModel::ObsInfo::ObsInfo()
-    : cluster(0), observation(0), angle(0), angular(false)
+    : cluster(0), clusterIndex(0), observation(0), observationNameIndex(-1), angle(0), angular(false),
+      positiveDefinite(true)
 {
     if (obsNames.size() == 0)
     {
@@ -137,20 +149,18 @@ ObservationTableModel::ObservationTableModel(GNU_gama::local::LocalNetwork *loca
                                              QObject *parent) :
     lnet(localNetwork),
     obsData(lnet->OD),
-    QAbstractTableModel(parent)
+    QAbstractTableModel(parent),
+    columnCountMax(0)
 {
     initObsMap();
 }
 
 void ObservationTableModel::initObsMap()
 {
-    qDebug() << "ObservationTableModel::initObsMap()" << __FILE__ << __LINE__;
-
     obsMap.clear();
-    columnCountMax = 0;
 
-    ClusterList::const_iterator ic = obsData.clusters.begin();
-    ClusterList::const_iterator ec = obsData.clusters.end();
+    ClusterList::iterator ic = obsData.clusters.begin();
+    ClusterList::iterator ec = obsData.clusters.end();
     for ( ; ic!=ec; ++ic)
     {
         ObsInfo info;
@@ -176,9 +186,8 @@ void ObservationTableModel::initObsMap()
 
         obsMap.push_back(info);
 
-        ObservationList::const_iterator i = (*ic)->observation_list.begin();
-        ObservationList::const_iterator e = (*ic)->observation_list.end();
-        int tmpCount = 0;
+        ObservationList::iterator i = (*ic)->observation_list.begin();
+        ObservationList::iterator e = (*ic)->observation_list.end();
         int clusterIndex = 1;
         for ( ; i!=e; ++i)
         {
@@ -197,8 +206,8 @@ void ObservationTableModel::initObsMap()
                 obs.observationNameIndex = indDir;
                 obs.angular = true;
             }
-            else if (const GNU_gama::local::Angle *a
-                     = dynamic_cast<const GNU_gama::local::Angle*>(*i))
+            else if (GNU_gama::local::Angle *a
+                     = dynamic_cast<GNU_gama::local::Angle*>(*i))
             {
                 obs.observationNameIndex = indAngle;
                 obs.angle = a;
@@ -243,10 +252,7 @@ void ObservationTableModel::initObsMap()
             }
 
             obsMap.push_back(obs);
-            tmpCount++;
         }
-
-        if (tmpCount > columnCountMax) columnCountMax = tmpCount;
 
         ObsInfo tail;
         tail.rowType = clusterTail;
@@ -257,7 +263,10 @@ void ObservationTableModel::initObsMap()
     tableEnd.rowType = tableTail;
     obsMap.push_back(tableEnd);
 
-    columnCountMax += indColumnCount;
+    setColumnCountMax();
+    for (int i=0; i<obsMap.size(); i++)
+        if (obsMap[i].rowType == clusterHeader)
+            testCovarianceMatrix(i);
 }
 
 // QAbstractTableModel functions
@@ -270,6 +279,34 @@ int ObservationTableModel::rowCount(const QModelIndex &parent) const
 int ObservationTableModel::columnCount(const QModelIndex &parent) const
 {
     return columnCountMax;
+}
+
+void ObservationTableModel::setColumnCountMax()
+{
+    int oldCount = columnCountMax;
+    const ClusterList& cl = lnet->OD.clusters;
+    int max = 0;
+    for (ClusterList::const_iterator i=cl.begin(), e=cl.end(); i!=e; ++i)
+    {
+        int n = (*i)->covariance_matrix.rows();
+        if ((*i)->covariance_matrix.rows() > max) max = (*i)->covariance_matrix.rows();
+    }
+    columnCountMax =  max + indColumnCount;
+
+    if (oldCount == 0)
+    {
+    }
+    else if (columnCountMax > oldCount)
+    {
+        insertColumns(oldCount, columnCountMax-oldCount);
+    }
+    else if (columnCountMax < oldCount)
+    {
+        removeColumns(columnCountMax, oldCount-columnCountMax);
+    }
+    else
+    {
+    }
 }
 
 QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
@@ -288,10 +325,17 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
             int b = col - indColumnCount;
             if (r+b > info.cluster->covariance_matrix.cols())      return GamaQ2::colorOutsideCovMat;
             if ( b  > info.cluster->covariance_matrix.bandWidth()) return GamaQ2::colorPassiveBackground;
+            // !info.positiveDefinite ... would not work here, why?
+            if (!obsMap[row].positiveDefinite)                     return GamaQ2::colorSingularCovMat;
+            return QVariant();
         }
 
         if (info.rowType == clusterHeader) return GamaQ2::colorClusterHeader;
-        if (info.observation && !info.observation->active()) return GamaQ2::colorPassiveBackground;
+        if (info.observation)
+        {
+            if ( info.observation->stdDev() <= 0 && col == indStdev) return GamaQ2::colorSingularCovMat;
+            if (!info.observation->active()) return GamaQ2::colorPassiveBackground;
+        }
 
         return QVariant();
     }
@@ -359,7 +403,7 @@ QVariant ObservationTableModel::data(const QModelIndex &index, int role) const
 
             if (j <= info.cluster->covariance_matrix.cols())
             {
-               double c = info.cluster->covariance_matrix(i, j);
+               double c = ((const Cluster*)(info.cluster))->covariance_matrix(i, j);
                if (c == 0) return QVariant();
 
                if (lnet->degrees())
@@ -479,10 +523,8 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
             }
         }
 
-        Observation* obs = const_cast<Observation*>(info.observation);
-
         if (info.angular) val /= R2G;
-        obs->set_value(val);
+        info.observation->set_value(val);
 
         return true;
     }
@@ -490,7 +532,7 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
     if (col == indStdev)
     {
         bool ok;
-        double std = value.toDouble(&ok);
+        double stdv = value.toDouble(&ok);
         if (!ok)
         {
             warning(tr("Non-numeric format of StdDev %1").arg(value.toString()));
@@ -498,11 +540,13 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
         }
 
         bool angular = info.angular;
-        if(angular && lnet->degrees()) std /= 0.324;
+        if(angular && lnet->degrees()) stdv /= 0.324;
 
         int i = info.clusterIndex;
         Cluster* cluster = const_cast<Cluster*>(info.cluster);
-        cluster->covariance_matrix(i,i) = std*std;
+        cluster->covariance_matrix(i,i) = stdv*stdv;
+
+        testCovarianceMatrix(row);
 
         return true;
     }
@@ -527,7 +571,7 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
     if (col >= indColumnCount)
     {
         int b = col - indColumnCount;
-        if (b > info.cluster->covariance_matrix.bandWidth())
+        if (b > info.cluster->covariance_matrix.bandWidth() && !value.toString().simplified().isEmpty())
         {
             //emit warning("elements outside the bandwidth");
             Cluster *cluster = const_cast<Cluster*>(info.cluster);
@@ -566,6 +610,9 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
         cluster->covariance_matrix(i,j) = val;
 
         if (val == 0) shrinkBandWidth(cluster->covariance_matrix);
+
+        // is variance-covariance matrix positive definite?
+        testCovarianceMatrix(row);
 
         return true;
     }
@@ -609,7 +656,7 @@ Qt::ItemFlags ObservationTableModel::ObservationTableModel::flags(const QModelIn
 
 bool ObservationTableModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    beginInsertRows(parent, row, row + count - 1);
+    beginInsertRows(parent, row, row+count-1);
 
     endInsertRows();
     return true;
@@ -617,27 +664,31 @@ bool ObservationTableModel::insertRows(int row, int count, const QModelIndex &pa
 
 bool ObservationTableModel::removeRows(int row, int count, const QModelIndex &parent)
 {
-    beginRemoveRows(parent, row, row + count - 1);
+    beginRemoveRows(parent, row, row+count-1);
 
     endRemoveRows();
     return true;
 }
-/*
+
 bool ObservationTableModel::insertColumns(int column, int count, const QModelIndex &parent)
 {
+    beginInsertColumns(parent, column, column+count-1);
 
+    endInsertColumns();
+    return true;
 }
 
 bool ObservationTableModel::removeColumns(int column, int count, const QModelIndex &parent)
 {
+    beginRemoveColumns(parent, column, column+count-1);
 
+    endRemoveColumns();
+    return true;
 }
-*/
+
 
 void ObservationTableModel::deleteCluster(int logicalIndex)
 {
-    qDebug() << "ObservationTableModel::deleteCluster" << __FILE__ << __LINE__;
-
     ObsInfo obsinfo = obsMap[logicalIndex];
     if (obsinfo.rowType == tableTail) return;
 
@@ -661,14 +712,14 @@ void ObservationTableModel::deleteCluster(int logicalIndex)
     lnet->update_observations();
 
     obsMap.remove(minIndex, maxIndex-minIndex+1);
-    removeRows(minIndex, maxIndex-minIndex+1, QModelIndex());
+    removeRows(minIndex, maxIndex-minIndex+1);
+
+    setColumnCountMax();
 }
 
 
 void ObservationTableModel::insertCluster(int logicalIndex, int position, QString clusterName)
 {
-    qDebug() << "ObservationTableModel::insertCluster()" << __FILE__ << __LINE__;
-
     Cluster* cluster = 0;
     if      (clusterName == GamaQ2::obsClusterName) cluster = new GNU_gama::local::StandPoint(&obsData);
     else if (clusterName == GamaQ2::xyzClusterName) cluster = new GNU_gama::local::Coordinates(&obsData);
@@ -693,7 +744,7 @@ void ObservationTableModel::insertCluster(int logicalIndex, int position, QStrin
         int N = obsMap.size() - 1;
         obsMap.insert(N,1,infoTail);
         obsMap.insert(N,1,infoHeader);
-        insertRows(N, 2, QModelIndex());
+        insertRows(N, 2);
         lnet->update_observations();
         return;
     }
@@ -803,7 +854,6 @@ void ObservationTableModel::deleteObservation(int logicalIndex)
                     if (b > rband) rband = b;
                     break;
                 }
-
         }
 
     // reduced covariance matrix
@@ -826,6 +876,8 @@ void ObservationTableModel::deleteObservation(int logicalIndex)
         obsMap[k++].clusterIndex--;
     }
     removeRows(logicalIndex, 1, QModelIndex());
+    testCovarianceMatrix(logicalIndex);
+    setColumnCountMax();
 }
 
 QString ObservationTableModel::currentClusterName(int logicalIndex) const
@@ -835,9 +887,63 @@ QString ObservationTableModel::currentClusterName(int logicalIndex) const
     return obsMap[logicalIndex].clusterName;
 }
 
-void ObservationTableModel::insertObservation(int logicalIndex, int position, const QStringList &obsNames)
+void ObservationTableModel::insertObservation(int logicalIndex, const InsertObservationDialog& dialog)
 {
-    qDebug() << "ObservationTableModel::insertObservation(int logicalIndex, int position, const QStringList &ObsNames)"
-             << __FILE__ << __LINE__;
-    qDebug() << ".... insert observation" << position << obsNames;
+    int minIndex, maxIndex;
+    if (!clusterIndexes(logicalIndex, minIndex, maxIndex)) return;
+
+    Cluster* cluster = const_cast<Cluster*>(obsMap[minIndex].cluster);
+    int cdim  = cluster->covariance_matrix.rows();
+    int cband = cluster->covariance_matrix.bandWidth();
+
+    Observation::CovarianceMatrix cov(cdim + dialog.obsInfo.size(), cband);
+    cov.set_zero();
+
+    enum {lastItem, afterCurrent, beforeCurrent, firstItem};
+
+    if (dialog.position() == lastItem)
+    {
+        for (int r=1; r<=cluster->covariance_matrix.rows(); r++)
+            for (int b=0; b<=cluster->covariance_matrix.bandWidth(); b++)
+                if (r+b <= cluster->covariance_matrix.cols() ){
+                    cov(r,r+b) = cluster->covariance_matrix(r,r+b);
+                }
+        cluster->covariance_matrix = cov;
+
+        for (int n=0, index=maxIndex;  n<dialog.obsInfo.size(); n++)
+        {
+            ObsInfo obs = dialog.obsInfo[n];
+            obs.clusterIndex = index-minIndex;
+            obs.cluster = cluster;
+            obsMap.insert(index++, obs);
+
+            cluster->observation_list.push_back(obs.observation);
+        }
+        cluster->update();
+        lnet->update_points();
+        insertRows(maxIndex, dialog.obsInfo.size());
+        setColumnCountMax();
+        testCovarianceMatrix(logicalIndex);
+
+        return;
+    }
+}
+
+void ObservationTableModel::testCovarianceMatrix(int LogicalIndex)
+{
+    int minIndex, maxIndex;
+    if (!clusterIndexes(LogicalIndex, minIndex, maxIndex)) return;
+
+    bool pd = true;
+    GNU_gama::CovMat<> C = obsMap[minIndex].cluster->covariance_matrix;
+    try {
+        C.cholDec();
+    }
+    catch (GNU_gama::Exception::matvec e) {
+        pd = false;
+    }
+    for (int i=minIndex+1; i<maxIndex; i++)
+    {
+        obsMap[i].positiveDefinite = pd;
+    }
 }

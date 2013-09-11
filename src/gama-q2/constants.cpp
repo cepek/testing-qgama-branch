@@ -31,3 +31,4 @@ const QString GamaQ2::zangleObsName  = "zangle";
 const QColor GamaQ2::colorClusterHeader     = QColor(210,210,210);
 const QColor GamaQ2::colorPassiveBackground = QColor(240,240,240);   // Qt::lightGray is too dark
 const QColor GamaQ2::colorOutsideCovMat     = Qt::lightGray;
+const QColor GamaQ2::colorSingularCovMat    = Qt::red;

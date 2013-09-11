@@ -1,6 +1,7 @@
 #include "insertobservationdialog.h"
 #include "ui_insertobservationdialog.h"
 #include "constants.h"
+#include "gnu_gama/local/observation.h"
 
 #include <QLineEdit>
 #include <QDebug>
@@ -8,6 +9,7 @@
 InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::InsertObservationDialog),
+    obsInfo(obsinfo),
     clusterName(cluster_name)
 {
     ui->setupUi(this);
@@ -33,7 +35,6 @@ InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *
         ui->formLayout->addRow(tr("From" ), lineEditFrom  = new QLineEdit(this));
         ui->formLayout->addRow(tr("To"   ), lineEditTo    = new QLineEdit(this));
         ui->formLayout->addRow(tr("Value"), lineEditValue = new QLineEdit(this));
-        ui->formLayout->addRow(tr("Stdev"), lineEditStdev = new QLineEdit(this));
     }
     else if (clusterName == GamaQ2::xyzClusterName)
     {
@@ -56,7 +57,7 @@ InsertObservationDialog::~InsertObservationDialog()
 
 int InsertObservationDialog::position() const
 {
-    return 0;
+    return ui->comboBoxPosition->currentIndex();
 }
 
 const QStringList& InsertObservationDialog::observationNames() const
@@ -66,33 +67,80 @@ const QStringList& InsertObservationDialog::observationNames() const
 
 void InsertObservationDialog::accept()
 {
+    using namespace GNU_gama::local;
+    GNU_gama::local::Observation* obs1 = 0;
+    GNU_gama::local::Observation* obs2 = 0;
+    GNU_gama::local::Observation* obs3 = 0;
+
     OK = true;
     tags.clear();
     html.clear();
     html += "<dl>";
 
-    if (clusterName == GamaQ2::obsClusterName)
-    {
-        getPointID(tr("From"),  lineEditFrom);
-        getPointID(tr("To"),    lineEditTo, true);
-        getDouble (tr("Value"), lineEditValue, value);
-        getDouble (tr("Stdev"), lineEditStdev, stdev, true);
-    }
-    else if (clusterName == GamaQ2::xyzClusterName)
-    {
+    try {
+        if (clusterName == GamaQ2::obsClusterName) {
+            getPointID(tr("From"),  lineEditFrom);
+            getPointID(tr("To"),    lineEditTo, true);
+            getDouble (tr("Value"), lineEditValue, value);
 
-    }
-    else if (clusterName == GamaQ2::hdfClusterName)
-    {
+            QString name = ui->comboBoxObservation->currentText(); name.toStdString().c_str();
+            if (OK) try {
+                using namespace GNU_gama::local;
 
-    }
-    else if (clusterName == GamaQ2::vecClusterName)
-    {
+                std::string sp(standpoint.toUtf8().data());
+                std::string t1(target1.toUtf8().data());
+                std::string t2(target2.toUtf8().data());
 
+                ObsInfo info;
+                info.rowType = ObservationTableModel::obsRow;
+
+                if (name == GamaQ2::distObsName) {
+                    info.observation = obs1 = new Distance(sp, t1, value);
+                    info.observationNameIndex = ObservationTableModel::indDist;
+                } else if (name == GamaQ2::dirObsName) {
+                    info.observation = obs1 = new Direction(sp, t1, value);
+                    info.observationNameIndex = ObservationTableModel::indDir;
+                } else if (name == GamaQ2::angleObsName) {
+                    info.observation = info.angle = new Angle(sp, t1, t2, value);
+                    info.angular = true;
+                    info.observationNameIndex = ObservationTableModel::indAngle;
+                } else if (name == GamaQ2::slopeObsName) {
+                    info.observation = obs1 = new S_Distance(sp, t1, value);
+                    info.angular = true;
+                    info.observationNameIndex = ObservationTableModel::indSdist;
+                } else if (name == GamaQ2::zangleObsName) {
+                    info.observation = obs1 = new Z_Angle(sp, t1, value);
+                    info.angular = true;
+                    info.observationNameIndex = ObservationTableModel::indZangle;
+                } else
+                    throw Exception(tr("unnown observation type in "
+                                       "GamaQ2::obsClusterName").toUtf8().data());
+
+                obsinfo.push_back(info);
+            }
+            catch(const Exception& e) {
+                setWarning(name, e.what());
+            }
+            catch (...) {
+                throw;
+            }
+        }
+        else if (clusterName == GamaQ2::xyzClusterName) {
+
+        }
+        else if (clusterName == GamaQ2::hdfClusterName) {
+
+        }
+        else if (clusterName == GamaQ2::vecClusterName) {
+
+        }
+        else {
+            setWarning(tr("FATAL"), tr("unknown cluster type"));
+            setWarning(tr("FATAL"), tr("this should never happen"));
+        }
     }
-    else
-    {
-        setWarning(tr("FATAL"), tr("unknown cluster type"));
+    catch (...) {
+        setWarning(tr("FATAL"), tr("unknown exception"));
         setWarning(tr("FATAL"), tr("this should never happen"));
     }
 
@@ -120,7 +168,7 @@ void InsertObservationDialog::getPointID(QString tag, QLineEdit *edit, bool isTa
     if (isTarget && ui->comboBoxObservation->currentText() == GamaQ2::angleObsName)
     {
         QStringList list = edit->text().split(QRegExp("\\s*;\\s*"));
-        qDebug() << list;
+
         if (list.size() != 2 || list[0].isEmpty() || list[1].isEmpty())
         {
             setWarning(tag, tr("An angle must have two target IDs separated by one semicolon"));
@@ -146,8 +194,6 @@ void InsertObservationDialog::getPointID(QString tag, QLineEdit *edit, bool isTa
     QString tst = isTarget ? target1 + target2 : standpoint;
     if (tst.contains(QRegExp("\\s")))
         setWarning(tag, tr("ID must not contain whitespaces"));
-
-    qDebug() << standpoint << target1 << target2;
 }
 
 void InsertObservationDialog::setWarning(QString tag, QString warning)
