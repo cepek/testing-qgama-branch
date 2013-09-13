@@ -31,7 +31,7 @@
 #include <QDebug>
 #include <typeinfo>
 
-/*void qDebugMatrix(const Observation::CovarianceMatrix& cov)
+void qDebugMatrix(const Observation::CovarianceMatrix& cov)
 {
     for (int r=1; r<=cov.rows(); r++)
     {
@@ -39,15 +39,15 @@
         for (int c = 1; c<=cov.cols(); c++) row << cov(r,c);
         qDebug() << row;
     }
-}*/
+}
 
 /*
-qDebug() << "rowType cluster clusterName clusterIndex observation ObservationNameIndex angle angular";
+qDebug() << "rowType cluster clusterName clusterIndex observation ObservationNameIndex angle angular group";
 for (int i=0; i<obsMap.size(); i++) {
     qDebug() << obsMap[i].rowType << obsMap[i].cluster << obsMap[i].clusterName
              << obsMap[i].clusterIndex << obsMap[i].observation
              << obsMap[i].observationNameIndex
-             << obsMap[i].angle << obsMap[i].angular;
+             << obsMap[i].angle << obsMap[i].angular << obsMap[i].group;
 }
 */
 
@@ -60,7 +60,7 @@ QStringList ObservationTableModel::ObsInfo::obsNames;
 
 ObservationTableModel::ObsInfo::ObsInfo()
     : cluster(0), clusterIndex(0), observation(0), observationNameIndex(-1), angle(0), angular(false),
-      positiveDefinite(true)
+      positiveDefinite(true), group(0)
 {
     if (obsNames.size() == 0)
     {
@@ -267,6 +267,30 @@ void ObservationTableModel::initObsMap()
     for (int i=0; i<obsMap.size(); i++)
         if (obsMap[i].rowType == clusterHeader)
             testCovarianceMatrix(i);
+
+    for (int i=1, j, k; i<obsMap.size()-2; i++)
+    {
+        j = i+1;
+        k = i+2;
+
+        int iname = obsMap[i].observationNameIndex;
+        if (iname != indXdiff && iname != indX) continue;
+
+        int jname = obsMap[j].observationNameIndex;
+        int kname = obsMap[k].observationNameIndex;
+
+        if (iname == indXdiff && jname == indYdiff && kname == indZdiff)
+        {
+            obsMap[i].group = obsMap[j].group = obsMap[k].group = GamaQ2::getUnique();
+        }
+
+        if (iname == indX && jname == indY)
+        {
+            if (kname != indZ) k = j;
+
+            obsMap[i].group = obsMap[j].group = obsMap[k].group = GamaQ2::getUnique();
+        }
+    }
 }
 
 // QAbstractTableModel functions
@@ -515,7 +539,7 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
         double val = value.toDouble(&ok);
         if (!ok)
         {
-            ok = GNU_gama::deg2gon(value.toString().toStdString(), val);
+            if (info.angular) ok = GNU_gama::deg2gon(value.toString().toStdString(), val);
             if (!ok)
             {
                 warning(tr("Non-numeric format of value %1").arg(value.toString()));
@@ -809,6 +833,22 @@ bool ObservationTableModel::clusterIndexes(int logicalIndex, int &minIndex, int 
     return true;
 }
 
+bool ObservationTableModel::groupIndexes(int logicalIndex, int &minIndex, int &maxIndex)
+{
+    if (logicalIndex < 0) return false;
+    if (logicalIndex >= obsMap.size()) return false;
+    if (obsMap[logicalIndex].rowType != obsRow) return false;
+
+    int group = obsMap[logicalIndex].group;
+    minIndex = maxIndex = logicalIndex;
+    if (group == 0) return true;
+
+    while (obsMap[minIndex-1].group == group) minIndex--;
+    while (obsMap[maxIndex+1].group == group) maxIndex++;
+
+    return true;
+}
+
 bool ObservationTableModel::isObservationRow(int logicalIndex) const
 {
     if (logicalIndex < 0) return false;
@@ -819,6 +859,18 @@ bool ObservationTableModel::isObservationRow(int logicalIndex) const
 
 void ObservationTableModel::deleteObservation(int logicalIndex)
 {
+    if (obsMap[logicalIndex].group)
+    {
+        int minIndex, maxIndex;
+        groupIndexes(logicalIndex, minIndex, maxIndex);
+        for (int i=minIndex; i<=maxIndex; i++)
+        {
+            obsMap[i].group = 0;
+            deleteObservation(minIndex);
+        }
+        return;
+    }
+
     const Observation* observation = obsMap[logicalIndex].observation;
     Cluster* cluster = const_cast<Cluster*>(observation->ptr_cluster());
 
@@ -840,8 +892,8 @@ void ObservationTableModel::deleteObservation(int logicalIndex)
     }
 
     // reduced band width
-    int cdim  = cluster->covariance_matrix.rows();
-    int cband = cluster->covariance_matrix.bandWidth();
+    const int cdim  = cluster->covariance_matrix.rows();
+    const int cband = cluster->covariance_matrix.bandWidth();
     int rband = 0;
     for (int row=1; row<=cdim; row++)
         if (row != cluster_index) {
@@ -861,9 +913,10 @@ void ObservationTableModel::deleteObservation(int logicalIndex)
     for (int r=1; r<=cov.rows(); r++)
         for (int b=0; b<=cov.bandWidth(); b++)
             if (r+b <= cov.cols() ){
-                int rr = ( r <cluster_index) ?  r  : r+1;
-                int cc = (r+b<cluster_index) ? r+b : r+b+1;
-                cov(r, r+b) = cluster->covariance_matrix(rr,cc);
+                const int rr = ( r <cluster_index) ?  r  : r+1;
+                const int cc = (r+b<cluster_index) ? r+b : r+b+1;
+                // zero value outside the original band
+                cov(r, r+b) = (cc-rr <= cband) ? cluster->covariance_matrix(rr,cc) : 0;
             }
 
     cluster->covariance_matrix = cov;
@@ -887,48 +940,6 @@ QString ObservationTableModel::currentClusterName(int logicalIndex) const
     return obsMap[logicalIndex].clusterName;
 }
 
-void ObservationTableModel::insertObservation(int logicalIndex, const InsertObservationDialog& dialog)
-{
-    int minIndex, maxIndex;
-    if (!clusterIndexes(logicalIndex, minIndex, maxIndex)) return;
-
-    Cluster* cluster = const_cast<Cluster*>(obsMap[minIndex].cluster);
-    int cdim  = cluster->covariance_matrix.rows();
-    int cband = cluster->covariance_matrix.bandWidth();
-
-    Observation::CovarianceMatrix cov(cdim + dialog.obsInfo.size(), cband);
-    cov.set_zero();
-
-    enum {lastItem, afterCurrent, beforeCurrent, firstItem};
-
-    if (dialog.position() == lastItem)
-    {
-        for (int r=1; r<=cluster->covariance_matrix.rows(); r++)
-            for (int b=0; b<=cluster->covariance_matrix.bandWidth(); b++)
-                if (r+b <= cluster->covariance_matrix.cols() ){
-                    cov(r,r+b) = cluster->covariance_matrix(r,r+b);
-                }
-        cluster->covariance_matrix = cov;
-
-        for (int n=0, index=maxIndex;  n<dialog.obsInfo.size(); n++)
-        {
-            ObsInfo obs = dialog.obsInfo[n];
-            obs.clusterIndex = index-minIndex;
-            obs.cluster = cluster;
-            obsMap.insert(index++, obs);
-
-            cluster->observation_list.push_back(obs.observation);
-        }
-        cluster->update();
-        lnet->update_points();
-        insertRows(maxIndex, dialog.obsInfo.size());
-        setColumnCountMax();
-        testCovarianceMatrix(logicalIndex);
-
-        return;
-    }
-}
-
 void ObservationTableModel::testCovarianceMatrix(int LogicalIndex)
 {
     int minIndex, maxIndex;
@@ -947,3 +958,131 @@ void ObservationTableModel::testCovarianceMatrix(int LogicalIndex)
         obsMap[i].positiveDefinite = pd;
     }
 }
+
+void ObservationTableModel::insertObservation(int logicalIndex, const InsertObservationDialog& dialog)
+{
+    qDebug() << "rowType cluster clusterName clusterIndex observation ObservationNameIndex angle angular group";
+    for (int i=0; i<obsMap.size(); i++) {
+        qDebug() << obsMap[i].rowType << obsMap[i].cluster << obsMap[i].clusterName
+                 << obsMap[i].clusterIndex << obsMap[i].observation
+                 << obsMap[i].observationNameIndex
+                 << obsMap[i].angle << obsMap[i].angular << obsMap[i].group;
+    }
+    int minIndex, maxIndex;
+    if (!clusterIndexes(logicalIndex, minIndex, maxIndex)) return;
+
+    Cluster*    cluster = obsMap[minIndex].cluster;
+    int cdim  = cluster->covariance_matrix.rows();
+    int cband = cluster->covariance_matrix.bandWidth();
+
+    qDebugMatrix(cluster->covariance_matrix);
+
+    enum {lastItem, afterCurrent, beforeCurrent, firstItem};
+
+    int position = dialog.position();
+    int selectedObservation = logicalIndex;
+    if (position == firstItem && !cluster->observation_list.empty())
+    {
+        position = beforeCurrent;
+        selectedObservation = minIndex + 1;
+    }
+
+    if (position == lastItem || cluster->observation_list.empty())
+    {
+        Observation::CovarianceMatrix cov(cdim + dialog.obsInfo.size(), cband);
+        cov.set_zero();
+
+        for (int r=1; r<=cluster->covariance_matrix.rows(); r++)
+            for (int b=0; b<=cluster->covariance_matrix.bandWidth(); b++)
+                if (r+b <= cluster->covariance_matrix.cols() ){
+                    cov(r,r+b) = cluster->covariance_matrix(r,r+b);
+                }
+        cluster->covariance_matrix = cov;
+
+        for (int n=0, index=maxIndex;  n<dialog.obsInfo.size(); n++)
+        {
+            ObsInfo obs = dialog.obsInfo[n];
+            obs.clusterIndex = index-minIndex;
+            obs.cluster = cluster;
+            obsMap.insert(index++, obs);
+
+            cluster->observation_list.push_back(obs.observation);
+        }
+
+        selectedObservation = maxIndex;
+    }
+    else
+    {
+        const int obsdim = dialog.obsInfo.size();
+        Observation::CovarianceMatrix cov(cdim + obsdim, cband + obsdim);
+        cov.set_zero();
+
+        ObservationList obs;
+        for (ObservationList::iterator
+            i=cluster->observation_list.begin(), e=cluster->observation_list.end(); i!=e; ++i)
+        {
+            obs.push_back(*i);
+        }
+        cluster->observation_list.clear();
+
+        ObservationList::iterator copy=obs.begin();
+        for (int r=1, i=minIndex+1; i<maxIndex; i++, r++)
+        {
+            for (int step=1; step<=2; step++)
+            {
+                if ((step == 1 && position == beforeCurrent && selectedObservation == i) ||
+                    (step == 2 && position == afterCurrent  && selectedObservation == i))
+                {
+                    for (int n=0; n<obsdim; n++)
+                    {
+                        ObsInfo obs = dialog.obsInfo[n];
+                        obs.cluster = cluster;
+                        obsMap.insert(i + (position == beforeCurrent ? 0 : 1), obs);
+
+                        cluster->observation_list.push_back(obs.observation);
+                    }
+                }
+                if (step == 1)
+                {
+                    for (int b=0; b<=cband; b++)
+                        if (r+b <= cdim)
+                        {
+                            int row = r;
+                            int col = r+b;
+                            if (position == beforeCurrent) {
+                                if (row >= selectedObservation-minIndex) row += obsdim;
+                                if (col >= selectedObservation-minIndex) col += obsdim;
+                            } else {
+                                if (row > selectedObservation-minIndex) row += obsdim;
+                                if (col > selectedObservation-minIndex) col += obsdim;
+                            }
+                            cov(row,col) = cluster->covariance_matrix(r,r+b);
+                        }
+
+                    cluster->observation_list.push_back(*copy++);
+                }
+            }
+
+            for (int n=minIndex+1, i=0; i<cdim+obsdim; i++, n++) obsMap[n].clusterIndex = n - minIndex;
+        }
+        cluster->covariance_matrix = cov;
+        qDebugMatrix(cluster->covariance_matrix);
+
+        if (position == afterCurrent) selectedObservation++;
+    }
+
+    cluster->update();
+    lnet->update_points();
+    insertRows(selectedObservation, dialog.obsInfo.size());
+    setColumnCountMax();
+    testCovarianceMatrix(logicalIndex);
+
+    qDebug() << "rowType cluster clusterName clusterIndex observation ObservationNameIndex angle angular group";
+    for (int i=0; i<obsMap.size(); i++) {
+        qDebug() << obsMap[i].rowType << obsMap[i].cluster << obsMap[i].clusterName
+                 << obsMap[i].clusterIndex << obsMap[i].observation
+                 << obsMap[i].observationNameIndex
+                 << obsMap[i].angle << obsMap[i].angular << obsMap[i].group;
+    }
+}
+

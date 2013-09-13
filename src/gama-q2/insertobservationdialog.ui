@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>240</width>
-    <height>186</height>
+    <width>279</width>
+    <height>146</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,26 +19,6 @@
      <property name="fieldGrowthPolicy">
       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
      </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="labelObservation">
-       <property name="text">
-        <string>Observation</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="comboBoxObservation"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="labelPosition">
-       <property name="text">
-        <string>Position</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="comboBoxPosition"/>
-     </item>
     </layout>
    </item>
    <item row="1" column="0">

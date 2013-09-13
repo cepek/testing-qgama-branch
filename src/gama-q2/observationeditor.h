@@ -58,7 +58,17 @@ private:
     public:
         SelectCluster(ObservationTableModel* model, QTableView* tableview, int logicalIndex);
        ~SelectCluster();
+        bool isValid() const;
 
+    private:
+        QTableView* tableView;
+        bool        isValid_;
+    };
+
+    class SelectGroup {
+    public:
+        SelectGroup(ObservationTableModel* model, QTableView* tableview, int logicalIndex);
+       ~SelectGroup();
         bool isValid() const;
 
     private:

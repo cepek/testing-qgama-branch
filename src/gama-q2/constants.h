@@ -52,6 +52,10 @@ namespace GamaQ2
     extern const QString slopeObsName;
     extern const QString zangleObsName;
 
+    extern const QString vectorObsName;
+    extern const QString coordinateObsName;
+
+
     extern const QString connection_implicit_db;
     extern const QString connection_dbf_drop_tables;
 
@@ -59,6 +63,8 @@ namespace GamaQ2
     extern const QColor colorPassiveBackground;
     extern const QColor colorOutsideCovMat;
     extern const QColor colorSingularCovMat;
+
+    int getUnique();
 }
 
 #endif // CONSTANTS_H

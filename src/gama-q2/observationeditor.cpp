@@ -61,6 +61,36 @@ bool ObservationEditor::SelectCluster::isValid() const
     return isValid_;
 }
 
+ObservationEditor::SelectGroup::SelectGroup(ObservationTableModel *model,
+                                                QTableView* tableview, int logicalIndex)
+    : tableView(tableview), isValid_(true)
+{
+    int minIndex, maxIndex;
+    if (!model->groupIndexes(logicalIndex, minIndex, maxIndex))
+    {
+        isValid_ = false;
+        return;
+    }
+
+    tableView->clearSelection();
+    tableView->setSelectionMode(QAbstractItemView::MultiSelection);
+    for (int index=maxIndex; index>=minIndex; index--)
+    {
+        tableView->selectRow(index);
+    }
+}
+
+ObservationEditor::SelectGroup::~SelectGroup()
+{
+    tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+    tableView->clearSelection();
+}
+
+bool ObservationEditor::SelectGroup::isValid() const
+{
+    return isValid_;
+}
+
 ObservationEditor::ObservationEditor(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ObservationEditor),
@@ -173,8 +203,9 @@ void ObservationEditor::deleteObservation()
 
     if (!model->isObservationRow(observationLogicalIndex)) return;
 
-    ui->tableView->clearSelection();
-    ui->tableView->selectRow(observationLogicalIndex);
+    //ui->tableView->clearSelection();
+    //ui->tableView->selectRow(observationLogicalIndex);
+    SelectGroup selectGroup(model, ui->tableView, observationLogicalIndex);
 
     int q = QMessageBox::warning(this, tr("Delete Observation"),
              tr("Do you want to delete selected observation?"),
@@ -192,8 +223,9 @@ void ObservationEditor::insertObservation()
     QModelIndex index = model->index(observationLogicalIndex, 0);
     if (!index.isValid()) return;
 
-    ui->tableView->clearSelection();
-    ui->tableView->selectRow(observationLogicalIndex);
+    //ui->tableView->clearSelection();
+    //ui->tableView->selectRow(observationLogicalIndex);
+    SelectGroup selectGroup(model, ui->tableView, observationLogicalIndex);
 
     InsertObservationDialog dialog(model->currentClusterName(observationLogicalIndex));
     if (dialog.exec() == QDialog::Rejected) return;

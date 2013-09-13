@@ -70,6 +70,7 @@ public:
     void deleteCluster (int logicalIndex);
     void insertCluster (int logicalIndex, int position, QString clusterName);
     bool clusterIndexes(int logicalIndex, int& minIndex, int& maxIndex);
+    bool groupIndexes  (int logicalIndex, int& minIndex, int& maxIndex);
 
     bool isObservationRow (int logicalIndex) const;
     void deleteObservation(int logicalIndex);
@@ -117,6 +118,7 @@ private:
         Angle*       angle;
         bool         angular;
         bool         positiveDefinite;
+        int          group;
     };
 
     QVector<ObsInfo> obsMap;
