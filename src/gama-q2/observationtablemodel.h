@@ -126,7 +126,7 @@ private:
 
     void initObsMap();
     void setColumnCountMax();
-    void testCovarianceMatrix(int LogicalIndex);
+    void testCovarianceMatrix(int logicalIndex);
 
 signals:
     void warning(QString);

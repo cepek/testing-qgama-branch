@@ -57,6 +57,11 @@ private:
 
     QLineEdit* lineEditHdiff;
 
+    QLineEdit* lineEditPoint;
+    QLineEdit* lineEditX;
+    QLineEdit* lineEditY;
+    QLineEdit* lineEditZ;
+
     QList<ObsInfo> obsinfo;
 
     bool OK;

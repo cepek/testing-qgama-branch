@@ -33,14 +33,13 @@ InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *
     {
         setWindowTitle(tr("Insert observation"));
 
-        // height differences are not included on purpose, they should
-        // be used only in hdf cluster, though they are allowed in XML input (.gkf)
         comboObservation = new QComboBox(this);
         comboObservation->addItem(GamaQ2::distObsName);
         comboObservation->addItem(GamaQ2::dirObsName);
         comboObservation->addItem(GamaQ2::angleObsName);
         comboObservation->addItem(GamaQ2::slopeObsName);
         comboObservation->addItem(GamaQ2::zangleObsName);
+        comboObservation->addItem(GamaQ2::hdifObsName);
 
         ui->formLayout->addRow(tr("Observation"), comboObservation);
         ui->formLayout->addRow(tr("Position"),    comboPosition);
@@ -50,6 +49,13 @@ InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *
     }
     else if (clusterName == GamaQ2::xyzClusterName)
     {
+        setWindowTitle(tr("Insert coordinates"));
+
+        ui->formLayout->addRow(tr("Position"), comboPosition);
+        ui->formLayout->addRow(tr("Point"), lineEditPoint = new QLineEdit(this));
+        ui->formLayout->addRow(tr("X"), lineEditX = new QLineEdit(this));
+        ui->formLayout->addRow(tr("Y"), lineEditY = new QLineEdit(this));
+        ui->formLayout->addRow(tr("Z"), lineEditZ = new QLineEdit(this));
 
     }
     else if (clusterName == GamaQ2::hdfClusterName)
@@ -149,6 +155,9 @@ void InsertObservationDialog::accept()
                     info.observation = new Z_Angle(sp, t1, value*G2R);
                     info.angular = true;
                     info.observationNameIndex = ObservationTableModel::indZangle;
+                } else if (name == GamaQ2::hdifObsName) {
+                    info.observation = new H_Diff(sp, t1, value);
+                    info.observationNameIndex = ObservationTableModel::indHdiff;
                 } else
                     throw Exception(tr("unnown observation type in "
                                        "GamaQ2::obsClusterName").toUtf8().data());
@@ -164,6 +173,64 @@ void InsertObservationDialog::accept()
         }
         else if (clusterName == GamaQ2::xyzClusterName) {
 
+            bool bx = !lineEditX->text().simplified().isEmpty();
+            bool by = !lineEditY->text().simplified().isEmpty();
+            bool bz = !lineEditZ->text().simplified().isEmpty();
+
+            if (!bx && !by && !bz) setWarning(GamaQ2::xyzClusterName, tr("No coordinates"));
+
+            getPointID(tr("Point"), lineEditPoint);
+
+            double x, y, z;
+            if (bx || by)
+            {
+                getDouble (tr("X"), lineEditX, x);
+                getDouble (tr("Y"), lineEditY, y);
+            }
+            if (bz)
+            {
+                getDouble (tr("Z"), lineEditZ, z);
+            }
+
+            if (OK) try {
+                using namespace GNU_gama::local;
+
+                QString qpoint = lineEditPoint->text().simplified();
+                std::string point(qpoint.toUtf8().data());
+
+                if (bx)
+                {
+                    ObsInfo infoX, infoY;
+                    infoX.rowType = infoY.rowType = ObservationTableModel::obsRow;
+                    infoX.group = infoY.group = GamaQ2::getUnique();
+
+                    infoX.observation = new X(point, x);
+                    infoX.observationNameIndex = ObservationTableModel::indX;
+
+                    infoY.observation = new Y(point, y);
+                    infoY.observationNameIndex = ObservationTableModel::indY;
+
+                    obsinfo.push_back(infoX);
+                    obsinfo.push_back(infoY);
+                }
+
+                if (bz)
+                {
+                    ObsInfo infoZ;
+                    infoZ.rowType = ObservationTableModel::obsRow;
+
+                    infoZ.observation = new Z(point, z);
+                    infoZ.observationNameIndex = ObservationTableModel::indZ;
+
+                    obsinfo.push_back(infoZ);
+                }
+            }
+            catch(const Exception& e) {
+                setWarning(comboObservation->currentText(), e.what());
+            }
+            catch (...) {
+                throw;
+            }
         }
         else if (clusterName == GamaQ2::hdfClusterName) {
 
@@ -190,7 +257,7 @@ void InsertObservationDialog::accept()
                 obsinfo.push_back(info);
             }
             catch(const Exception& e) {
-                setWarning(comboObservation->currentText(), e.what());
+                setWarning(GamaQ2::hdfClusterName, e.what());
             }
             catch (...) {
                 throw;
@@ -234,7 +301,7 @@ void InsertObservationDialog::accept()
                 obsinfo.push_back(infoZdiff);
             }
             catch(const Exception& e) {
-                setWarning(comboObservation->currentText(), e.what());
+                setWarning(GamaQ2::vecClusterName, e.what());
             }
             catch (...) {
                 throw;
