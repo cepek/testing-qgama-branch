@@ -42,6 +42,7 @@ namespace GamaQ2
     extern const QString distObsName;
     extern const QString dirObsName;
     extern const QString angleObsName;
+    extern const QString azimObsName;
     extern const QString hdifObsName;
     extern const QString xdifObsName;
     extern const QString ydifObsName;

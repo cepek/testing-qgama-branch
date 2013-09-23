@@ -69,7 +69,7 @@ ObservationTableModel::ObsInfo::ObsInfo()
     if (obsNames.size() == 0)
     {
         using namespace GamaQ2;
-        obsNames << distObsName  << dirObsName  << angleObsName << hdifObsName    // see constants.cpp
+        obsNames << distObsName  << dirObsName  << angleObsName << azimObsName << hdifObsName    // see constants.cpp
                  << xdifObsName  << ydifObsName << zdifObsName  << xObsName << yObsName << zObsName
                  << slopeObsName << zangleObsName;
     }
@@ -216,6 +216,11 @@ void ObservationTableModel::initObsMap()
             {
                 obs.observationNameIndex = indAngle;
                 obs.angle = a;
+                obs.angular = true;
+            }
+            else if (dynamic_cast<GNU_gama::local::Azimuth*>(*i))
+            {
+                obs.observationNameIndex = indAzimuth;
                 obs.angular = true;
             }
             else if (dynamic_cast<const GNU_gama::local::H_Diff*>(*i))

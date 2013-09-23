@@ -28,6 +28,7 @@
 typedef GNU_gama::local::Observation     Observation;
 typedef GNU_gama::local::Direction       Direction;
 typedef GNU_gama::local::Angle           Angle;
+typedef GNU_gama::local::Azimuth         Azimuth;
 typedef GNU_gama::local::Z_Angle         Z_Angle;
 typedef GNU_gama::local::H_Diff          H_Diff;
 typedef GNU_gama::Cluster<Observation>   Cluster;
@@ -86,7 +87,7 @@ private:
     enum ColIndx  { indFrom, indTo, indName, indVal, indStdev,
                     indActive, indFromDh, indToDh, indHdist,
                     indColumnCount };
-    enum ObsNames { indDist,  indDir,   indAngle, indHdiff,
+    enum ObsNames { indDist,  indDir,   indAngle, indAzimuth, indHdiff,
                     indXdiff, indYdiff, indZdiff, indX, indY, indZ,
                     indSdist, indZangle };
 

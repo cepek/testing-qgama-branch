@@ -37,6 +37,7 @@ InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *
         comboObservation->addItem(GamaQ2::distObsName);
         comboObservation->addItem(GamaQ2::dirObsName);
         comboObservation->addItem(GamaQ2::angleObsName);
+        comboObservation->addItem(GamaQ2::azimObsName);
         comboObservation->addItem(GamaQ2::slopeObsName);
         comboObservation->addItem(GamaQ2::zangleObsName);
         comboObservation->addItem(GamaQ2::hdifObsName);
@@ -112,7 +113,8 @@ void InsertObservationDialog::accept()
 
             QString name = comboObservation->currentText();
 
-            if (name==GamaQ2::dirObsName || name ==  GamaQ2::angleObsName || name == GamaQ2::zangleObsName)
+            if (name==GamaQ2::dirObsName || name ==  GamaQ2::angleObsName ||
+               name == GamaQ2::zangleObsName || name == GamaQ2::azimObsName)
             {
                 acceptDegrees = true;    // see getDouble()
             }
@@ -148,6 +150,10 @@ void InsertObservationDialog::accept()
                     info.observation = info.angle = new Angle(sp, t1, t2, value*G2R);
                     info.angular = true;
                     info.observationNameIndex = ObservationTableModel::indAngle;
+                } else if (name == GamaQ2::azimObsName) {
+                    info.observation == new Azimuth(sp, t1, value);
+                    info.angular = true;
+                    info.observationNameIndex = ObservationTableModel::indAzimuth;
                 } else if (name == GamaQ2::slopeObsName) {
                     info.observation = new S_Distance(sp, t1, value);
                     info.observationNameIndex = ObservationTableModel::indSdist;

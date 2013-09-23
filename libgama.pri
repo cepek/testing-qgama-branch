@@ -194,6 +194,7 @@ $$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_exception.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_gkfparser.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_locnet.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_output_file.cpp \
+$$LIBGAMASRC/lib/gnu_gama/local/gamadata.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/html.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/language.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/localnetwork2sql.cpp \

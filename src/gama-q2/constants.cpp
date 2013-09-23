@@ -18,6 +18,7 @@ const QString GamaQ2::vecClusterName = "vec";
 const QString GamaQ2::distObsName    = "dist.";
 const QString GamaQ2::dirObsName     = "dir.";
 const QString GamaQ2::angleObsName   = "angle";
+const QString GamaQ2::azimObsName    = "azim.";
 const QString GamaQ2::hdifObsName    = "h dif";
 const QString GamaQ2::xdifObsName    = "x dif";
 const QString GamaQ2::ydifObsName    = "y dif";

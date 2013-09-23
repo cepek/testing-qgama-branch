@@ -305,6 +305,7 @@ void Adjustment::fetch_obs(QSqlQuery& q, QString cluster, GNU_gama::local::Stand
           }
        else if (tag == "distance")   p = new GNU_gama::local::Distance  (from, to, val);
        else if (tag == "angle")      p = a = new GNU_gama::local::Angle (from, to, to2, val);
+       else if (tag == "azimuth")    p = new GNU_gama::local::Azimuth   (from, to, val);
        else if (tag == "s-distance") p = new GNU_gama::local::S_Distance(from, to, val);
        else if (tag == "z-angle")    p = new GNU_gama::local::Z_Angle   (from, to, val);
        else if (tag == "dh")         p = new GNU_gama::local::H_Diff    (from, to, val);
