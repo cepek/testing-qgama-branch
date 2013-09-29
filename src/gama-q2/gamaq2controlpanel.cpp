@@ -14,10 +14,23 @@
 #include "dbfunctions.h"
 #include "importconfigurationfile.h"
 #include "networkadjustmentpanel.h"
+#include "gamaq2interfaces.h"
 
 namespace
 {
     GamaQ2ControlPanel* controlPanel;
+
+    // Solution after software.rtcm-ntrip.org by Leos Mervart (C) 2013
+    template<typename Interface>
+    struct PluginAction : public QAction {
+        Interface* interface;
+
+        PluginAction(QObject* parent, Interface* intface)
+            : QAction(intface->getName(), parent), interface(intface)
+        {
+        }
+    };
+
 }
 
 void ShowMessage(QString message)
@@ -53,8 +66,8 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
         }
     }
 
-    setWindowTitle(GamaQ2::name + "  " +
-                   GamaQ2::version + " / " + GamaQ2::gnu_gama_version);
+    setWindowTitle(GamaQ2::name + "  " + GamaQ2::version + " / " + GamaQ2::gnu_gama_version);
+    load_plugins();
     build_menus();
     setMinimumSize(400, 150);
 }
@@ -137,9 +150,16 @@ void GamaQ2ControlPanel::build_menus()
     connect(actionDbDeleteData, SIGNAL(triggered()), SLOT(on_action_Delete_all_Data_from_the_Schema_triggered()));
     actionDbDeleteConfiguration = menuDb->addAction(tr("Delete &Network Configuration"));
     connect(actionDbDeleteConfiguration, SIGNAL(triggered()), SLOT(on_action_Delete_Network_Configuration_triggered()));
-    if (false)
+    if (!mapDbPlugins.empty())
     {
-        // Db plugins
+        menuDb->addSeparator();
+        for (QMap<QString, DbInterface*>::iterator
+             i=mapDbPlugins.begin(), e=mapDbPlugins.end(); i!=e; ++i)
+        {
+            PluginAction<DbInterface>* action = new PluginAction<DbInterface>(this, *i);
+            menuDb->addAction(action);
+            connect(action, SIGNAL(triggered()), SLOT(dbSlot()));
+        }
     }
     menuDb->addSeparator();
     actionDbExit = menuDb->addAction(tr("&Exit"));
@@ -154,6 +174,16 @@ void GamaQ2ControlPanel::build_menus()
 
     menuBar()->addMenu(menuDb);
     menuBar()->addMenu(menuAdj);
+}
+
+void GamaQ2ControlPanel::dbSlot()
+{
+    if (PluginAction<DbInterface>* plugin_action = dynamic_cast<PluginAction<DbInterface>*>(sender()))
+    {
+        QWidget* widget = plugin_action->interface->create();
+        NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList.append(widget);
+        widget->show();
+    }
 }
 
 void GamaQ2ControlPanel::closeEvent(QCloseEvent * event)
@@ -232,4 +262,30 @@ void GamaQ2ControlPanel::on_action_Delete_Network_Configuration_triggered()
 {
     DB_DeleteNetworkConfiguration* dbf = new DB_DeleteNetworkConfiguration(this);
     dbf->exec();
+}
+
+void GamaQ2ControlPanel::load_plugins()
+{
+    QDir gamaq2plugins(qApp->applicationDirPath());
+#if defined(Q_OS_WIN)
+    if (gamaq2plugins.dirName().toLower() == "debug" || gamaq2plugins.dirName().toLower() == "release")
+        gamaq2plugins.cdUp();
+#elif defined(Q_OS_MAC)
+    if (gamaq2plugins.dirName() == "MacOS") {
+        gamaq2plugins.cdUp();
+        gamaq2plugins.cdUp();pluginsDir
+        gamaq2plugins.cdUp();
+    }
+#endif
+    gamaq2plugins.cd("gamaq2plugins");
+    foreach (QString fileName, gamaq2plugins.entryList(QDir::Files/*, QDir::Name*/)) {
+        QPluginLoader pluginLoader(gamaq2plugins.absoluteFilePath(fileName));
+        QObject *plugin = pluginLoader.instance();
+        if (plugin) {
+            if (DbInterface* dbinterface = qobject_cast<DbInterface*>(plugin))
+            {
+                mapDbPlugins[dbinterface->getName() + fileName] = dbinterface;
+            }
+        }
+    }
 }

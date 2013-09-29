@@ -22,7 +22,10 @@
 #define GAMAG2CONTROLPANEL_H
 
 #include <QMainWindow>
+#include <QMap>
 #include "showmessage.h"
+
+class DbInterface;
 
 class GamaQ2ControlPanel : public QMainWindow
 {
@@ -41,6 +44,7 @@ private slots:
     void on_action_Delete_all_Data_from_the_Schema_triggered();
     void on_action_Delete_Network_Configuration_triggered();
     void disable_input_data(bool);
+    void dbSlot();
 
 private:
     QAction *actionDbConnect, *actionDbImport, *actionDbDropSchema,
@@ -48,9 +52,12 @@ private:
             *actionDbExit;
     QAction *actionAdjAdjustment;
 
+    QMap<QString, DbInterface*> mapDbPlugins;
+
     void closeEvent(QCloseEvent *);
     void init_schema_lists();
     void build_menus();
+    void load_plugins();
 
 signals:
     void gamaCloseSignal();

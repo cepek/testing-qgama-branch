@@ -22,6 +22,7 @@ SOURCES  += $$GAMAQ2SRC/main.cpp\
     $$GAMAQ2SRC/shrinkbandwidth.cpp
 
 HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
+    $$GAMAQ2SRC/gamaq2interfaces.h \
     $$GAMAQ2SRC/constants.h \
     $$GAMAQ2SRC/importconfigurationfile.h \
     $$GAMAQ2SRC/insertclusterdialog.h \
