@@ -1,10 +1,11 @@
 #include "gamaq2controlpanel.h"
-#include "ui_gamaq2controlpanel.h"
 
+#include <QMenu>
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QFile>
 #include <QTextStream>
+#include <QMenuBar>
 #include <QStatusBar>
 #include <QDebug>
 
@@ -26,16 +27,11 @@ void ShowMessage(QString message)
 
 
 GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::GamaQ2ControlPanel)
+    QMainWindow(parent)
 {
-    ui->setupUi(this);
-
     controlPanel = this;
 
     init_schema_lists();
-    disable_input_data(false);
-
     {
         GamaQ2::name    = "gama-g2";
         GamaQ2::version = "0.0";
@@ -59,11 +55,12 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
 
     setWindowTitle(GamaQ2::name + "  " +
                    GamaQ2::version + " / " + GamaQ2::gnu_gama_version);
+    build_menus();
+    setMinimumSize(400, 150);
 }
 
 GamaQ2ControlPanel::~GamaQ2ControlPanel()
 {
-    delete ui;
 }
 
 void GamaQ2ControlPanel::on_action_Exit_triggered()
@@ -126,6 +123,39 @@ void GamaQ2ControlPanel::init_schema_lists()
     tables << "gnu_gama_local_configurations";
 }
 
+void GamaQ2ControlPanel::build_menus()
+{
+    QMenu* menuDb = new QMenu(tr("&Database"), this);
+    actionDbConnect = menuDb->addAction(tr("&Connect to Database"));
+    connect(actionDbConnect, SIGNAL(triggered()), SLOT(on_action_Connect_to_database_triggered()));
+    actionDbImport = menuDb->addAction(tr("&Import Configuration File"));
+    connect(actionDbImport, SIGNAL(triggered()), SLOT(on_action_Import_configuration_file_triggered()));
+    menuDb->addSeparator();
+    actionDbDropSchema = menuDb->addAction(tr("Drop Schema &Tables"));
+    connect(actionDbDropSchema, SIGNAL(triggered()), SLOT(on_action_Drop_schema_Tables_triggered()));
+    actionDbDeleteData = menuDb->addAction(tr("&Delete all Data from the Schema"));
+    connect(actionDbDeleteData, SIGNAL(triggered()), SLOT(on_action_Delete_all_Data_from_the_Schema_triggered()));
+    actionDbDeleteConfiguration = menuDb->addAction(tr("Delete &Network Configuration"));
+    connect(actionDbDeleteConfiguration, SIGNAL(triggered()), SLOT(on_action_Delete_Network_Configuration_triggered()));
+    if (false)
+    {
+        // Db plugins
+    }
+    menuDb->addSeparator();
+    actionDbExit = menuDb->addAction(tr("&Exit"));
+    connect(actionDbExit, SIGNAL(triggered()), SLOT(on_action_Exit_triggered()));
+
+    QMenu* menuAdj = new QMenu(tr("&Adjustment"), this);
+    actionAdjAdjustment = menuAdj->addAction(tr("&Network Adjustment"));
+    actionAdjAdjustment->setDisabled(true);
+    connect (actionAdjAdjustment, SIGNAL(triggered()), SLOT(on_action_Network_adjustment_triggered()));
+
+    disable_input_data(false);
+
+    menuBar()->addMenu(menuDb);
+    menuBar()->addMenu(menuAdj);
+}
+
 void GamaQ2ControlPanel::closeEvent(QCloseEvent * event)
 {
     QMessageBox confirm;
@@ -164,10 +194,10 @@ void GamaQ2ControlPanel::on_action_Connect_to_database_triggered()
 
 void GamaQ2ControlPanel::disable_input_data(bool yes)
 {
-    ui->action_Connect_to_database->setDisabled(yes);
+    actionDbConnect->setDisabled(yes);
 
-    ui->action_Import_configuration_file->setEnabled(yes);
-    ui->action_Network_adjustment->setEnabled(yes);
+    actionDbImport->setEnabled(yes);
+    actionAdjAdjustment->setEnabled(yes);
 
     if (yes) ShowMessage(tr("Connected to database"));
 }
@@ -192,13 +222,13 @@ void GamaQ2ControlPanel::on_action_Drop_schema_Tables_triggered()
     dbf->exec();
 }
 
-void GamaQ2ControlPanel::on_actionDelete_all_Data_from_the_Schema_triggered()
+void GamaQ2ControlPanel::on_action_Delete_all_Data_from_the_Schema_triggered()
 {
     DB_DeleteAllData* dbf = new DB_DeleteAllData(this);
     dbf->exec();
 }
 
-void GamaQ2ControlPanel::on_actionDelete_Network_Configuration_triggered()
+void GamaQ2ControlPanel::on_action_Delete_Network_Configuration_triggered()
 {
     DB_DeleteNetworkConfiguration* dbf = new DB_DeleteNetworkConfiguration(this);
     dbf->exec();

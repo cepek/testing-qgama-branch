@@ -24,11 +24,6 @@
 #include <QMainWindow>
 #include "showmessage.h"
 
-namespace Ui {
-    class GamaQ2ControlPanel;
-}
-
-
 class GamaQ2ControlPanel : public QMainWindow
 {
     Q_OBJECT
@@ -40,18 +35,22 @@ public:
 private slots:
     void on_action_Exit_triggered();
     void on_action_Connect_to_database_triggered();
-    void disable_input_data(bool);
     void on_action_Import_configuration_file_triggered();
     void on_action_Network_adjustment_triggered();
     void on_action_Drop_schema_Tables_triggered();
-    void on_actionDelete_all_Data_from_the_Schema_triggered();
-    void on_actionDelete_Network_Configuration_triggered();
+    void on_action_Delete_all_Data_from_the_Schema_triggered();
+    void on_action_Delete_Network_Configuration_triggered();
+    void disable_input_data(bool);
 
 private:
-    Ui::GamaQ2ControlPanel *ui;
+    QAction *actionDbConnect, *actionDbImport, *actionDbDropSchema,
+            *actionDbDeleteData, *actionDbDeleteConfiguration,
+            *actionDbExit;
+    QAction *actionAdjAdjustment;
 
     void closeEvent(QCloseEvent *);
     void init_schema_lists();
+    void build_menus();
 
 signals:
     void gamaCloseSignal();

@@ -45,8 +45,7 @@ HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
     $$GAMAQ2SRC/shrinkbandwidth.h
 
 
-FORMS    += $$GAMAQ2SRC/gamaq2controlpanel.ui \
-    $$GAMAQ2SRC/importconfigurationfile.ui \
+FORMS    += $$GAMAQ2SRC/importconfigurationfile.ui \
     $$GAMAQ2SRC/insertclusterdialog.ui \
     $$GAMAQ2SRC/insertobservationdialog.ui \
     $$GAMAQ2SRC/networkadjustmentpanel.ui \
