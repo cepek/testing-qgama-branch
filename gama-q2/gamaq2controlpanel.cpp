@@ -277,7 +277,7 @@ void GamaQ2ControlPanel::load_plugins()
         gamaq2plugins.cdUp();
     }
 #endif
-    gamaq2plugins.cd("gamaq2plugins");
+    gamaq2plugins.cd("gama-q2-plugins");
     foreach (QString fileName, gamaq2plugins.entryList(QDir::Files/*, QDir::Name*/)) {
         QPluginLoader pluginLoader(gamaq2plugins.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
