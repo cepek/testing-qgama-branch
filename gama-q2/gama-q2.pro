@@ -13,7 +13,7 @@ DEFINES   += GNU_gama_expat_1_1
 DEFINES   += VERSION=\\\"configure.ac\\\"
 
 LIBS        += -L.. -lgama
-INCLUDEPATH += ./libgama/gama/lib
+INCLUDEPATH += lib/gama/lib
 
 CONFIG(release, debug|release) {
     DEFINES += QT_NO_DEBUG_OUTPUT

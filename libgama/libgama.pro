@@ -4,7 +4,7 @@ TARGET   = ../gama
 TEMPLATE = lib
 CONFIG  += staticlib
 
-LIBGAMASRC = ./gama
+LIBGAMASRC = ../gama-q2/lib/gama
 DEFINES   += GNU_gama_expat_1_1
 DEFINES   += VERSION=\\\"configure.ac\\\"
 
