@@ -1,5 +1,5 @@
-#ifndef GAMAQ2INTERFACES_H
-#define GAMAQ2INTERFACES_H
+#ifndef GAMAQ2INTERFACES_gama_q2_interfaces_H
+#define GAMAQ2INTERFACES_gama_q2_interfaces_H
 
 #include <QString>
 class QWidget;
@@ -13,7 +13,7 @@ public:
 };
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(DbInterface, "org.gnu.gama.DbInterface/1.0");
+Q_DECLARE_INTERFACE(DbInterface, "org.gnu.gama.gama-q2.DbInterface/1.0")
 QT_END_NAMESPACE
 
-#endif // GAMAQ2INTERFACES_H
+#endif // GAMAQ2INTERFACES_gama_q2_interfaces_H

@@ -180,9 +180,11 @@ void GamaQ2ControlPanel::dbSlot()
 {
     if (PluginAction<DbInterface>* plugin_action = dynamic_cast<PluginAction<DbInterface>*>(sender()))
     {
-        QWidget* widget = plugin_action->interface->create();
-        NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList.append(widget);
-        widget->show();
+        if (QWidget* widget = plugin_action->interface->create())
+        {
+            NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList.append(widget);
+            widget->show();
+        }
     }
 }
 
