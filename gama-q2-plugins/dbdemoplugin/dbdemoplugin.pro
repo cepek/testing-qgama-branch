@@ -10,8 +10,8 @@ SOURCES += dbdemoplugin.cpp
 HEADERS += dbdemoplugin.h
 
 win32 {
-     CONFIG(debug, release|debug):DESTDIR = ../../debug/gama-q2/plugins
-     CONFIG(release, release|debug):DESTDIR = ../../release/gama-q2/plugins
+     CONFIG(debug, release|debug):DESTDIR = ../../gama-q2/debug/plugins
+     CONFIG(release, release|debug):DESTDIR = ../../gama-q2/release/plugins
  } else {
      DESTDIR = ../../gama-q2/plugins
  }
