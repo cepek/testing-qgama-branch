@@ -44,7 +44,7 @@ QFrame* DBdemoPlugin::getFrame()
 
         edit = new QLineEdit(frame);
 
-        QGridLayout* grid = new QGridLayout;
+        QGridLayout* grid = new QGridLayout(frame);
         grid->addWidget(edit);
         grid->addWidget(tableView);
         frame->setLayout(grid);
@@ -68,7 +68,7 @@ void DBdemoPlugin::selectData()
             "         COUNT(z) AS \"COUNT(z)\" "
             "FROM     gnu_gama_local_configurations JOIN "
             "         gnu_gama_local_points USING (conf_id) "
-            "WHERE    conf_name LIKE '%1%%' "
+            "WHERE    conf_name LIKE '%1%' "
             "GROUP BY conf_id, conf_name "
             "ORDER BY conf_name ASC ";
 

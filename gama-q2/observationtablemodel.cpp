@@ -652,7 +652,7 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
     return false;
 }
 
-Qt::ItemFlags ObservationTableModel::ObservationTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags ObservationTableModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid()) return Qt::NoItemFlags;
 

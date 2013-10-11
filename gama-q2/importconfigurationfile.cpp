@@ -15,6 +15,7 @@
 #include <gnu_gama/exception.h>
 #include <sstream>
 #include <fstream>
+#include <cctype>
 
 ImportConfigurationFile::ImportConfigurationFile(QWidget *parent) :
     QWidget(parent),

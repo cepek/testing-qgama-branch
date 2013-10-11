@@ -5,27 +5,13 @@ CONFIG      += plugin
 INCLUDEPATH +=  ../../gama-q2
 TARGET       = $$qtLibraryTarget(dbdemoplugin)
 
-DESTDIR = ..
-
 SOURCES += dbdemoplugin.cpp
 
 HEADERS += dbdemoplugin.h
 
-#symbian {
-#    MMP_RULES += EXPORTUNFROZEN
-#    TARGET.UID3 = 0xEA7643B4
-#    TARGET.CAPABILITY =
-#    TARGET.EPOCALLOWDLLDATA = 1
-#    addFiles.sources = dbdemo.dll
-#    addFiles.path = !:/sys/bin
-#    DEPLOYMENT += addFiles
-#}
-#
-#unix:!symbian {
-#    maemo5 {
-#        target.path = /opt/usr/lib
-#    } else {
-#        target.path = /usr/lib
-#    }
-#    INSTALLS += target
-#}
+win32 {
+     CONFIG(debug, release|debug):DESTDIR = ../../debug/gama-q2/plugins
+     CONFIG(release, release|debug):DESTDIR = ../../release/gama-q2/plugins
+ } else {
+     DESTDIR = ../../gama-q2/plugins
+ }

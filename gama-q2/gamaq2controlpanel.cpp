@@ -269,18 +269,8 @@ void GamaQ2ControlPanel::on_action_Delete_Network_Configuration_triggered()
 void GamaQ2ControlPanel::load_plugins()
 {
     QDir gamaq2plugins(qApp->applicationDirPath());
-#if defined(Q_OS_WIN)
-    if (gamaq2plugins.dirName().toLower() == "debug" || gamaq2plugins.dirName().toLower() == "release")
-        gamaq2plugins.cdUp();
-#elif defined(Q_OS_MAC)
-    if (gamaq2plugins.dirName() == "MacOS") {
-        gamaq2plugins.cdUp();
-        gamaq2plugins.cdUp();pluginsDir
-        gamaq2plugins.cdUp();
-    }
-#endif
-    gamaq2plugins.cd("gama-q2-plugins");
-    foreach (QString fileName, gamaq2plugins.entryList(QDir::Files/*, QDir::Name*/)) {
+    gamaq2plugins.cd("plugins");
+    foreach (QString fileName, gamaq2plugins.entryList(QDir::Files)) {
         QPluginLoader pluginLoader(gamaq2plugins.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
         if (plugin) {

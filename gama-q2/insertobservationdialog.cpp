@@ -140,29 +140,29 @@ void InsertObservationDialog::accept()
                 info.rowType = ObservationTableModel::obsRow;
 
                 if (name == GamaQ2::distObsName) {
-                    info.observation = new Distance(sp, t1, value);
+                    info.observation = new GNU_gama::local::Distance(sp, t1, value);
                     info.observationNameIndex = ObservationTableModel::indDist;
                 } else if (name == GamaQ2::dirObsName) {
-                    info.observation = new Direction(sp, t1, value*G2R);
+                    info.observation = new GNU_gama::local::Direction(sp, t1, value*G2R);
                     info.angular = true;
                     info.observationNameIndex = ObservationTableModel::indDir;
                 } else if (name == GamaQ2::angleObsName) {
-                    info.observation = info.angle = new Angle(sp, t1, t2, value*G2R);
+                    info.observation = info.angle = new GNU_gama::local::Angle(sp, t1, t2, value*G2R);
                     info.angular = true;
                     info.observationNameIndex = ObservationTableModel::indAngle;
                 } else if (name == GamaQ2::azimObsName) {
-                    info.observation == new Azimuth(sp, t1, value);
+                    info.observation = new GNU_gama::local::Azimuth(sp, t1, value);
                     info.angular = true;
                     info.observationNameIndex = ObservationTableModel::indAzimuth;
                 } else if (name == GamaQ2::slopeObsName) {
                     info.observation = new S_Distance(sp, t1, value);
                     info.observationNameIndex = ObservationTableModel::indSdist;
                 } else if (name == GamaQ2::zangleObsName) {
-                    info.observation = new Z_Angle(sp, t1, value*G2R);
+                    info.observation = new GNU_gama::local::Z_Angle(sp, t1, value*G2R);
                     info.angular = true;
                     info.observationNameIndex = ObservationTableModel::indZangle;
                 } else if (name == GamaQ2::hdifObsName) {
-                    info.observation = new H_Diff(sp, t1, value);
+                    info.observation = new GNU_gama::local::H_Diff(sp, t1, value);
                     info.observationNameIndex = ObservationTableModel::indHdiff;
                 } else
                     throw Exception(tr("unnown observation type in "
@@ -257,7 +257,7 @@ void InsertObservationDialog::accept()
                 ObsInfo info;
                 info.rowType = ObservationTableModel::obsRow;
 
-                info.observation = new H_Diff(sp, tp, value);
+                info.observation = new GNU_gama::local::H_Diff(sp, tp, value);
                 info.observationNameIndex = ObservationTableModel::indHdiff;
 
                 obsinfo.push_back(info);
@@ -394,5 +394,5 @@ void InsertObservationDialog::getDouble(QString tag, QLineEdit* edit, double &va
         if (acceptDegrees) good = GNU_gama::deg2gon(edit->text().toStdString(), val);
         if (!good) setWarning(tag, tr("Not a numeric value"));
     }
-    if (good & positive & val <= 0) setWarning(tag, "Value must be positive");
+    if (good & positive & (val <= 0)) setWarning(tag, "Value must be positive");
 }

@@ -1,6 +1,6 @@
 QT      -= core gui
 
-TARGET   = ../gama
+TARGET   = libgama
 TEMPLATE = lib
 CONFIG  += staticlib
 
