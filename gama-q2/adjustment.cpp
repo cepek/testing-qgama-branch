@@ -11,7 +11,7 @@
 #include <gnu_gama/local/acord.h>
 #include <gnu_gama/local/orientation.h>
 #include <gnu_gama/local/gamadata.h>
-#include <gnu_gama/xml/localnetwork.h>
+#include <gnu_gama/xml/localnetworkxml.h>
 #include <gnu_gama/local/svg.h>
 #include <sstream>
 #include <cfloat>

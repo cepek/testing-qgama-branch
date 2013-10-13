@@ -141,7 +141,9 @@ $$LIBGAMASRC/lib/gnu_gama/xml/encoding.h \
 $$LIBGAMASRC/lib/gnu_gama/xml/gkfparser.h \
 $$LIBGAMASRC/lib/gnu_gama/xml/htmlparser.h \
 $$LIBGAMASRC/lib/gnu_gama/xml/localnetwork_adjustment_results.h \
-$$LIBGAMASRC/lib/gnu_gama/xml/localnetwork.h \
+$$LIBGAMASRC/lib/gnu_gama/xml/localnetwork_adjustment_results_data.h \
+$$LIBGAMASRC/lib/gnu_gama/xml/localnetworksql.h \
+$$LIBGAMASRC/lib/gnu_gama/xml/localnetworkxml.h \
 
 # matvec
 
@@ -231,7 +233,9 @@ $$LIBGAMASRC/lib/gnu_gama/xml/encoding_unknown_handler.cpp \
 $$LIBGAMASRC/lib/gnu_gama/xml/gkfparser.cpp \
 $$LIBGAMASRC/lib/gnu_gama/xml/htmlparser.cpp \
 $$LIBGAMASRC/lib/gnu_gama/xml/localnetwork_adjustment_results.cpp \
-$$LIBGAMASRC/lib/gnu_gama/xml/localnetwork.cpp \
+$$LIBGAMASRC/lib/gnu_gama/xml/localnetwork_adjustment_results_data.cpp \
+$$LIBGAMASRC/lib/gnu_gama/xml/localnetworksql.cpp \
+$$LIBGAMASRC/lib/gnu_gama/xml/localnetworkxml.cpp \
 
 # expat xml parser
 
