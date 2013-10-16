@@ -36,7 +36,7 @@ public:
                                  bool newConfName, QWidget *parent = 0);
     ~SelectConfiguration();
 
-    void exec();
+    void select();
 
 private slots:
     void on_lineEdit_ConfigurationName_textChanged(const QString &arg1);

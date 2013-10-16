@@ -23,10 +23,10 @@ namespace
     // Solution after software.rtcm-ntrip.org by Leos Mervart (C) 2013
     template<typename Interface>
     struct PluginAction : public QAction {
-        Interface* interface;
+        Interface* interface_;
 
         PluginAction(QObject* parent, Interface* intface)
-            : QAction(intface->getName(), parent), interface(intface)
+            : QAction(intface->getName(), parent), interface_(intface)
         {
         }
     };
@@ -180,7 +180,7 @@ void GamaQ2ControlPanel::dbSlot()
 {
     if (PluginAction<DbInterface>* plugin_action = dynamic_cast<PluginAction<DbInterface>*>(sender()))
     {
-        if (QWidget* widget = plugin_action->interface->create())
+        if (QWidget* widget = plugin_action->interface_->create())
         {
             NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList.append(widget);
             widget->show();

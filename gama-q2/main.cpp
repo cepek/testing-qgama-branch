@@ -1,4 +1,4 @@
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "gamaq2controlpanel.h"
 
 int main(int argc, char *argv[])

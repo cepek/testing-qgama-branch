@@ -1,5 +1,4 @@
-QT       += sql
-
+QT       += core gui sql
 TEMPLATE     = lib
 CONFIG      += plugin
 INCLUDEPATH +=  ../../gama-q2

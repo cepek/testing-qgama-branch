@@ -59,7 +59,7 @@ SelectConfiguration::~SelectConfiguration()
     delete ui;
 }
 
-void SelectConfiguration::exec()
+void SelectConfiguration::select()
 {
     QStringList confs;
     {

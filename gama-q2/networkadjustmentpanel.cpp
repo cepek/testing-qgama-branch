@@ -105,7 +105,7 @@ void NetworkAdjustmentPanel::exec()
 {
     SelectConfiguration* sc = new SelectConfiguration(connection_name, true, false, this);
     connect(sc, SIGNAL(selectConfiguration(QString,bool)), this, SLOT(getConfigurationName(QString,bool)));
-    sc->exec();
+    sc->select();
 }
 
 void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
@@ -515,7 +515,7 @@ void NetworkAdjustmentPanel::on_action_Save_into_database_triggered()
 void NetworkAdjustmentPanel::on_actionSave_As_triggered()
 {
     SelectConfiguration* sc = new SelectConfiguration(connection_name, false, true, this);
-    sc->exec();
+    sc->select();
     connect(sc, SIGNAL(selectConfiguration(QString)), SLOT(save_configuration(QString)));
 }
 

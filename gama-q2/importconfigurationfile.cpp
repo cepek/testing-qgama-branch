@@ -37,7 +37,10 @@ void ImportConfigurationFile::exec()
     QFileDialog fileDialog(0,trUtf8("Open XML Input File"));
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setFileMode(QFileDialog::ExistingFile);
-    fileDialog.setNameFilter(tr("Gama XML input files (*.xml *.gkf)"));
+    QStringList filters;
+    filters << tr("Gama XML input files (*.xml *.gkf)")
+            << tr("Any files (*)");
+    fileDialog.setNameFilters(filters);
     fileDialog.setViewMode(QFileDialog::Detail);
 
     if (!fileDialog.exec()) return;

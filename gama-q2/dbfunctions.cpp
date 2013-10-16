@@ -113,7 +113,7 @@ void DropDeleteBase::drop_or_delete_schema_tables(bool connected)
                     << QSqlDatabase::database(GamaQ2::connection_dbf_drop_tables).isOpen();
         SelectConfiguration* sc = new SelectConfiguration(GamaQ2::connection_dbf_drop_tables, false, false, this);
         connect(sc, SIGNAL(selectConfiguration(QString)), this, SLOT(getConfigurationName(QString)));
-        sc->exec();
+        sc->select();
         qDebug() << "operace neni implementovana";
         return;
     }

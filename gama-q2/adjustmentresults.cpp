@@ -3,7 +3,6 @@
 #include <gnu_gama/local/html.h>
 #include <gnu_gama/local/network.h>
 
-#include <QPrinter>
 #include <QDebug>
 
 AdjustmentResults::AdjustmentResults(QWidget *parent) :
