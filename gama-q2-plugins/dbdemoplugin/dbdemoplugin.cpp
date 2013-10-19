@@ -52,16 +52,15 @@ QFrame* DBdemoPlugin::getFrame()
 
         model = new QSqlQueryModel(frame);
 
-        selectData();
-        edit->setText(tr("write your search pattern here ..."));
+        selectData("");
 
-        connect(edit, SIGNAL(editingFinished()), SLOT(selectData()));
+        connect(edit, SIGNAL(textChanged(QString)), SLOT(selectData(QString)));
     }
 
     return frame;
 }
 
-void DBdemoPlugin::selectData()
+void DBdemoPlugin::selectData(QString str)
 {
     QString sql =
             "SELECT   conf_name, COUNT(x) AS \"COUNT(x,y)\", "
@@ -73,8 +72,10 @@ void DBdemoPlugin::selectData()
             "ORDER BY conf_name ASC ";
 
     QSqlDatabase db = QSqlDatabase::database("connection_implicit_db");
-    model->setQuery(sql.arg(edit->text().simplified()), db);
+    model->setQuery(sql.arg(str.simplified()), db);
     tableView->setModel(model);
 }
 
+#if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN2(dbdemoplugin, DBdemoPlugin)
+#endif
