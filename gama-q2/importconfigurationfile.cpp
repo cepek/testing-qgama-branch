@@ -7,6 +7,8 @@
 #include <QFileInfo>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlError>
+#include <QMessageBox>
 #include <QDebug>
 
 // headers from gala-local-xml2sql.cpp
@@ -163,6 +165,14 @@ void ImportConfigurationFile::on_pushButton_Import_clicked()
         if (EndOfSQL)
         {
             query.exec(str);
+            if (query.lastError().isValid())
+            {
+                QMessageBox::critical(this, tr("Database error"),
+                                      query.lastError().databaseText() + "\n" + str);
+                db.rollback();
+                close();
+                return;
+            }
             str.clear();
         }
     }
