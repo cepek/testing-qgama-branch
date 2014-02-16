@@ -3,10 +3,7 @@
 #include <QDebug>
 
 #include <gnu_gama/local/observation.h>
-#include <gnu_gama/local/network_chol.h>
-#include <gnu_gama/local/network_env.h>
-#include <gnu_gama/local/network_gso.h>
-#include <gnu_gama/local/network_svd.h>
+#include <gnu_gama/local/network.h>
 #include <gnu_gama/local/language.h>
 #include <gnu_gama/local/acord.h>
 #include <gnu_gama/local/orientation.h>
@@ -69,19 +66,19 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
     }
 
     delete lnet;
+    lnet = new GNU_gama::local::LocalNetwork;
 
-    const QString alg = q.value(1).toString();
+    const std::string alg = q.value(1).toString().toStdString();
     if (alg == "svd")
-        lnet = new GNU_gama::local::LocalNetwork_svd;
+        lnet->set_algorithm("svd");
     else if (alg == "gso")
-        lnet = new GNU_gama::local::LocalNetwork_gso;
+        lnet->set_algorithm("gso");
     else if (alg == "cholesky")
-        lnet = new GNU_gama::local::LocalNetwork_chol;
+        lnet->set_algorithm("cholesky");
     else if (alg == "sm-env")
-        lnet = new GNU_gama::local::LocalNetwork_env;
+        lnet->set_algorithm("envelope");
     else
-        lnet = new GNU_gama::local::LocalNetwork_env;
-
+        lnet->set_algorithm();
 
     lnet->apriori_m_0(q.value(2).toDouble());
     lnet->conf_pr    (q.value(3).toDouble());
@@ -117,7 +114,7 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
        else      lnet->PD.setAngularObservations_Lefthanded();
     }
 
-    lnet->epoch = q.value(9).toDouble();
+    lnet->set_epoch(q.value(9).toDouble());
 
     if (q.value(10).toInt() == 400)
        lnet->set_gons();
@@ -617,12 +614,12 @@ QString Adjustment::get_angles() const
 
 double  Adjustment::get_epoch() const
 {
-    return lnet->epoch;
+    return lnet->epoch();
 }
 
 QString Adjustment::get_algorithm () const
 {
-    return lnet->algorithm();
+    return lnet->algorithm().c_str();
 }
 
 int     Adjustment::get_ang_units () const

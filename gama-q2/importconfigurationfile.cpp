@@ -13,7 +13,7 @@
 
 // headers from gala-local-xml2sql.cpp
 #include <gnu_gama/local/localnetwork2sql.h>
-#include <gnu_gama/local/network_gso.h>
+#include <gnu_gama/local/network.h>
 #include <gnu_gama/exception.h>
 #include <sstream>
 #include <fstream>
@@ -126,7 +126,7 @@ void ImportConfigurationFile::on_pushButton_Import_clicked()
         std::ifstream xml(snm.c_str());
 
         const QString qconfname = ui->lineEdit_ConfigurationName->text();
-        GNU_gama::local::LocalNetwork_gso lnet;
+        GNU_gama::local::LocalNetwork lnet;
         GNU_gama::local::LocalNetwork2sql imp(lnet);
         imp.readGkf(xml);
         imp.write  (sql, qconfname.toUtf8().data());

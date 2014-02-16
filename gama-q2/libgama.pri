@@ -74,7 +74,6 @@ $$LIBGAMASRC/lib/gnu_gama/local/network_env.h \
 $$LIBGAMASRC/lib/gnu_gama/local/network_gso.h \
 $$LIBGAMASRC/lib/gnu_gama/local/network.h \
 $$LIBGAMASRC/lib/gnu_gama/local/network_svd.h \
-$$LIBGAMASRC/lib/gnu_gama/local/newnetwork.h \
 $$LIBGAMASRC/lib/gnu_gama/local/observation.h \
 $$LIBGAMASRC/lib/gnu_gama/local/orientation.h \
 $$LIBGAMASRC/lib/gnu_gama/local/pointid.h \
@@ -84,19 +83,13 @@ $$LIBGAMASRC/lib/gnu_gama/local/skipcomm.h \
 $$LIBGAMASRC/lib/gnu_gama/local/sqlitereader.h \
 $$LIBGAMASRC/lib/gnu_gama/local/svg.h \
 $$LIBGAMASRC/lib/gnu_gama/local/writevisitor.h \
+$$LIBGAMASRC/lib/gnu_gama/local/xmlerror.h \
 
 HEADERS += \
 $$LIBGAMASRC/lib/gnu_gama/local/acord/approx_heights.h \
 $$LIBGAMASRC/lib/gnu_gama/local/acord/approx_vectors.h \
 $$LIBGAMASRC/lib/gnu_gama/local/acord/reduce_observations.h \
 $$LIBGAMASRC/lib/gnu_gama/local/acord/reduce_to_ellipsoid.h \
-
-HEADERS += \
-$$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_exception.h \
-$$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_gkfparser.h \
-$$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_locnet.h \
-$$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_output_file.h \
-$$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_private_exception.h \
 
 HEADERS += \
 $$LIBGAMASRC/lib/gnu_gama/local/pobs/bearing.h \
@@ -192,10 +185,6 @@ $$LIBGAMASRC/lib/gnu_gama/local/acord/approx_vectors.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/acord.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/acord/reduce_observations.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/acord/reduce_to_ellipsoid.cpp \
-$$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_exception.cpp \
-$$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_gkfparser.cpp \
-$$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_locnet.cpp \
-$$LIBGAMASRC/lib/gnu_gama/local/c/api/capi_output_file.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/gamadata.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/html.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/language.cpp \
@@ -205,7 +194,6 @@ $$LIBGAMASRC/lib/gnu_gama/local/median/g2d_coordinates.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/median/g2d_helper.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/median/g2d_point.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/network.cpp \
-$$LIBGAMASRC/lib/gnu_gama/local/newnetwork.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/observation.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/observation_local.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/orientation.cpp \
@@ -216,6 +204,7 @@ $$LIBGAMASRC/lib/gnu_gama/local/results/text/underline.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/skipcomm.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/sqlitereader.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/svg.cpp \
+$$LIBGAMASRC/lib/gnu_gama/local/xmlerror.cpp \
 $$LIBGAMASRC/lib/gnu_gama/outstream.cpp \
 $$LIBGAMASRC/lib/gnu_gama/rand.cpp \
 $$LIBGAMASRC/lib/gnu_gama/statan.cpp \

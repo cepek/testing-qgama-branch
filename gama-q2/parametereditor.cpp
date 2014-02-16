@@ -73,7 +73,7 @@ void ParameterEditor::connectParameters(GNU_gama::local::LocalNetwork *ln)
     ui->lineEdit_conf_pr  ->setText( QString::number( lnet->conf_pr()) );
     ui->lineEdit_tol_abs  ->setText( QString::number(lnet->tol_abs()) );
 
-    if(double epoch = lnet->epoch) {
+    if(double epoch = lnet->epoch()) {
         ui->lineEdit_epoch->setText( QString::number(epoch) );
     } else {
         ui->lineEdit_epoch->clear();
@@ -89,7 +89,7 @@ void ParameterEditor::connectParameters(GNU_gama::local::LocalNetwork *ln)
     else
         ui->comboBox_angles->setCurrentIndex(1);
 
-    QString algorithm = lnet->algorithm();
+    QString algorithm = lnet->algorithm().c_str();
     int index_alg = 0;
     for (int i=0; i<ui->comboBox_algorithm->count(); i++)
         if (ui->comboBox_algorithm->itemText(i) == algorithm)
@@ -166,7 +166,7 @@ void ParameterEditor::on_lineEdit_epoch_editingFinished()
 {
     if (ui->lineEdit_epoch->text().simplified().isEmpty())
     {
-        lnet->epoch = 0;
+        lnet->set_epoch(0);
         return;
     }
 
@@ -175,7 +175,7 @@ void ParameterEditor::on_lineEdit_epoch_editingFinished()
 
     if (ok)
     {
-        lnet->epoch = value;
+        lnet->set_epoch(value);
         return;
     }
 

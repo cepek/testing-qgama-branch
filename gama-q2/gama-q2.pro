@@ -25,3 +25,6 @@ DEFINES   += VERSION=\\\"configure.ac\\\"
 
 LIBGAMASRC = lib/gama
 include(libgama.pri)
+
+OTHER_FILES += \
+    Poznamky.txt
