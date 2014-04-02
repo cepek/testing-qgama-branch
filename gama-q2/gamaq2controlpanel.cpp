@@ -47,7 +47,7 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
     init_schema_lists();
     {
         GamaQ2::name    = "gama-g2";
-        GamaQ2::version = "0.0";
+        GamaQ2::version = "0.80";
 
         QFile rfile(":/lib/gama/configure.ac");
         rfile.open(QIODevice::ReadOnly);
@@ -170,10 +170,18 @@ void GamaQ2ControlPanel::build_menus()
     actionAdjAdjustment->setDisabled(true);
     connect (actionAdjAdjustment, SIGNAL(triggered()), SLOT(on_action_Network_adjustment_triggered()));
 
+    QMenu* menuHelp = new QMenu(tr("&Help"), this);
+    actionAboutGamaQ2 = menuHelp->addAction(tr("&About gama-q2"));
+    connect(actionAboutGamaQ2, SIGNAL(triggered()), SLOT(on_action_About_gama_q2_triggered()));
+    actionAboutQt = menuHelp->addAction(tr("&About Qt"));
+    connect(actionAboutQt, SIGNAL(triggered()), SLOT(on_action_About_qt_triggered()));
+
+
     disable_input_data(false);
 
     menuBar()->addMenu(menuDb);
     menuBar()->addMenu(menuAdj);
+    menuBar()->addMenu(menuHelp);
 }
 
 void GamaQ2ControlPanel::dbSlot()
@@ -280,4 +288,15 @@ void GamaQ2ControlPanel::load_plugins()
             }
         }
     }
+}
+
+void GamaQ2ControlPanel::on_action_About_gama_q2_triggered()
+{
+    QMessageBox::about(this,"About gama-q2",
+                       "<bf>gama-q2 0.80</bf>");
+}
+
+void GamaQ2ControlPanel::on_action_About_qt_triggered()
+{
+    QMessageBox::aboutQt(this);
 }

@@ -43,6 +43,8 @@ private slots:
     void on_action_Drop_schema_Tables_triggered();
     void on_action_Delete_all_Data_from_the_Schema_triggered();
     void on_action_Delete_Network_Configuration_triggered();
+    void on_action_About_gama_q2_triggered();
+    void on_action_About_qt_triggered();
     void disable_input_data(bool);
     void dbSlot();
 
@@ -51,6 +53,7 @@ private:
             *actionDbDeleteData, *actionDbDeleteConfiguration,
             *actionDbExit;
     QAction *actionAdjAdjustment;
+    QAction *actionAboutGamaQ2, *actionAboutQt;
 
     QMap<QString, DbInterface*> mapDbPlugins;
 
