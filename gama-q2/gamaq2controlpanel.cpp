@@ -66,7 +66,7 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
         }
     }
 
-    setWindowTitle(GamaQ2::name + "  " + GamaQ2::version + " / " + GamaQ2::gnu_gama_version);
+    setWindowTitle(GamaQ2::name);
     load_plugins();
     build_menus();
     setMinimumSize(400, 150);
@@ -292,8 +292,33 @@ void GamaQ2ControlPanel::load_plugins()
 
 void GamaQ2ControlPanel::on_action_About_gama_q2_triggered()
 {
-    QMessageBox::about(this,"About gama-q2",
-                       "<bf>gama-q2 0.80</bf>");
+    QMessageBox about(this);
+    about.setWindowTitle(tr("About gama-q2"));
+    about.setTextFormat(Qt::RichText);
+    about.setText(tr("<p>Adjustment of geodetic networks with database support<p>") +
+
+                  "<p><b>" + GamaQ2::name + " &nbsp;" + GamaQ2::version + "</b>&nbsp;&nbsp;&nbsp;&nbsp;"
+                  " Copyright (C) &nbsp; 2014 &nbsp; Ales Cepek</p>"
+                  "<p>" +
+                  QString(tr("Based on <a href='http://www.gnu.org/software/gama'>"
+                             "GNU gama</a> version %1")).arg(GamaQ2::gnu_gama_version) +
+                  "</p>"
+
+                  "<p>This program is free software: you can redistribute it and/or modify "
+                  "it under the terms of the GNU General Public License as published by "
+                  "the Free Software Foundation, either version 3 of the License, or "
+                  "(at your option) any later version.</p>"
+
+                  "<p>This program is distributed in the hope that it will be useful, "
+                  "but WITHOUT ANY WARRANTY; without even the implied warranty of "
+                  "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
+                  "GNU General Public License for more details.</p>"
+
+                  "<p>You should have received a copy of the GNU General Public License "
+                  " along with this program.  If not, see <a "
+                  "href='http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>.</p>"
+                  );
+    about.exec();
 }
 
 void GamaQ2ControlPanel::on_action_About_qt_triggered()
