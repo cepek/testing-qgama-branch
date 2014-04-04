@@ -28,3 +28,6 @@ include(libgama.pri)
 
 OTHER_FILES += \
     Poznamky.txt
+
+RESOURCES += \
+    img.qrc

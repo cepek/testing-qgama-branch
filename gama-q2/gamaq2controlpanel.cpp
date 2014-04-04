@@ -293,6 +293,9 @@ void GamaQ2ControlPanel::load_plugins()
 void GamaQ2ControlPanel::on_action_About_gama_q2_triggered()
 {
     QMessageBox about(this);
+    QIcon icon(":/img/q2-icon.png");
+    about.setIconPixmap(icon.pixmap(iconSize().width()*2));
+
     about.setWindowTitle(tr("About gama-q2"));
     about.setTextFormat(Qt::RichText);
     about.setText(tr("<p>Adjustment of geodetic networks with database support<p>") +
