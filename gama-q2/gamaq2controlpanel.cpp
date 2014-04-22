@@ -35,6 +35,8 @@
 #include "networkadjustmentpanel.h"
 #include "gamaq2interfaces.h"
 
+#include <gnu_gama/version.h>
+
 namespace
 {
     GamaQ2ControlPanel* controlPanel;
@@ -66,7 +68,7 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
     init_schema_lists();
     {
         GamaQ2::name    = "gama-g2";
-        GamaQ2::version = "0.80";
+        GamaQ2::version = "0.81";
 
         QFile rfile(":/lib/gama/configure.ac");
         rfile.open(QIODevice::ReadOnly);
@@ -80,6 +82,7 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
                 QString ver = ac_init.split("]")[1];
                 ver = ver.split("[")[1];
                 GamaQ2::gnu_gama_version = ver;
+                GNU_gama::GNU_gama_version = ver.toStdString();
                 break;
             }
         }

@@ -47,8 +47,6 @@ DBConnectDialog::DBConnectDialog(QString connectionName, QWidget *parent) :
     connect(ui->comboBox_Driver,  SIGNAL(currentIndexChanged(int)), this, SLOT(switchStackedWidgets()));
 
     switchStackedWidgets();
-
-    this->adjustSize();
 }
 
 DBConnectDialog::~DBConnectDialog()
@@ -67,10 +65,14 @@ void DBConnectDialog::switchStackedWidgets()
 void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
 {
     QFileDialog fileDialog(0,trUtf8("Opening Sqlite Database File"));
-    fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setFileMode(QFileDialog::AnyFile);     // a single file only
     fileDialog.setDefaultSuffix("db");
-    //fileDialog.setNameFilter(tr("Sqlite DB (*.db)"));
+
+    if (ui->checkBox_CreateNewDbFile->isChecked())
+        fileDialog.setAcceptMode(QFileDialog::AcceptSave);
+    else
+        fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
+
     QStringList filters;
     filters << "Sqlite DB (*.db)"
             << "All files (*.*)";
