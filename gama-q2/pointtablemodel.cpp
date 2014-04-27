@@ -329,8 +329,6 @@ bool PointTableModel::removeRows(int row, int count,
 
 void PointTableModel::scan_data()
 {
-    qDebug() << "PointTableModel::scan_data()" << __FILE__ << __LINE__;
-
     pids.clear();
     ptxy.clear(); // 0 - no xy, 1 - x only, 2 - y only, 3 - both xy
     for (PointData::iterator i=pointData.begin(), e=pointData.end(); i!=e; ++i)

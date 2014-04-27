@@ -29,6 +29,7 @@ DrawSettings::DrawSettings(GNU_gama::local::GamaLocalSVG *lsvg, QWidget *parent)
     ui(new Ui::DrawSettings),
     svg(lsvg)
 {
+    qDebug() << "***  DrawSettings" << __FILE__ << __LINE__;
     ui->setupUi(this);
 
     QStringList pointsymbols;

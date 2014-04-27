@@ -35,9 +35,8 @@ InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *
     isObsAngle(false),
     clusterName(cluster_name)
 {
+    qDebug() << "***  InsertObservationDialog" << __FILE__ << __LINE__;
     ui->setupUi(this);
-
-    qDebug() << "InsertObservationDialog CTOR" << __FILE__ << __LINE__;
 
     ui->warnings->hide();
     ui->warnings->setReadOnly(true);

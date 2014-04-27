@@ -20,11 +20,13 @@
 #include "insertclusterdialog.h"
 #include "ui_insertclusterdialog.h"
 #include "constants.h"
+#include <QDebug>
 
 InsertClusterDialog::InsertClusterDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::InsertClusterDialog)
 {
+    qDebug() << "***  InsertClusterDialog" << __FILE__ << __LINE__;
     ui->setupUi(this);
 
     ui->comboBoxClusterName->addItem(GamaQ2::obsClusterName);

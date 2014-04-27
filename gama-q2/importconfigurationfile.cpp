@@ -42,6 +42,7 @@ ImportConfigurationFile::ImportConfigurationFile(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ImportConfigurationFile)
 {
+    qDebug() << "***  ImportConfigurationFile" << __FILE__ << __LINE__;
     ui->setupUi(this);
 
     setWindowTitle(tr("Import XML input data"));

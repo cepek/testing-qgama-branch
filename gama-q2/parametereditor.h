@@ -52,8 +52,8 @@ private slots:
     void on_comboBox_algorithm_currentIndexChanged(const QString &arg1);
     void on_comboBox_ellipsoid_currentIndexChanged(const QString &arg1);
     void on_checkBox_update_cc_stateChanged(int arg1);
-
     void on_comboBox_ang_units_currentIndexChanged(const QString &arg1);
+    void on_lineEdit_adj_covband_editingFinished();
 
 signals:
     void angular_units_changed();

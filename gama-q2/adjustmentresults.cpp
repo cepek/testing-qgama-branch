@@ -29,8 +29,9 @@ AdjustmentResults::AdjustmentResults(QWidget *parent) :
     ui(new Ui::AdjustmentResults),
     html(0)
 {
-    qDebug() << "AdjustmentResults::AdjustmentResults" << __FILE__ << __LINE__;
+    qDebug() << "***  AdjustmentResults" << __FILE__ << __LINE__;
     ui->setupUi(this);
+    ui->textEdit->setReadOnly(true);
 }
 
 AdjustmentResults::~AdjustmentResults()

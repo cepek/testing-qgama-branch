@@ -45,6 +45,7 @@ namespace {
 
 Adjustment::Adjustment() : lsvg(0), lnet(0), solved(false)
 {
+    qDebug() << "***  Adjustment" << __FILE__ << __LINE__;
     bool static language = true;
     if (language)
     {
@@ -61,12 +62,10 @@ Adjustment::~Adjustment()
 
 void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
 {
-    qDebug() << "Adjustment::read_configuration" << __FILE__ << __LINE__;
-
     q.exec("select conf_id, algorithm, "
            "       sigma_apr, conf_pr, tol_abs, sigma_act, update_cc,"
            "       axes_xy, angles, epoch, ang_units, "
-           "       latitude, ellipsoid "
+           "       latitude, ellipsoid, cov_band "
            "  from gnu_gama_local_configurations "
            " where conf_name = '" + configuration + "'");
     dberr(q, "DB read local_configurations");
@@ -94,7 +93,7 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
         lnet->set_algorithm("gso");
     else if (alg == "cholesky")
         lnet->set_algorithm("cholesky");
-    else if (alg == "sm-env")
+    else if (alg == "envelope")
         lnet->set_algorithm("envelope");
     else
         lnet->set_algorithm();
@@ -108,9 +107,8 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
     else
         lnet->set_m_0_apriori();
 
-    /* not used in LocalNetwork adjustment */
-    // bool update_cc = (q.value(6).toString() == "yes" );
-    // lnet->update_constrained_coordinates(update_cc);
+    bool update_cc = (q.value(6).toString() == "yes" );
+    lnet->update_constrained_coordinates(update_cc);
 
     {
        using namespace GNU_gama::local;
@@ -140,10 +138,16 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
     else
        lnet->set_degrees();
 
-    // two attributes not used in LocalNetwork adjustment
+    // the following two attributes are not used in gama-q2 ------------
     latitude = q.value(11).toDouble()*M_PI/(lnet->gons() ? 200 : 180);
     ellipsoid.clear();
     if (!q.value(12).isNull())  ellipsoid = q.value(12).toString();
+    // -----------------------------------------------------------------
+
+    if (q.value(13).isNull())
+        lnet->set_adj_covband();
+    else
+        lnet->set_adj_covband(q.value(13).toInt());
 
     description.clear();
     q.exec("select text from gnu_gama_local_descriptions "

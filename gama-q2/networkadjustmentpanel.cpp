@@ -54,6 +54,7 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     ui(new Ui::NetworkAdjustmentPanel), connection_name(connectionName),
     par(0), ped(0), obs(0), svg(0), res(0)
 {
+    qDebug() << "***  NetworkAdjustmentPanel" << __FILE__ << __LINE__;
     allNetworkAdjustmentPanelsList.push_back(this);
 
     ui->setupUi(this);
@@ -410,21 +411,6 @@ void NetworkAdjustmentPanel::on_actionSave_network_configuration_outline_trigger
     }
     else
     {
-       /*
-        QByteArray  b(s.c_str(), s.length());
-        QImage  image;
-        image.loadFromData(b, "svg");
-        image.save(fileName);
-       */
-        /* ????
-        QString svgfile (":/penguin.svg");
-        QSvgRenderer svg( svgfile );
-        QString destination("C:\\penguin.png");
-        QImage image( 311,368, QImage::Format_ARGB32);
-        QPainter painter(&image);
-        svg.render (&painter);
-        image.save( destination, "PNG" );
-        */
         QByteArray  b(s.c_str(), s.length());
         QSvgRenderer svg;
         svg.load(b);

@@ -68,7 +68,7 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
     init_schema_lists();
     {
         GamaQ2::name    = "gama-g2";
-        GamaQ2::version = "0.81";
+        GamaQ2::version = "0.82";
 
         QFile rfile(":/lib/gama/configure.ac");
         rfile.open(QIODevice::ReadOnly);

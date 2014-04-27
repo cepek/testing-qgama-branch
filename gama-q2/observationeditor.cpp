@@ -35,6 +35,7 @@ ObservationEditor::SelectCluster::SelectCluster(ObservationTableModel *model,
                                                 QTableView* tableview, int logicalIndex)
     : tableView(tableview), isValid_(true)
 {
+    qDebug() << "***  ObservationEditor" << __FILE__ << __LINE__;
     int minIndex, maxIndex;
     if (!model->clusterIndexes(logicalIndex, minIndex, maxIndex))
     {

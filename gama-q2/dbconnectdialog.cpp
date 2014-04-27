@@ -34,6 +34,7 @@ DBConnectDialog::DBConnectDialog(QString connectionName, QWidget *parent) :
     ui(new Ui::DBConnectDialog),
     connection_name(connectionName)
 {
+    qDebug() << "***  DBConnectDialog" << __FILE__ << __LINE__;
     ui->setupUi(this);
 
     setWindowTitle(tr("DB Connection"));

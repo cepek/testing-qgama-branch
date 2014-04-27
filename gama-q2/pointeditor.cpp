@@ -25,12 +25,14 @@
 
 #include <QMenu>
 #include <QMessageBox>
+#include <QDebug>
 
 PointEditor::PointEditor(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PointEditor),
     model(0), readonly(true)
 {
+    qDebug() << "***  PointEditor" << __FILE__ << __LINE__;
     ui->setupUi(this);
 
     PointTypeComboBox* combobox = new PointTypeComboBox(ui->tableView);

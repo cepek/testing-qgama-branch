@@ -37,6 +37,7 @@ SelectConfiguration::SelectConfiguration(QString connectionName, bool tabsDocks,
     enableNewConfigurationName(newConfName),
     tabbedWidgets(true)
 {
+    qDebug() << "***  SelectConfiguration" << __FILE__ << __LINE__;
     ui->setupUi(this);
     setWindowModality(Qt::ApplicationModal);
     setAttribute(Qt::WA_DeleteOnClose);
