@@ -51,19 +51,20 @@ void ParameterEditor::enableEdit(bool edit)
 
     ui->plainTextEdit->setReadOnly(readonly);
 
-    ui->lineEdit_sigma_apr  ->setEnabled(edit);
-    ui->lineEdit_conf_pr    ->setEnabled(edit);
-    ui->lineEdit_tol_abs    ->setEnabled(edit);
-    ui->comboBox_sigma_act  ->setEnabled(edit);
-    ui->checkBox_update_cc  ->setEnabled(edit);
-    ui->comboBox_axes_xy    ->setEnabled(edit);
-    ui->comboBox_angles     ->setEnabled(edit);
-    ui->lineEdit_epoch      ->setEnabled(edit);
-    ui->comboBox_algorithm  ->setEnabled(edit);
-    ui->comboBox_ang_units  ->setEnabled(edit);
-    ui->lineEdit_adj_covband->setEnabled(edit);
-    ui->lineEdit_latitude   ->setEnabled(edit && false);
-    ui->comboBox_ellipsoid  ->setEnabled(edit && false);
+    ui->lineEdit_sigma_apr       ->setEnabled(edit);
+    ui->lineEdit_conf_pr         ->setEnabled(edit);
+    ui->lineEdit_tol_abs         ->setEnabled(edit);
+    ui->comboBox_sigma_act       ->setEnabled(edit);
+    ui->checkBox_update_cc       ->setEnabled(edit);
+    ui->comboBox_axes_xy         ->setEnabled(edit);
+    ui->comboBox_angles          ->setEnabled(edit);
+    ui->lineEdit_epoch           ->setEnabled(edit);
+    ui->comboBox_algorithm       ->setEnabled(edit);
+    ui->comboBox_ang_units       ->setEnabled(edit);
+    ui->lineEdit_adj_covband     ->setEnabled(edit);
+    ui->comboBox_results_language->setEnabled(edit);
+    ui->lineEdit_latitude        ->setEnabled(edit && false);
+    ui->comboBox_ellipsoid       ->setEnabled(edit && false);
 }
 
 void ParameterEditor::connectParameters(GNU_gama::local::LocalNetwork *ln)
