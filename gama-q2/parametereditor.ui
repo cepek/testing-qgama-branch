@@ -226,28 +226,38 @@
          <item row="10" column="1">
           <widget class="QLineEdit" name="lineEdit_epoch"/>
          </item>
-         <item row="11" column="0">
+         <item row="12" column="0">
           <widget class="QLabel" name="label_latitude">
            <property name="text">
             <string>latitude</string>
            </property>
           </widget>
          </item>
-         <item row="11" column="1">
+         <item row="12" column="1">
           <widget class="QLineEdit" name="lineEdit_latitude"/>
          </item>
-         <item row="12" column="0">
+         <item row="13" column="0">
           <widget class="QLabel" name="label_ellipsoid">
            <property name="text">
             <string>ellipsoid</string>
            </property>
           </widget>
          </item>
-         <item row="12" column="1">
+         <item row="13" column="1">
           <widget class="QComboBox" name="comboBox_ellipsoid"/>
          </item>
          <item row="9" column="1">
           <widget class="QLineEdit" name="lineEdit_adj_covband"/>
+         </item>
+         <item row="11" column="0">
+          <widget class="QLabel" name="label_results_language">
+           <property name="text">
+            <string>results language</string>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="1">
+          <widget class="QComboBox" name="comboBox_results_language"/>
          </item>
         </layout>
        </item>
