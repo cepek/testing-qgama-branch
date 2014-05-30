@@ -1,4 +1,4 @@
-/*
+/* 
   GNU Gama Qt based GUI
   Copyright (C) 2013 Ales Cepek <cepek@gnu.org>
 
