@@ -23,7 +23,6 @@
 
 #include <gnu_gama/local/observation.h>
 #include <gnu_gama/local/network.h>
-#include <gnu_gama/local/language.h>
 #include <gnu_gama/local/acord.h>
 #include <gnu_gama/local/orientation.h>
 #include <gnu_gama/local/gamadata.h>
@@ -46,12 +45,6 @@ namespace {
 Adjustment::Adjustment() : lsvg(0), lnet(0), solved(false)
 {
     qDebug() << "***  Adjustment" << __FILE__ << __LINE__;
-    bool static language = true;
-    if (language)
-    {
-       GNU_gama::local::set_gama_language(GNU_gama::local::en);
-       language = false;
-    }
 }
 
 Adjustment::~Adjustment()
@@ -473,8 +466,6 @@ void Adjustment::fetch_height_differences(QSqlQuery& q, QString cluster, GNU_gam
 
 void Adjustment::exec()
 {
-    qDebug() << "Adjustment::exec()" << __FILE__ << __LINE__;
-
     /*if (!solved)*/ try
     {
         GNU_gama::local::Acord acord(lnet->PD, lnet->OD);

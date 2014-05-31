@@ -34,8 +34,10 @@
 #include "importconfigurationfile.h"
 #include "networkadjustmentpanel.h"
 #include "gamaq2interfaces.h"
+#include "selectadjresultslanguage.h"
 
 #include <gnu_gama/version.h>
+#include <gnu_gama/local/language.h>
 
 namespace
 {
@@ -61,7 +63,8 @@ void ShowMessage(QString message)
 
 
 GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
-    QMainWindow(parent)
+    QMainWindow(parent),
+    init_language_list(true)
 {
     controlPanel = this;
 
@@ -88,6 +91,9 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
         }
     }
 
+    // setting implicit adjustment results language
+    set_adjustment_results_language();
+
     setWindowTitle(GamaQ2::name);
     load_plugins();
     build_menus();
@@ -96,6 +102,16 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
 
 GamaQ2ControlPanel::~GamaQ2ControlPanel()
 {
+    // save options into database
+    QSqlDatabase db = QSqlDatabase::database(GamaQ2::connection_implicit_db);
+    if (db.isOpen())
+    {
+        QSqlQuery q(db);
+        q.exec("DELETE FROM gnu_gama_local_options "
+               "WHERE opt_key='AdjResultsLanguage'");
+        q.exec("INSERT INTO gnu_gama_local_options (opt_key, opt_val) "
+               "VALUES ('AdjResultsLanguage','" + GamaQ2::currentLanguage + "')");
+    }
 }
 
 void GamaQ2ControlPanel::on_action_Exit_triggered()
@@ -192,17 +208,21 @@ void GamaQ2ControlPanel::build_menus()
     actionAdjAdjustment->setDisabled(true);
     connect (actionAdjAdjustment, SIGNAL(triggered()), SLOT(on_action_Network_adjustment_triggered()));
 
+    QMenu* menuTools = new QMenu(tr("&Tools"), this);
+    actionAdjResultsLanguage = menuTools->addAction(tr("Adjustment results &language"));
+    connect(actionAdjResultsLanguage, SIGNAL(triggered()), SLOT(on_action_Adjustment_results_language()));
+
     QMenu* menuHelp = new QMenu(tr("&Help"), this);
     actionAboutGamaQ2 = menuHelp->addAction(tr("&About gama-q2"));
     connect(actionAboutGamaQ2, SIGNAL(triggered()), SLOT(on_action_About_gama_q2_triggered()));
     actionAboutQt = menuHelp->addAction(tr("&About Qt"));
     connect(actionAboutQt, SIGNAL(triggered()), SLOT(on_action_About_qt_triggered()));
 
-
     disable_input_data(false);
 
     menuBar()->addMenu(menuDb);
     menuBar()->addMenu(menuAdj);
+    menuBar()->addMenu(menuTools);
     menuBar()->addMenu(menuHelp);
 }
 
@@ -252,6 +272,20 @@ void GamaQ2ControlPanel::on_action_Connect_to_database_triggered()
     connect(d, SIGNAL(input_data_open(bool)), this, SLOT(disable_input_data(bool)));
     d->exec();
     delete d;
+
+    QSqlDatabase db = QSqlDatabase::database(GamaQ2::connection_implicit_db);
+    if (db.isOpen())
+    {
+        QSqlQuery q(db);
+        q.exec("SELECT opt_key, opt_val FROM gnu_gama_local_options");
+        while (q.next())
+        {
+            QString key = q.value(0).toString();
+            QString val = q.value(1).toString();
+
+            if (key == "AdjResultsLanguage") set_adjustment_results_language(val);
+        }
+    }
 }
 
 void GamaQ2ControlPanel::disable_input_data(bool yes)
@@ -260,6 +294,7 @@ void GamaQ2ControlPanel::disable_input_data(bool yes)
 
     actionDbImport->setEnabled(yes);
     actionAdjAdjustment->setEnabled(yes);
+    actionAdjResultsLanguage->setEnabled(yes);
 
     if (yes) ShowMessage(tr("Connected to database"));
 }
@@ -348,4 +383,46 @@ void GamaQ2ControlPanel::on_action_About_gama_q2_triggered()
 void GamaQ2ControlPanel::on_action_About_qt_triggered()
 {
     QMessageBox::aboutQt(this);
+}
+
+void GamaQ2ControlPanel::set_adjustment_results_language(QString language)
+{
+    using namespace  GNU_gama::local;
+
+    if      (cmp(language, "en")) set_gama_language(en);
+    else if (cmp(language, "ca")) set_gama_language(ca);
+    else if (cmp(language, "cs")) set_gama_language(cz);
+    else if (cmp(language, "cz")) set_gama_language(cz);
+    else if (cmp(language, "du")) set_gama_language(du);
+    else if (cmp(language, "es")) set_gama_language(es);
+    else if (cmp(language, "fr")) set_gama_language(fr);
+    else if (cmp(language, "fi")) set_gama_language(fi);
+    else if (cmp(language, "hu")) set_gama_language(hu);
+    else if (cmp(language, "ru")) set_gama_language(ru);
+    else if (cmp(language, "ua")) set_gama_language(ua);
+    else if (cmp(language, "zh")) set_gama_language(zh);
+    else
+    {
+        init_language_list = false;
+
+        // redefine implicit language in Qt Linguist during localisation
+        set_adjustment_results_language(tr("en"));
+    }
+    init_language_list = false;
+}
+
+bool GamaQ2ControlPanel::cmp(QString s, QString c)
+{
+    if (init_language_list) GamaQ2::languages.push_back(c);
+
+    if (s != c) return false;
+
+    GamaQ2::currentLanguage = c;
+    return true;
+}
+
+void GamaQ2ControlPanel::on_action_Adjustment_results_language()
+{
+    SelectAdjResultsLanguage dialog(this);
+    dialog.exec();
 }

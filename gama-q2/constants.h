@@ -30,9 +30,11 @@ namespace GamaQ2
     extern QString version;
     extern QString gnu_gama_version;
 
-
     extern QStringList gama_local_schema;
     extern QStringList gama_local_schema_table_names;
+
+    extern QStringList languages;
+    extern QString currentLanguage;
 
     extern const QString obsClusterName;
     extern const QString xyzClusterName;

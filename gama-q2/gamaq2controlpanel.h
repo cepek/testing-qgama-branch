@@ -35,6 +35,8 @@ public:
     explicit GamaQ2ControlPanel(QWidget *parent = 0);
     ~GamaQ2ControlPanel();
 
+    void set_adjustment_results_language(QString language = QString());
+
 private slots:
     void on_action_Exit_triggered();
     void on_action_Connect_to_database_triggered();
@@ -45,6 +47,7 @@ private slots:
     void on_action_Delete_Network_Configuration_triggered();
     void on_action_About_gama_q2_triggered();
     void on_action_About_qt_triggered();
+    void on_action_Adjustment_results_language();
     void disable_input_data(bool);
     void dbSlot();
 
@@ -53,6 +56,7 @@ private:
             *actionDbDeleteData, *actionDbDeleteConfiguration,
             *actionDbExit;
     QAction *actionAdjAdjustment;
+    QAction *actionAdjResultsLanguage;
     QAction *actionAboutGamaQ2, *actionAboutQt;
 
     QMap<QString, DbInterface*> mapDbPlugins;
@@ -61,6 +65,9 @@ private:
     void init_schema_lists();
     void build_menus();
     void load_plugins();
+
+    bool cmp(QString s, QString c);
+    bool init_language_list;
 
 signals:
     void gamaCloseSignal();

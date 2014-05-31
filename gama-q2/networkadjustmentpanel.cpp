@@ -331,8 +331,6 @@ void NetworkAdjustmentPanel::on_actionSave_as_SQL_file_triggered()
 
 void NetworkAdjustmentPanel::on_action_Run_triggered()
 {
-    qDebug() << "NetworkAdjustmentPanel::on_action_Run_triggered()" << __FILE__ << __LINE__;
-
     status_bar(tr("Runnig adjustement '%1'").arg(configuration_name));
     try {
         adj.exec();

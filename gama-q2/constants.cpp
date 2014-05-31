@@ -26,6 +26,9 @@ QString GamaQ2::gnu_gama_version;
 QStringList GamaQ2::gama_local_schema;
 QStringList GamaQ2::gama_local_schema_table_names;
 
+QStringList GamaQ2::languages;
+QString GamaQ2::currentLanguage;
+
 const QString GamaQ2::connection_implicit_db     = "connection_implicit_db";
 const QString GamaQ2::connection_dbf_drop_tables = "connection_dbf_drop_tables";
 
