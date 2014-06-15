@@ -1,0 +1,18 @@
+/** \mainpage GNU gama-qt
+
+Gama-qt is a Qt based GUI for GNU Gama project. To download and
+build the application follow the following six steps.
+
+\verbatim
+git clone git://git.sv.gnu.org/gama/qt.git
+cd  qt/gama-q2/lib/
+git clone git://git.sv.gnu.org/gama.git
+cd  ../..
+qmake
+make
+gama-q2/gama-q2 &
+\endverbatim
+
+Instead of runnig qmake and make, you can point qtcreator to the
+project file gama-q2/gama-q2.pro.
+*/

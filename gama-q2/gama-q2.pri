@@ -20,7 +20,7 @@ SOURCES  += $$GAMAQ2SRC/main.cpp\
     $$GAMAQ2SRC/pointtablemodel.cpp \
     $$GAMAQ2SRC/observationtablemodel.cpp \
     $$GAMAQ2SRC/shrinkbandwidth.cpp \
-    selectadjresultslanguage.cpp
+    $$GAMAQ2SRC/selectadjresultslanguage.cpp
 
 HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
     $$GAMAQ2SRC/gamaq2interfaces.h \
@@ -45,7 +45,7 @@ HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
     $$GAMAQ2SRC/pointtablemodel.h \
     $$GAMAQ2SRC/observationtablemodel.h \
     $$GAMAQ2SRC/shrinkbandwidth.h \
-    selectadjresultslanguage.h
+    $$GAMAQ2SRC/selectadjresultslanguage.h
 
 
 FORMS    += $$GAMAQ2SRC/importconfigurationfile.ui \
@@ -59,7 +59,7 @@ FORMS    += $$GAMAQ2SRC/importconfigurationfile.ui \
     $$GAMAQ2SRC/dbconnectdialog.ui \
     $$GAMAQ2SRC/observationeditor.ui \
     $$GAMAQ2SRC/parametereditor.ui \
-    selectadjresultslanguage.ui
+    $$GAMAQ2SRC/selectadjresultslanguage.ui
 
 RESOURCES += \
     gama-q2.qrc
