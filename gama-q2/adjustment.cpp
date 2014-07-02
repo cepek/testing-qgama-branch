@@ -478,39 +478,8 @@ void Adjustment::exec()
         }
 
         lnet->update_points();
-
         lnet->solve();
-        /* ????????????
-        std::set<std::string> adjset;
-        pid2indx.clear();
-        rcluster.clear();
-        for (int i=1, N=lnet->sum_unknowns(); i<=N; i++)
-        {
-            std::string id = lnet->unknown_pointid(i).str();
-            char        t  = lnet->unknown_type(i);
-            if (t=='X' || t=='Y' || t=='Z')
-                {
-                    pid2indx[std::pair<std::string,char>(id,t)] = i;
-                    adjset.insert(id);
-                }
-            else if (t=='R')
-                {
-                    void* c = lnet->unknown_standpoint(i);
-                    rcluster.push_back(c);
-                }
-            else
-                {
-                    throw QGama::Exception(AdjustmentException,
-                                           tr("Undefined adjustment parameter type"));
-                }
-        }
-        adjid.clear();
-        for (std::set<std::string>::const_iterator
-             i = adjset.begin(), N = adjset.end(); i!=N; i++)
-        {
-            adjid.push_back(*i);
-        }
-*/
+
         solved = true;
         emit adjustment_signal(solved);
     }

@@ -22,6 +22,8 @@
 #define DRAWSETTINGS_H
 
 #include <QWidget>
+#include <QDoubleSpinBox>
+#include <QAbstractButton>
 
 namespace Ui {
 class DrawSettings;
@@ -44,11 +46,22 @@ signals:
     void redraw();
 
 private slots:
-    void on_pushButtonRedraw_clicked();
+    void on_buttonBox_accepted();
+    void on_buttonBox_clicked(QAbstractButton *button);
 
 private:
     Ui::DrawSettings *ui;
     GNU_gama::local::GamaLocalSVG *svg;
+    QStringList pointsymbols;
+    QStringList pointfill;
+
+    void setSpinBoxDefaults(QDoubleSpinBox* spinBox);
+    void readSvgValues();
+
+    bool r_drawPointSymbols, r_drawPointIDs, r_drawEllipses, r_drawObservations, r_drawAxes;
+    double r_fontSize, r_symbolSize, r_strokeWidth;
+    std::string r_fixedSymbol, r_constrainedSymbol, r_freeSymbol;
+    std::string r_fixedFill, r_constrainedFill, r_freeFill;
 };
 
 #endif // DRAWSETTINGS_H

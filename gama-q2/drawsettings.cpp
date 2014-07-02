@@ -32,13 +32,14 @@ DrawSettings::DrawSettings(GNU_gama::local::GamaLocalSVG *lsvg, QWidget *parent)
     qDebug() << "***  DrawSettings" << __FILE__ << __LINE__;
     ui->setupUi(this);
 
-    QStringList pointsymbols;
+    //QPushButton *help = new QPushButton(tr("Help"));
+    //ui->buttonBox->addButton(help, QDialogButtonBox::HelpRole);
+
     pointsymbols << "triangle" << "circle" << "none";
     ui->comboBoxFixedSymbol      ->addItems(pointsymbols);
     ui->comboBoxConstrainedSymbol->addItems(pointsymbols);
     ui->comboBoxFreeSymbol       ->addItems(pointsymbols);
 
-    QStringList pointfill;
     // 16 basic colors
     pointfill << "aqua"   << "black" << "blue"   << "fuchsia"
               << "gray"   << "green" << "lime"   << "maroon"
@@ -49,16 +50,62 @@ DrawSettings::DrawSettings(GNU_gama::local::GamaLocalSVG *lsvg, QWidget *parent)
     ui->comboBoxConstrainedFill->addItems(pointfill);
     ui->comboBoxFreeFill       ->addItems(pointfill);
 
+    setSpinBoxDefaults(ui->doubleSpinBoxFontSize);
+    setSpinBoxDefaults(ui->doubleSpinBoxSymbolSize);
+    setSpinBoxDefaults(ui->doubleSpinBoxStrokeWidth);
 
+    readSvgValues();
+
+    // stored values for Reset function
+    r_drawPointSymbols = svg->drawPointSymbols();
+    r_drawPointIDs = svg->drawPointIDs();
+    r_drawEllipses = svg->drawEllipses();
+    r_drawObservations = svg->drawObservations();
+    r_drawAxes = svg->drawAxes();
+
+    r_fontSize = svg->fontSize();
+    r_symbolSize = svg->symbolSize();
+    r_strokeWidth = svg->strokeWidth();
+
+    r_fixedSymbol = svg->fixedSymbol();
+    r_constrainedSymbol = svg->constrainedSymbol();
+    r_freeSymbol = svg->freeSymbol();
+
+    r_fixedFill = svg->fixedFill();
+    r_constrainedFill = svg->constrainedFill();
+    r_freeFill = svg->freeFill();
+}
+
+DrawSettings::~DrawSettings()
+{
+    delete ui;
+}
+
+void DrawSettings::setSpinBoxDefaults(QDoubleSpinBox *spinBox)
+{
+    const double minv = 0.0001;
+    const double maxv = 1000 - minv;
+
+    spinBox->setDecimals(4);
+    spinBox->setMaximum(maxv);
+    spinBox->setMinimum(minv);
+    spinBox->setSingleStep(0.1);
+    spinBox->adjustSize();
+
+    spinBox->setValue(minv);
+}
+
+void DrawSettings::readSvgValues()
+{
     ui->checkBoxDrawPointSymbols->setChecked(svg->drawPointSymbols());
-    ui->checkBoxDrawPointIDs    ->setChecked(svg->drawPoinsIDs());
+    ui->checkBoxDrawPointIDs    ->setChecked(svg->drawPointIDs());
     ui->checkBoxDrawEllipses    ->setChecked(svg->drawEllipses());
-    ui->checkBoxDrawObservations->setChecked(svg->drawPoinsObservations());
+    ui->checkBoxDrawObservations->setChecked(svg->drawObservations());
     ui->checkBoxDrawAxes        ->setChecked(svg->drawAxes());
 
-    ui->spinBoxFontSize   ->setValue(svg->fontSize());
-    ui->spinBoxSymbolSize ->setValue(svg->symbolSize());
-    ui->spinBoxStrokeWidth->setValue(svg->strokeWidth());
+    ui->doubleSpinBoxFontSize   ->setValue(svg->fontSize());
+    ui->doubleSpinBoxSymbolSize ->setValue(svg->symbolSize());
+    ui->doubleSpinBoxStrokeWidth->setValue(svg->strokeWidth());
 
     ui->comboBoxFixedSymbol      ->setCurrentIndex(pointsymbols.indexOf(svg->fixedSymbol().c_str()));
     ui->comboBoxConstrainedSymbol->setCurrentIndex(pointsymbols.indexOf(svg->constrainedSymbol().c_str()));
@@ -69,12 +116,7 @@ DrawSettings::DrawSettings(GNU_gama::local::GamaLocalSVG *lsvg, QWidget *parent)
     ui->comboBoxFreeFill       ->setCurrentIndex(pointfill.indexOf(svg->freeFill().c_str()));
 }
 
-DrawSettings::~DrawSettings()
-{
-    delete ui;
-}
-
-void DrawSettings::on_pushButtonRedraw_clicked()
+void DrawSettings::on_buttonBox_accepted()
 {
     svg->setDrawPointSymbols(ui->checkBoxDrawPointSymbols->isChecked());
     svg->setDrawPointIDs    (ui->checkBoxDrawPointIDs    ->isChecked());
@@ -82,9 +124,9 @@ void DrawSettings::on_pushButtonRedraw_clicked()
     svg->setDrawObservations(ui->checkBoxDrawObservations->isChecked());
     svg->setDrawAxes        (ui->checkBoxDrawAxes        ->isChecked());
 
-    svg->setFontSize   (ui->spinBoxFontSize   ->value());
-    svg->setSymbolSize (ui->spinBoxSymbolSize ->value());
-    svg->setStrokeWidth(ui->spinBoxStrokeWidth->value());
+    svg->setFontSize   (ui->doubleSpinBoxFontSize   ->value());
+    svg->setSymbolSize (ui->doubleSpinBoxSymbolSize ->value());
+    svg->setStrokeWidth(ui->doubleSpinBoxStrokeWidth->value());
 
     svg->setFixedSymbol      (ui->comboBoxFixedSymbol      ->currentText().toStdString());
     svg->setConstrainedSymbol(ui->comboBoxConstrainedSymbol->currentText().toStdString());
@@ -93,6 +135,54 @@ void DrawSettings::on_pushButtonRedraw_clicked()
     svg->setFixedFill      (ui->comboBoxFixedFill      ->currentText().toStdString());
     svg->setConstrainedFill(ui->comboBoxConstrainedFill->currentText().toStdString());
     svg->setFreeFill       (ui->comboBoxFreeFill       ->currentText().toStdString());
+
+    emit redraw();
+}
+
+void DrawSettings::on_buttonBox_clicked(QAbstractButton *button)
+{
+    QString text = button->text();
+    if (text == tr("Apply"))
+    {
+        on_buttonBox_accepted();
+    }
+    else if (text == tr("&Close"))
+    {
+        close();
+    }
+    else if (text == tr("Restore Defaults"))
+    {
+        svg->restoreDefaults();
+        readSvgValues();
+    }
+    else if (text == tr("Reset"))
+    {
+        //svg->restoreDefaults();
+
+        svg->setDrawPointSymbols(r_drawPointSymbols);
+        svg->setDrawPointIDs(r_drawPointIDs);
+        svg->setDrawEllipses(r_drawEllipses);
+        svg->setDrawObservations(r_drawObservations);
+        svg->setDrawAxes(r_drawAxes);
+
+        svg->setFontSize(r_fontSize);
+        svg->setSymbolSize(r_symbolSize);
+        svg->setStrokeWidth(r_strokeWidth);
+
+        svg->setFixedSymbol(r_fixedSymbol);
+        svg->setConstrainedSymbol(r_constrainedSymbol);
+        svg->setFreeSymbol(r_freeSymbol);
+
+        svg->setFixedFill(r_fixedFill);
+        svg->setConstrainedFill(r_constrainedFill);
+        svg->setFreeFill(r_freeFill);
+
+        readSvgValues();
+    }
+    else
+    {
+        qDebug() << __FILE__ << __LINE__ << "unknown button" << button->text();
+    }
 
     emit redraw();
 }

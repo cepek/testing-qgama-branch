@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>356</width>
-    <height>387</height>
+    <width>462</width>
+    <height>419</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -95,24 +95,10 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QSpinBox" name="spinBoxFontSize">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
             <item row="2" column="0">
              <widget class="QLabel" name="labelStrokeWidth">
               <property name="text">
                <string>Stroke Width</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QSpinBox" name="spinBoxStrokeWidth">
-              <property name="minimum">
-               <number>1</number>
               </property>
              </widget>
             </item>
@@ -123,15 +109,18 @@
               </property>
              </widget>
             </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBoxFontSize"/>
+            </item>
             <item row="1" column="1">
-             <widget class="QSpinBox" name="spinBoxSymbolSize">
+             <widget class="QDoubleSpinBox" name="doubleSpinBoxSymbolSize">
               <property name="enabled">
                <bool>true</bool>
               </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
              </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBoxStrokeWidth"/>
             </item>
            </layout>
           </item>
@@ -223,41 +212,11 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonRedraw">
-         <property name="text">
-          <string>Redraw</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Apply|QDialogButtonBox::Close|QDialogButtonBox::Reset|QDialogButtonBox::RestoreDefaults</set>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

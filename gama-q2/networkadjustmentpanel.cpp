@@ -206,6 +206,7 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
 
     update_point_editor_table();
     update_observation_editor_table();
+    draw_network_configuration(false);
 
     show();
 }
@@ -334,9 +335,6 @@ void NetworkAdjustmentPanel::on_action_Run_triggered()
     status_bar(tr("Runnig adjustement '%1'").arg(configuration_name));
     try {
         adj.exec();
-
-        //update_point_editor_table();
-        //update_observation_editor_table();
     }
     catch (QGama::Exception e)
     {
