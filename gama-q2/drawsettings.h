@@ -59,7 +59,7 @@ private:
     void readSvgValues();
 
     bool r_drawPointSymbols, r_drawPointIDs, r_drawEllipses, r_drawObservations, r_drawAxes;
-    double r_fontSize, r_symbolSize, r_strokeWidth;
+    double r_fontSize, r_symbolSize, r_strokeWidth, r_ellipsesScale;
     std::string r_fixedSymbol, r_constrainedSymbol, r_freeSymbol;
     std::string r_fixedFill, r_constrainedFill, r_freeFill;
 };

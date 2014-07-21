@@ -53,6 +53,7 @@ DrawSettings::DrawSettings(GNU_gama::local::GamaLocalSVG *lsvg, QWidget *parent)
     setSpinBoxDefaults(ui->doubleSpinBoxFontSize);
     setSpinBoxDefaults(ui->doubleSpinBoxSymbolSize);
     setSpinBoxDefaults(ui->doubleSpinBoxStrokeWidth);
+    setSpinBoxDefaults(ui->doubleSpinBoxEllipsesScale);
 
     readSvgValues();
 
@@ -66,6 +67,7 @@ DrawSettings::DrawSettings(GNU_gama::local::GamaLocalSVG *lsvg, QWidget *parent)
     r_fontSize = svg->fontSize();
     r_symbolSize = svg->symbolSize();
     r_strokeWidth = svg->strokeWidth();
+    r_ellipsesScale = svg->ellipsesScale();
 
     r_fixedSymbol = svg->fixedSymbol();
     r_constrainedSymbol = svg->constrainedSymbol();
@@ -83,7 +85,7 @@ DrawSettings::~DrawSettings()
 
 void DrawSettings::setSpinBoxDefaults(QDoubleSpinBox *spinBox)
 {
-    const double minv = 0.0001;
+    const double minv = svg->minimalSize();
     const double maxv = 1000 - minv;
 
     spinBox->setDecimals(4);
@@ -103,9 +105,10 @@ void DrawSettings::readSvgValues()
     ui->checkBoxDrawObservations->setChecked(svg->drawObservations());
     ui->checkBoxDrawAxes        ->setChecked(svg->drawAxes());
 
-    ui->doubleSpinBoxFontSize   ->setValue(svg->fontSize());
-    ui->doubleSpinBoxSymbolSize ->setValue(svg->symbolSize());
-    ui->doubleSpinBoxStrokeWidth->setValue(svg->strokeWidth());
+    ui->doubleSpinBoxFontSize     ->setValue(svg->fontSize());
+    ui->doubleSpinBoxSymbolSize   ->setValue(svg->symbolSize());
+    ui->doubleSpinBoxStrokeWidth  ->setValue(svg->strokeWidth());
+    ui->doubleSpinBoxEllipsesScale->setValue(svg->ellipsesScale());
 
     ui->comboBoxFixedSymbol      ->setCurrentIndex(pointsymbols.indexOf(svg->fixedSymbol().c_str()));
     ui->comboBoxConstrainedSymbol->setCurrentIndex(pointsymbols.indexOf(svg->constrainedSymbol().c_str()));
@@ -124,9 +127,10 @@ void DrawSettings::on_buttonBox_accepted()
     svg->setDrawObservations(ui->checkBoxDrawObservations->isChecked());
     svg->setDrawAxes        (ui->checkBoxDrawAxes        ->isChecked());
 
-    svg->setFontSize   (ui->doubleSpinBoxFontSize   ->value());
-    svg->setSymbolSize (ui->doubleSpinBoxSymbolSize ->value());
-    svg->setStrokeWidth(ui->doubleSpinBoxStrokeWidth->value());
+    svg->setFontSize     (ui->doubleSpinBoxFontSize   ->value());
+    svg->setSymbolSize   (ui->doubleSpinBoxSymbolSize ->value());
+    svg->setStrokeWidth  (ui->doubleSpinBoxStrokeWidth->value());
+    svg->setEllipsesScale(ui->doubleSpinBoxEllipsesScale->value());
 
     svg->setFixedSymbol      (ui->comboBoxFixedSymbol      ->currentText().toStdString());
     svg->setConstrainedSymbol(ui->comboBoxConstrainedSymbol->currentText().toStdString());
@@ -157,8 +161,6 @@ void DrawSettings::on_buttonBox_clicked(QAbstractButton *button)
     }
     else if (text == tr("Reset"))
     {
-        //svg->restoreDefaults();
-
         svg->setDrawPointSymbols(r_drawPointSymbols);
         svg->setDrawPointIDs(r_drawPointIDs);
         svg->setDrawEllipses(r_drawEllipses);
@@ -168,6 +170,7 @@ void DrawSettings::on_buttonBox_clicked(QAbstractButton *button)
         svg->setFontSize(r_fontSize);
         svg->setSymbolSize(r_symbolSize);
         svg->setStrokeWidth(r_strokeWidth);
+        svg->setEllipsesScale(r_ellipsesScale);
 
         svg->setFixedSymbol(r_fixedSymbol);
         svg->setConstrainedSymbol(r_constrainedSymbol);
