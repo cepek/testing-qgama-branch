@@ -116,6 +116,7 @@ GamaQ2ControlPanel::~GamaQ2ControlPanel()
 
 void GamaQ2ControlPanel::on_action_Exit_triggered()
 {
+    emit adjustmentPanel(false);
     close();
 }
 
@@ -242,7 +243,11 @@ void GamaQ2ControlPanel::closeEvent(QCloseEvent * event)
 {
     QMessageBox confirm;
     confirm.setText(tr("Do you really want to exit the program?"));
-    confirm.setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes | QMessageBox::YesAll);
+    confirm.setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
+    if (NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList.size() > 0)
+    {
+        confirm.addButton(QMessageBox::YesAll);
+    }
     confirm.setDefaultButton  (QMessageBox::Cancel);
     int dialogCode  = confirm.exec();
 
@@ -292,6 +297,10 @@ void GamaQ2ControlPanel::disable_input_data(bool yes)
 {
     actionDbConnect->setDisabled(yes);
 
+    actionDbDropSchema->setEnabled(yes);
+    actionDbDeleteData->setEnabled(yes);
+    actionDbDeleteConfiguration->setEnabled(yes);
+
     actionDbImport->setEnabled(yes);
     actionAdjAdjustment->setEnabled(yes);
     actionAdjResultsLanguage->setEnabled(yes);
@@ -308,6 +317,7 @@ void GamaQ2ControlPanel::on_action_Import_configuration_file_triggered()
 void GamaQ2ControlPanel::on_action_Network_adjustment_triggered()
 {
     NetworkAdjustmentPanel* nap = new NetworkAdjustmentPanel(GamaQ2::connection_implicit_db);
+    connect(nap,  SIGNAL(networkAdjustmentPanel(bool)), this, SLOT(adjustmentPanel(bool)));
     connect(this, SIGNAL(gamaCloseSignal()), nap, SLOT(close()));
     nap->setAttribute(Qt::WA_DeleteOnClose);
     nap->exec();
@@ -316,7 +326,11 @@ void GamaQ2ControlPanel::on_action_Network_adjustment_triggered()
 void GamaQ2ControlPanel::on_action_Drop_schema_Tables_triggered()
 {
     DB_DropTables* dbf = new DB_DropTables(this);
-    dbf->exec();
+    if (dbf->exec())
+    {
+        QSqlDatabase::removeDatabase(GamaQ2::connection_implicit_db);
+        disable_input_data(false);
+    }
 }
 
 void GamaQ2ControlPanel::on_action_Delete_all_Data_from_the_Schema_triggered()
@@ -425,4 +439,13 @@ void GamaQ2ControlPanel::on_action_Adjustment_results_language()
 {
     SelectAdjResultsLanguage dialog(this);
     dialog.exec();
+}
+
+void GamaQ2ControlPanel::adjustmentPanel(bool newPanel)
+{
+    static int count;
+    if (newPanel) count++;
+    else          count--;
+
+    actionDbDropSchema->setDisabled(count > 0);
 }

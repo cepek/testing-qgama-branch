@@ -59,6 +59,7 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
 
     ui->setupUi(this);
 
+
     set_gui_adjustment_functions_status(false);
 }
 
@@ -208,6 +209,7 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
     update_observation_editor_table();
     draw_network_configuration(false);
 
+    emit networkAdjustmentPanel(true);
     show();
 }
 
@@ -224,12 +226,14 @@ void NetworkAdjustmentPanel::closeEvent(QCloseEvent* event)
     QMessageBox confirm;
     confirm.setWindowTitle(configuration_name);
     confirm.setText(tr("Do you really want to exit the adjustment panel?"));
-    confirm.setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes | QMessageBox::YesAll);
+    confirm.setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
+    if (allNetworkAdjustmentPanelsList.size() > 1) confirm.addButton(QMessageBox::YesAll);
     confirm.setDefaultButton  (QMessageBox::Cancel);
     int dialogCode  = confirm.exec();
 
     if (dialogCode == QMessageBox::Yes)
     {
+        emit networkAdjustmentPanel(false);
         event->accept();
     }
     else if (dialogCode == QMessageBox::YesAll)
@@ -238,9 +242,10 @@ void NetworkAdjustmentPanel::closeEvent(QCloseEvent* event)
         for (int i=0; i<NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList.size(); i++)
         {
             NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList[i]->close();
+            emit networkAdjustmentPanel(false);
         }
-
         event->accept();
+        NetworkAdjustmentPanel::closeAllNetworkAdjustmentPanels = false;
     }
     else
     {

@@ -28,7 +28,15 @@
 #include <QSqlError>
 #include <QDebug>
 
-DropDeleteBase::DropDeleteBase(QWidget *parent) : QWidget(parent) { needsConfName = false; }
+DropDeleteBase::DropDeleteBase(QWidget *parent)
+    : QWidget(parent), needsConfName(false), success(false)
+{
+}
+
+DropDeleteBase::~DropDeleteBase()
+{
+    qDebug() << "     DropDeleteBase::~DropDeleteBase()" << __FILE__ << __LINE__;
+}
 
 DB_DropTables::DB_DropTables(QWidget *parent) : DropDeleteBase(parent) {}
 
@@ -74,14 +82,15 @@ void DB_DeleteNetworkConfiguration::init()
 
 void DB_DeleteNetworkConfiguration::getConfigurationName(QString name)
 {
+
     confName = name;
-    needsConfName = false;
-    drop_or_delete_schema_tables(true);
+    drop_or_delete_schema_tables();
+    close();
 }
 
 // ----------------------------------------------------------------------------
 
-void DropDeleteBase::exec()
+bool DropDeleteBase::exec()
 {
     setAttribute(Qt::WA_DeleteOnClose);
     init();
@@ -91,57 +100,41 @@ void DropDeleteBase::exec()
     confirm.setText(confirmQuestion);
     confirm.setStandardButtons(QMessageBox::Cancel | QMessageBox::Yes);
     confirm.setDefaultButton  (QMessageBox::Cancel);
-    int dialogCode  = confirm.exec();
 
-    DBConnectDialog* dbc = new DBConnectDialog(GamaQ2::connection_dbf_drop_tables);
-    connect(dbc, SIGNAL(input_data_open(bool)), this, SLOT(drop_or_delete_schema_tables(bool)));
-    dbc->exec();
-    delete dbc;
+    if (confirm.exec() == QMessageBox::Yes)
+    {
+        if (needsConfName)
+        {
+            SelectConfiguration* sc = new SelectConfiguration(GamaQ2::connection_implicit_db, false, false, this);
+            connect(sc, SIGNAL(selectConfiguration(QString)), this, SLOT(getConfigurationName(QString)));
+            sc->select();
+            return success;
+        }
+
+        drop_or_delete_schema_tables();
+    }
 
     close();
+    return success;
 }
 
-void DropDeleteBase::drop_or_delete_schema_tables(bool connected)
+void DropDeleteBase::drop_or_delete_schema_tables()
 {
-    if (!connected)
-    {
-        close();
-        return;
-    }
-
-    QSqlDatabase drop = QSqlDatabase::database(GamaQ2::connection_dbf_drop_tables);
-    QSqlDatabase impl = QSqlDatabase::database(GamaQ2::connection_implicit_db);
-
-    if (drop.isOpen() && impl.isOpen() && (drop.databaseName() == impl.databaseName()))
-    {
-        QMessageBox::critical(this, tr("Database %1").arg(drop.databaseName()), critical_1);
-        close();
-        return;
-    }
-
-    if (!drop.isOpen())
+    QSqlDatabase impl= QSqlDatabase::database(GamaQ2::connection_implicit_db);
+    if (!impl.isOpen())
     {
         QMessageBox::critical(this, tr("Database Connection Failed"), critical_2);
         close();
         return;
     }
 
-    if (needsConfName)
-    {
-        qDebug() << GamaQ2::connection_dbf_drop_tables
-                    << QSqlDatabase::database(GamaQ2::connection_dbf_drop_tables).isOpen();
-        SelectConfiguration* sc = new SelectConfiguration(GamaQ2::connection_dbf_drop_tables, false, false, this);
-        connect(sc, SIGNAL(selectConfiguration(QString)), this, SLOT(getConfigurationName(QString)));
-        sc->select();
-        qDebug() << "operace neni implementovana";
-        return;
-    }
+    QSqlQuery dq(impl);
 
-    QSqlQuery dq(drop);
-
-    drop.transaction();
+    impl.transaction();
 
     QStringList tables = GamaQ2::gama_local_schema_table_names;
+    if (query_string.startsWith("DELETE")) tables.removeOne("gnu_gama_local_schema_version");
+    if (needsConfName)                     tables.removeOne("gnu_gama_local_options");
     for (QStringList::const_iterator i=tables.begin(), e=tables.end(); i!=e; ++i)
     {
         dq.exec(QString(query_string).arg(*i).arg(confName));
@@ -149,16 +142,15 @@ void DropDeleteBase::drop_or_delete_schema_tables(bool connected)
         {
             QMessageBox::critical(this, tr("Database Error"),
                                   critical_3.arg(dq.lastError().databaseText()));
-            drop.rollback();
-            drop.close();
+            impl.rollback();
+            impl.close();
             close();
             return;
         }
     }
 
-    drop.commit();
-    drop.close();
+    impl.commit();
 
     QMessageBox::information(this, confirmWindowTitle, tr("Operation succesfully completed"));
-    close();
+    success = true;
 }

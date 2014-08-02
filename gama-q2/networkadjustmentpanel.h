@@ -95,6 +95,10 @@ private slots:
     void on_actionPrint_triggered();
     void on_actionPrint_as_PDF_triggered();
     void on_actionSave_adjustment_results_as_HTML_file_triggered();
+
+signals:
+
+    void networkAdjustmentPanel(bool newPanel);
 };
 
 #endif // NETWORKADJUSTMENTPANEL_H

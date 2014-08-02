@@ -50,6 +50,7 @@ private slots:
     void on_action_Adjustment_results_language();
     void disable_input_data(bool);
     void dbSlot();
+    void adjustmentPanel(bool newPanel);
 
 private:
     QAction *actionDbConnect, *actionDbImport, *actionDbDropSchema,

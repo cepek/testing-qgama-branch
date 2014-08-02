@@ -29,11 +29,12 @@ class DropDeleteBase : public QWidget
 
 public:
     DropDeleteBase(QWidget* parent);
+    virtual ~DropDeleteBase();
 
-    void exec();
+    bool exec();
 
 protected slots:
-    void drop_or_delete_schema_tables(bool connected);
+    void drop_or_delete_schema_tables();
 
 protected:
     virtual void init() = 0;
@@ -46,6 +47,7 @@ protected:
     QString query_string;
     QString confName;
     bool    needsConfName;
+    bool    success;
 };
 
 class DB_DropTables : public DropDeleteBase
