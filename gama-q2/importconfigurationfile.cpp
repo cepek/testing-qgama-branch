@@ -28,14 +28,16 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QDialogButtonBox>
+#include <QPlainTextEdit>
 #include <QDebug>
 
 // headers from gala-local-xml2sql.cpp
 #include <gnu_gama/local/localnetwork2sql.h>
 #include <gnu_gama/local/network.h>
 #include <gnu_gama/exception.h>
+#include <gnu_gama/xml/gkfparser.h>
 #include <sstream>
-#include <fstream>
 #include <cctype>
 
 ImportConfigurationFile::ImportConfigurationFile(QWidget *parent) :
@@ -139,11 +141,29 @@ void ImportConfigurationFile::on_lineEdit_ConfigurationName_textChanged(const QS
 void ImportConfigurationFile::on_pushButton_Import_clicked()
 {
     std::stringstream sql;
+    QString qnm = ui->label_File->text();
+    QFileInfo fileInfo(qnm);
+    QString file = fileInfo.fileName();
 
-    try {
-        const QString     qnm = ui->label_File->text();
-        const std::string snm = qnm.toUtf8().data();
-        std::ifstream xml(snm.c_str());
+    QString xmlString;
+    QFile inputFile(qnm);
+    if (inputFile.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&inputFile);
+        xmlString = in.readAll();
+        inputFile.close();
+    }
+    else
+    {
+        QMessageBox::critical(this, tr("Critical Error on Opening File"), qnm);
+        close();
+        return;
+    }
+
+    bool repeat {false};
+    do try {             // do try ... while (repeat)
+        repeat = false;
+        std::istringstream xml(xmlString.toUtf8().data());
 
         const QString qconfname = ui->lineEdit_ConfigurationName->text();
         GNU_gama::local::LocalNetwork lnet;
@@ -151,10 +171,63 @@ void ImportConfigurationFile::on_pushButton_Import_clicked()
         imp.readGkf(xml);
         imp.write  (sql, qconfname.toUtf8().data());
     }
+    catch (const GNU_gama::local::ParserException& v)
+    {
+        QDialog dialog;
+
+        dialog.setWindowTitle(tr("Import failed"));
+        QVBoxLayout* layout = new QVBoxLayout;
+        layout->addWidget(new QLabel(tr("File: ") + file + "\n" +
+                                     tr("Error at line: ") + QString::number(v.line) +
+                                     tr(" : ") + v.what()));
+
+        line = new QLabel(this);
+        layout->addWidget(line);
+
+        edit = new QPlainTextEdit(xmlString, this);
+        QTextCursor cursor = edit->textCursor();
+        cursor.movePosition(QTextCursor::Start);
+        cursor.movePosition(QTextCursor::Down,QTextCursor::MoveAnchor,v.line-1);
+        cursor.movePosition(QTextCursor::EndOfLine, QTextCursor::KeepAnchor);
+        edit->setTextCursor(cursor);
+        edit->setFocus();
+        layout->addWidget(edit);
+
+        connect(edit, SIGNAL(cursorPositionChanged()), this, SLOT(setXmlLine()));
+        emit edit->cursorPositionChanged();
+
+        QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok|
+                                                         QDialogButtonBox::Cancel);
+        connect(buttons, SIGNAL(accepted()), &dialog, SLOT(accept()));
+        connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
+        layout->addWidget(buttons);
+
+        dialog.setLayout(layout);
+        int result = dialog.exec();
+        if (result == QDialog::Accepted)
+        {
+            xmlString = edit->toPlainText();
+            repeat = true;
+        }
+        else
+        {
+            close();
+            return;
+        }
+    }
+    catch (const GNU_gama::local::Exception& v)
+    {
+        QMessageBox::warning(this, tr("Import failed"), v.what());
+        close();
+        return;
+    }
     catch (...)
     {
-
+        QMessageBox::warning(this, tr("Import failed"), tr("Unknown exception"));
+        close();
+        return;
     }
+    while (repeat);   // do try ... while (repeat)
 
     QSqlDatabase db = QSqlDatabase::database(GamaQ2::connection_implicit_db);
     QSqlQuery query(db);
@@ -199,4 +272,10 @@ void ImportConfigurationFile::on_pushButton_Import_clicked()
 
     db.commit();
     close();
+}
+
+void ImportConfigurationFile::setXmlLine()
+{
+    QString str(tr("XML Line: %1"));
+    line->setText(str.arg(edit->textCursor().blockNumber() + 1));
 }

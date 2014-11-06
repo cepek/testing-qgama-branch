@@ -30,3 +30,4 @@ OTHER_FILES += \
     Poznamky.txt
 
 RESOURCES +=
+CONFIG    += c++11

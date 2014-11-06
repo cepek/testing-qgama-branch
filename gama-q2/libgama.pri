@@ -82,6 +82,7 @@ $$LIBGAMASRC/lib/gnu_gama/local/revision.h \
 $$LIBGAMASRC/lib/gnu_gama/local/skipcomm.h \
 $$LIBGAMASRC/lib/gnu_gama/local/sqlitereader.h \
 $$LIBGAMASRC/lib/gnu_gama/local/svg.h \
+$$LIBGAMASRC/lib/gnu_gama/local/test_linearization_visitor.h \
 $$LIBGAMASRC/lib/gnu_gama/local/writevisitor.h \
 $$LIBGAMASRC/lib/gnu_gama/local/xmlerror.h \
 
@@ -107,7 +108,6 @@ $$LIBGAMASRC/lib/gnu_gama/local/results/text/outlying_abs_terms.h \
 $$LIBGAMASRC/lib/gnu_gama/local/results/text/reduced_observations.h \
 $$LIBGAMASRC/lib/gnu_gama/local/results/text/reduced_observations_to_ellipsoid.h \
 $$LIBGAMASRC/lib/gnu_gama/local/results/text/residuals_observations.h \
-$$LIBGAMASRC/lib/gnu_gama/local/results/text/test_linearization.h \
 $$LIBGAMASRC/lib/gnu_gama/local/results/text/underline.h \
 
 HEADERS += \
@@ -204,6 +204,7 @@ $$LIBGAMASRC/lib/gnu_gama/local/results/text/underline.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/skipcomm.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/sqlitereader.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/svg.cpp \
+$$LIBGAMASRC/lib/gnu_gama/local/test_linearization_visitor.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/xmlerror.cpp \
 $$LIBGAMASRC/lib/gnu_gama/outstream.cpp \
 $$LIBGAMASRC/lib/gnu_gama/rand.cpp \

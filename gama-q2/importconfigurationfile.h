@@ -22,6 +22,8 @@
 #define IMPORTCONFIGURATIONFILE_H
 
 #include <QWidget>
+#include <QLabel>
+#include <QPlainTextEdit>
 
 namespace Ui {
     class ImportConfigurationFile;
@@ -42,12 +44,16 @@ private slots:
     void on_lineEdit_ConfigurationName_textChanged(const QString &arg1);
 
     void on_pushButton_Import_clicked();
+    void setXmlLine();
 
 private:
     Ui::ImportConfigurationFile *ui;
     QString file;
+    QLabel* line {nullptr};
+    QPlainTextEdit* edit {nullptr};
 
     void configure();
 };
+
 
 #endif // IMPORTCONFIGURATIONFILE_H
