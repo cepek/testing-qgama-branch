@@ -58,9 +58,10 @@ namespace GamaQ2
     extern const QString vectorObsName;
     extern const QString coordinateObsName;
 
-
     extern const QString connection_implicit_db;
     extern const QString connection_dbf_drop_tables;
+
+    extern const QString delegate_style_sheet;
 
     extern const QColor colorClusterHeader;
     extern const QColor colorPassiveBackground;

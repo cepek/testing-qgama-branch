@@ -21,7 +21,9 @@
 #include "pointeditor.h"
 #include "pointtablemodel.h"
 #include "ui_pointeditor.h"
+#include "lineeditdelegate.h"
 #include "pointtypecombobox.h"
+#include "constants.h"
 
 #include <QMenu>
 #include <QMessageBox>
@@ -35,9 +37,12 @@ PointEditor::PointEditor(QWidget *parent) :
     qDebug() << "***  PointEditor" << __FILE__ << __LINE__;
     ui->setupUi(this);
 
+    LineEditDelegate* item = new LineEditDelegate(ui->tableView);
+    ui->tableView->setItemDelegate(item);
     PointTypeComboBox* combobox = new PointTypeComboBox(ui->tableView);
     ui->tableView->setItemDelegateForColumn(3, combobox);
     ui->tableView->setItemDelegateForColumn(5, combobox);
+    ui->tableView->setStyleSheet(GamaQ2::delegate_style_sheet);
 
     enableEdit(false);
 

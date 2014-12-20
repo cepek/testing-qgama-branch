@@ -55,7 +55,7 @@ int PointTableModel::columnCount(const QModelIndex &parent) const
 
 QVariant PointTableModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid()) return QVariant();
+    if (!index.isValid()) return QVariant();      // return invalig QVariant
 
     int row = index.row();
     if (row == pointData.size()) return QVariant();

@@ -22,6 +22,7 @@
 #include "ui_observationeditor.h"
 #include "insertclusterdialog.h"
 #include "insertobservationdialog.h"
+#include "lineeditdelegate.h"
 #include "constants.h"
 #include <gnu_gama/local/gamadata.h>
 #include <QMenu>
@@ -98,6 +99,10 @@ ObservationEditor::ObservationEditor(QWidget *parent) :
     model(0), readonly(true)
 {
     ui->setupUi(this);
+
+    LineEditDelegate* item = new LineEditDelegate(ui->tableView);
+    ui->tableView->setItemDelegate(item);
+    ui->tableView->setStyleSheet(GamaQ2::delegate_style_sheet);
 
     ui->tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     observationMenu = new QMenu(this);

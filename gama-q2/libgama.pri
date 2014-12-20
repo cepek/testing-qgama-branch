@@ -69,11 +69,7 @@ $$LIBGAMASRC/lib/gnu_gama/local/localnetwork2sql.h \
 $$LIBGAMASRC/lib/gnu_gama/local/lpoint.h \
 $$LIBGAMASRC/lib/gnu_gama/local/matvec.h \
 $$LIBGAMASRC/lib/gnu_gama/local/medianf.h \
-$$LIBGAMASRC/lib/gnu_gama/local/network_chol.h \
-$$LIBGAMASRC/lib/gnu_gama/local/network_env.h \
-$$LIBGAMASRC/lib/gnu_gama/local/network_gso.h \
 $$LIBGAMASRC/lib/gnu_gama/local/network.h \
-$$LIBGAMASRC/lib/gnu_gama/local/network_svd.h \
 $$LIBGAMASRC/lib/gnu_gama/local/observation.h \
 $$LIBGAMASRC/lib/gnu_gama/local/orientation.h \
 $$LIBGAMASRC/lib/gnu_gama/local/pointid.h \

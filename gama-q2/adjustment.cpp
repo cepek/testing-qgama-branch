@@ -28,6 +28,7 @@
 #include <gnu_gama/local/gamadata.h>
 #include <gnu_gama/xml/localnetworkxml.h>
 #include <gnu_gama/local/svg.h>
+#include <gnu_gama/local/test_linearization_visitor.h>
 #include <sstream>
 #include <cfloat>
 
@@ -479,6 +480,14 @@ void Adjustment::exec()
 
         lnet->update_points();
         lnet->solve();
+
+        lnet->clear_linearization_iterations();
+        while (lnet->next_linearization_iterations() &&
+               TestLinearization(lnet))
+        {
+                lnet->increment_linearization_iterations();
+                lnet->refine_approx();
+        }
 
         solved = true;
         emit adjustment_signal(solved);

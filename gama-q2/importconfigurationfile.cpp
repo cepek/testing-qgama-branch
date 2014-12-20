@@ -105,8 +105,9 @@ void ImportConfigurationFile::configure()
         }
     }
 
-    const QString basename = QFileInfo(file).baseName();
-    ui->label_File->setText(file);
+    QFileInfo info(file);
+    const QString basename = info.baseName();
+    ui->label_File->setText(info.fileName());
     ui->lineEdit_ConfigurationName->setText(basename);
 }
 
@@ -142,11 +143,9 @@ void ImportConfigurationFile::on_pushButton_Import_clicked()
 {
     std::stringstream sql;
     QString qnm = ui->label_File->text();
-    QFileInfo fileInfo(qnm);
-    QString file = fileInfo.fileName();
 
     QString xmlString;
-    QFile inputFile(qnm);
+    QFile inputFile(file);
     if (inputFile.open(QIODevice::ReadOnly))
     {
         QTextStream in(&inputFile);

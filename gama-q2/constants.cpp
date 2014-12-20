@@ -54,6 +54,11 @@ const QString GamaQ2::zangleObsName  = "zangle";
 const QString GamaQ2::vectorObsName      = "vector";
 const QString GamaQ2::coordinateObsName  = "coordinates";
 
+const QString GamaQ2::delegate_style_sheet = "QLineEdit {"
+                                             " border: 0px white;"
+                                             " background: white;"
+                                             "}";
+
 const QColor GamaQ2::colorClusterHeader     = QColor(210,210,210);
 const QColor GamaQ2::colorPassiveBackground = QColor(240,240,240);   // Qt::lightGray is too dark
 const QColor GamaQ2::colorOutsideCovMat     = Qt::lightGray;
