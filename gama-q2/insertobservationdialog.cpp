@@ -58,7 +58,6 @@ InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *
         comboObservation->addItem(GamaQ2::azimObsName);
         comboObservation->addItem(GamaQ2::slopeObsName);
         comboObservation->addItem(GamaQ2::zangleObsName);
-        comboObservation->addItem(GamaQ2::hdifObsName);
 
         ui->formLayout->addRow(tr("Observation"), comboObservation);
         ui->formLayout->addRow(tr("Position"),    comboPosition);
@@ -179,9 +178,6 @@ void InsertObservationDialog::accept()
                     info.observation = new GNU_gama::local::Z_Angle(sp, t1, value*G2R);
                     info.angular = true;
                     info.observationNameIndex = ObservationTableModel::indZangle;
-                } else if (name == GamaQ2::hdifObsName) {
-                    info.observation = new GNU_gama::local::H_Diff(sp, t1, value);
-                    info.observationNameIndex = ObservationTableModel::indHdiff;
                 } else
                     throw Exception(tr("unnown observation type in "
                                        "GamaQ2::obsClusterName").toUtf8().data());
