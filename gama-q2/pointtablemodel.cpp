@@ -244,7 +244,7 @@ bool PointTableModel::setData (const QModelIndex &index,
         if      (value == coordinate_types[1]) lp.set_fixed_xy();
         else if (value == coordinate_types[2]) lp.set_constrained_xy();
         else if (value == coordinate_types[3]) lp.set_free_xy();
-        else if (simple.isEmpty())             lp.unused_xy();
+        else if (simple.isEmpty())             lp.set_unused_xy();
         else
         {
             warning_text = warning_txyz;
@@ -266,7 +266,7 @@ bool PointTableModel::setData (const QModelIndex &index,
         if      (value == coordinate_types[1]) lp.set_fixed_z();
         else if (value == coordinate_types[2]) lp.set_constrained_z();
         else if (value == coordinate_types[3]) lp.set_free_z();
-        else if (simple.isEmpty())             lp.unused_z();
+        else if (simple.isEmpty())             lp.set_unused_z();
         else
         {
             warning_text = warning_txyz;
