@@ -145,7 +145,6 @@ void SelectConfiguration::on_buttonBox_accepted()
 
 void SelectConfiguration::on_buttonBox_rejected()
 {
-    emit selectConfiguration(QString());
     close();
 }
 

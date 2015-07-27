@@ -74,7 +74,8 @@ private slots:
     void update_observation_editor_table();
 
     void getConfigurationName(QString conf, bool tabbed);
-    void draw_network_configuration(bool solved=true);
+    void draw_network_configuration();
+    void tabIndexChanged(int n);
     void update_adjustment_results(bool solved=false);
     void status_bar(QString text);
     void save_configuration(QString confname);

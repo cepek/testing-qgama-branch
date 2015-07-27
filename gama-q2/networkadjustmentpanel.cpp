@@ -75,7 +75,7 @@ void NetworkAdjustmentPanel::on_action_Close_triggered()
     close();
 }
 
-void NetworkAdjustmentPanel::draw_network_configuration(bool solved)
+void NetworkAdjustmentPanel::draw_network_configuration()
 {
     std::string s = adj.svg();
     QByteArray  b(s.c_str(), s.length());
@@ -108,6 +108,11 @@ void NetworkAdjustmentPanel::exec()
     SelectConfiguration* sc = new SelectConfiguration(connection_name, true, false, this);
     connect(sc, SIGNAL(selectConfiguration(QString,bool)), this, SLOT(getConfigurationName(QString,bool)));
     sc->select();
+}
+
+void NetworkAdjustmentPanel::tabIndexChanged(int n)
+{
+    if (n==3) draw_network_configuration();
 }
 
 void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
@@ -162,6 +167,8 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
 
         QAction* view = ui->menubar->actions()[2];
         ui->menubar->removeAction(view);
+
+        connect(tab, SIGNAL(currentChanged(int)),this,SLOT(tabIndexChanged(int)));
     }
     else
     {
@@ -191,6 +198,8 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
         dockres->setWidget(res);
         tabifyDockWidget(dockpar, dockres);
         ui->menu_View->addAction(dockres->toggleViewAction());
+
+        connect(docksvg, SIGNAL(visibilityChanged(bool)),this,SLOT(draw_network_configuration()));
     }
 
     connect(par,  SIGNAL(angular_units_changed()), this, SLOT(update_observation_editor_table()));
@@ -200,14 +209,13 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
     connect(obs,  SIGNAL(warning(QString)), this,  SLOT(status_bar(QString)));
 
     connect(&adj, SIGNAL(acord_signal()),          this, SLOT(update_point_editor_table()));
-    connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(draw_network_configuration(bool)));
+    connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(draw_network_configuration()));
     connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_adjustment_results (bool)));
     connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_point_editor_table()));
     connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_observation_editor_table()));
 
     update_point_editor_table();
     update_observation_editor_table();
-    draw_network_configuration(false);
 
     emit networkAdjustmentPanel(true);
     show();
@@ -428,14 +436,14 @@ void NetworkAdjustmentPanel::on_actionSave_network_configuration_outline_trigger
 
 void NetworkAdjustmentPanel::on_actionOutline_draw_triggered()
 {
-    DrawSettings *svg = new DrawSettings(adj.get_svg());
+    DrawSettings *draw = new DrawSettings(adj.get_svg());
 
-    connect(this, SIGNAL(destroyed()), svg, SLOT(close()));
-    connect(svg, SIGNAL(redraw()), this, SLOT(draw_network_configuration()));
+    connect(this, SIGNAL(destroyed()), draw, SLOT(close()));
+    connect(draw, SIGNAL(redraw()), this, SLOT(draw_network_configuration()));
 
-    svg->setAttribute(Qt::WA_DeleteOnClose);
-    svg->setWindowTitle(configuration_name);
-    svg->show();
+    draw->setAttribute(Qt::WA_DeleteOnClose);
+    draw->setWindowTitle(configuration_name);
+    draw->show();
 }
 
 void NetworkAdjustmentPanel::status_bar(QString text)
@@ -502,8 +510,8 @@ void NetworkAdjustmentPanel::on_action_Save_into_database_triggered()
 void NetworkAdjustmentPanel::on_actionSave_As_triggered()
 {
     SelectConfiguration* sc = new SelectConfiguration(connection_name, false, true, this);
-    sc->select();
     connect(sc, SIGNAL(selectConfiguration(QString)), SLOT(save_configuration(QString)));
+    sc->select();
 }
 
 void NetworkAdjustmentPanel::save_configuration(QString confname)

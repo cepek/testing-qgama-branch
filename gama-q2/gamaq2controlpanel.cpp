@@ -71,7 +71,7 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
     init_schema_lists();
     {
         GamaQ2::name    = "gama-g2";
-        GamaQ2::version = "0.82";
+        GamaQ2::version = "0.83";
 
         QFile rfile(":/lib/gama/configure.ac");
         rfile.open(QIODevice::ReadOnly);
@@ -368,10 +368,10 @@ void GamaQ2ControlPanel::on_action_About_gama_q2_triggered()
 
     about.setWindowTitle(tr("About gama-q2"));
     about.setTextFormat(Qt::RichText);
-    about.setText(tr("<p>Adjustment of geodetic networks with database support<p>") +
+    about.setText(tr("<p>Adjustment of geodetic networks with database support</p>") +
 
-                  "<p><b>" + GamaQ2::name + " &nbsp;" + GamaQ2::version + "</b>&nbsp;&nbsp;&nbsp;&nbsp;"
-                  " Copyright (C) &nbsp; 2014 &nbsp; Ales Cepek</p>"
+                  "<p><b>" + GamaQ2::name + "&nbsp;" + GamaQ2::version + "</b>"
+                  " Copyright (C) 2014 Aleš Čepek</p>"
                   "<p>" +
                   QString(tr("Based on <a href='http://www.gnu.org/software/gama'>"
                              "GNU gama</a> version %1")).arg(GamaQ2::gnu_gama_version) +
