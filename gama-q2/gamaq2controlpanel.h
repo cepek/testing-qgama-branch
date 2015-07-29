@@ -58,7 +58,7 @@ private:
             *actionDbExit;
     QAction *actionAdjAdjustment;
     QAction *actionAdjResultsLanguage;
-    QAction *actionAboutGamaQ2, *actionAboutQt;
+    QAction *actionGamaQ2help,*actionAboutGamaQ2, *actionAboutQt;
 
     QMap<QString, DbInterface*> mapDbPlugins;
 

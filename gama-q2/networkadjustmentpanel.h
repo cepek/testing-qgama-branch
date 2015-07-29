@@ -97,6 +97,8 @@ private slots:
     void on_actionPrint_as_PDF_triggered();
     void on_actionSave_adjustment_results_as_HTML_file_triggered();
 
+    void on_actionGama_q2_help_triggered();
+
 signals:
 
     void networkAdjustmentPanel(bool newPanel);

@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>lib/gama/xml/gama-local-schema.sql</file>
         <file>lib/gama/configure.ac</file>
+        <file>help/gama-q2.html</file>
     </qresource>
     <qresource prefix="/img">
         <file>q2-icon.png</file>

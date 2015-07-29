@@ -21,7 +21,8 @@ SOURCES  += $$GAMAQ2SRC/main.cpp\
     $$GAMAQ2SRC/lineeditdelegate.cpp \
     $$GAMAQ2SRC/observationtablemodel.cpp \
     $$GAMAQ2SRC/shrinkbandwidth.cpp \
-    $$GAMAQ2SRC/selectadjresultslanguage.cpp
+    $$GAMAQ2SRC/selectadjresultslanguage.cpp \
+    $$GAMAQ2SRC/gamaq2help.cpp
 
 HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
     $$GAMAQ2SRC/gamaq2interfaces.h \
@@ -47,7 +48,8 @@ HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
     $$GAMAQ2SRC/lineeditdelegate.h \
     $$GAMAQ2SRC/observationtablemodel.h \
     $$GAMAQ2SRC/shrinkbandwidth.h \
-    $$GAMAQ2SRC/selectadjresultslanguage.h
+    $$GAMAQ2SRC/selectadjresultslanguage.h \
+    $$GAMAQ2SRC/gamaq2help.h
 
 
 FORMS    += $$GAMAQ2SRC/importconfigurationfile.ui \

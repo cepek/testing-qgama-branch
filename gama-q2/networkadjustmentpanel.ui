@@ -22,7 +22,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>32</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -68,11 +68,18 @@
     <addaction name="action_Points"/>
     <addaction name="actionObservations"/>
    </widget>
+   <widget class="QMenu" name="menu_Hrlp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionGama_q2_help"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Adjustment"/>
    <addaction name="menu_View"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Settings"/>
+   <addaction name="menu_Hrlp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSave_XML_adjustment_results">
@@ -174,6 +181,11 @@
    </property>
    <property name="text">
     <string>Save adjustment results as &amp;HTML file</string>
+   </property>
+  </action>
+  <action name="actionGama_q2_help">
+   <property name="text">
+    <string>Gama-q2 &amp;help</string>
    </property>
   </action>
  </widget>

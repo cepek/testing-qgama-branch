@@ -29,6 +29,7 @@
 #include "pointeditor.h"
 #include "observationeditor.h"
 #include "adjustmentresults.h"
+#include "gamaq2help.h"
 
 #include <sstream>
 #include <fstream>
@@ -600,4 +601,9 @@ void NetworkAdjustmentPanel::set_gui_adjustment_functions_status(bool isvalid)
     ui->actionSave_adjustment_results_as_plain_text->setEnabled(valid);
     ui->actionSave_network_configuration_outline->setEnabled(valid);
     ui->actionSave_XML_adjustment_results->setEnabled(valid);
+}
+
+void NetworkAdjustmentPanel::on_actionGama_q2_help_triggered()
+{
+    GamaQ2help::get()->show();
 }

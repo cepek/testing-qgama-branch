@@ -12,6 +12,7 @@
 *.so
 *.dll
 *.dylib
+*.autosave
 QuickStart.html
 
 # gama-q2

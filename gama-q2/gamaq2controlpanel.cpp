@@ -35,6 +35,7 @@
 #include "networkadjustmentpanel.h"
 #include "gamaq2interfaces.h"
 #include "selectadjresultslanguage.h"
+#include "gamaq2help.h"
 
 #include <gnu_gama/version.h>
 #include <gnu_gama/local/language.h>
@@ -214,9 +215,14 @@ void GamaQ2ControlPanel::build_menus()
     connect(actionAdjResultsLanguage, SIGNAL(triggered()), SLOT(on_action_Adjustment_results_language()));
 
     QMenu* menuHelp = new QMenu(tr("&Help"), this);
+    actionGamaQ2help = menuHelp->addAction(tr("Gama-q2 &help"));
+    // the very first c++11 lambda function in gama-q2 (2015-07-29)
+    // https://wiki.qt.io/New_Signal_Slot_Syntax
+    connect(actionGamaQ2help, &QAction::triggered, [](){GamaQ2help::get()->show();});
+    menuHelp->addSeparator();
     actionAboutGamaQ2 = menuHelp->addAction(tr("&About gama-q2"));
     connect(actionAboutGamaQ2, SIGNAL(triggered()), SLOT(on_action_About_gama_q2_triggered()));
-    actionAboutQt = menuHelp->addAction(tr("&About Qt"));
+    actionAboutQt = menuHelp->addAction(tr("About &Qt"));
     connect(actionAboutQt, SIGNAL(triggered()), SLOT(on_action_About_qt_triggered()));
 
     disable_input_data(false);
@@ -254,6 +260,7 @@ void GamaQ2ControlPanel::closeEvent(QCloseEvent * event)
     if (dialogCode == QMessageBox::Yes)
     {
         event->accept();
+        GamaQ2help::get()->close();
     }
     else if (dialogCode == QMessageBox::YesAll)
     {
@@ -264,6 +271,7 @@ void GamaQ2ControlPanel::closeEvent(QCloseEvent * event)
         }
 
         event->accept();
+        GamaQ2help::get()->close();
     }
     else
     {
