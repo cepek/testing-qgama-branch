@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+<style type='text/css'>
+  table { border:0; margin:0.2em 0; }
+  th    { white-space:nowrap; }
+</style>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+
+<title>gama-q2</title></head>
+<body>
+
+
+
+<h1>Gama-q2</h1>
+
+<p>Gama-q2 is a <a href="http://qt.io/">Qt</a> application for
+adjustment of geodetic networks with database support, where the
+database can be a simple SQLite3 flat file, used for storing geodetic
+network data, or any full-featured relational DBMS
+with <a href="http://doc.qt.io/qt-5/sql-driver.html">Qt driver</a>
+available like PostgreSQL or MySQL. It is build on the
+<a href="http://www.gnu.org/software/gama/">GNU gama</a> adjustment
+library</p>
+
+<p>Gama-q2 Graphical User Interface (GUI) has two main panels. One
+<b>Main Control Panel</b> that is open on the application startup
+and <b>Network Adjustment Panel</b> open for a selected network
+configuration. More than one <i>network adjustment panels</i> can be opened
+simultaneously.</p>
+
+
+
+<h2>Main Control Panel</h2>
+
+<i>Main Control Menu</i> has four menus and a bottom status bar
+temporarily displaying program's messages. This panel is displayed at
+program startup and the user typically starts with connection to a
+database.
+
+
+<h3>Database menu</h3>
+
+<dl>
+<dt>Connect to database</dt>
+
+<dd>
+<p>starts up a dialog for connecting to a database. Until the
+connection is established, some program functions are blocked. To open
+database connection the user must select <i>Database Drive</i> which
+implicitly set to <i>QSQLITE</i>. For Sqlite the database file must be
+selecte in <i>Open File dialog</i>, for new database you must check
+the <i>Create a New Sqlite Database</i> check box. Alternatively you
+can work with temporary database <i>:memory:</i> (implicit database
+name), but its content is lost when the program is closed.</p>
+
+<p>If you select another <i>Database Driver</i> in the top combo-box
+(for example to <i>QPSQL</i>) dialog changes and input fields
+for <i>Database Name, Username, Passwords, Hostname and Port</i> are
+displayed (depending on your system only some of the attributes need
+to be entered).
+</p> 
+</dd>
+
+<dt>Import Configuration File<dt>
+
+<dd>
+<p>XML input adjustment data (<i>Configuration File</i>) contains
+information on points, observations and other adjustment parameters,
+for details see GNU gama 
+<a href="http://www.gnu.org/software/gama/manual/index.html">documentation</a>.
+After selection the file (with .xml or .gkf extension), the dialog
+displays <i>existing configuration names</i> and user can either
+replace selected existing configuration or create a <i>new
+configuration name</i>. The configuration name can be arbitrary, but
+<i>white spaces</i> are removed by the application.
+</p>
+</dd>
+
+<dt>Drop Schema Tables</dt>
+<dt>Delete All Data from the Schema</dt>
+<dt>Delete Network Configuration</dt>
+
+<dd>
+<p>are corresponding administrative database operations.</p>
+</dd>
+
+
+<dt>Plugins ...</dd>
+<dd>
+<p>if plugins are available, they are listed here.
+</p>
+</dd>
+
+<dt>Exit</dt>
+
+<dd>
+<p>The program stops when all panels are closed. You can even
+close <i>Main Control Panel</i> and have one or more <i>Network
+Adjustment Panels</i> open and continue work. In situations like this
+the exit dialog asks if you want to exit just the <i>Main Control
+Panel</i> (yes) or all other opened panels as well (yes to all). 
+</p>
+</dd>
+
+</dl>
+
+
+<h3>Adjustment menu</h3>
+
+<dl>
+<dt>Network Adjustment<dt>
+
+<dd><p>Opens dialog for selecting <i>network configuration</i> stored
+in the database. If the configuration is selected, a new <i>Network
+Adjustment Panel</i> is created.
+<dd>
+
+</dl>
+
+
+
+<h3>Tools Menu</h3>
+
+<dl>
+<dt>Adjustement results language</dt>
+
+<dd><p>Enables to select a language for the adjustment results text.
+</p>
+</dd>
+
+</dl>
+
+
+
+<h3>Help menu</h3>
+
+<dl>
+<dt>Gama-q2 help</dt>
+
+<dd><p>this text.
+</p>
+</dd>
+
+<dt>About gama-q2</dt>
+
+<dd><p> Basic information about gama-q2, its version, GNU gama build
+version and the GPL licence.
+</p>
+</dd>
+
+
+<dt>About Qt</dt>
+
+<dd><p>Qt version, licencing and basic information on Qt C++ cross-platform.
+</p></dd>
+</dl>
+
+
+
+<h2>Network Adjustment Panel</h2>
+
+
+
+</table>
+</body>
+</html>

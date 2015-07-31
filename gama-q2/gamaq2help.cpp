@@ -27,9 +27,11 @@ GamaQ2help::GamaQ2help(QWidget *parent) : QMainWindow(parent)
     QString text = file.readAll();
 
     auto edit = new QTextEdit;
-    edit->setMinimumSize(500,300);
+    edit->setMinimumSize(800,500);
     edit->setText(text);
     edit->setReadOnly(true);
 
     setCentralWidget(edit);
+
+    show();
 }
