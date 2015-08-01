@@ -35,10 +35,10 @@ simultaneously.</p>
 
 <h2>Main Control Panel</h2>
 
-<i>Main Control Menu</i> has four menus and a bottom status bar
+<p><i>Main Control Menu</i> has four menus and a bottom status bar
 temporarily displaying program's messages. This panel is displayed at
 program startup and the user typically starts with connection to a
-database.
+database.</p>
 
 
 <h3>Database menu</h3>
@@ -61,15 +61,15 @@ name), but its content is lost when the program is closed.</p>
 for <i>Database Name, Username, Passwords, Hostname and Port</i> are
 displayed (depending on your system only some of the attributes need
 to be entered).
-</p> 
+</p>
 </dd>
 
-<dt>Import Configuration File<dt>
+<dt>Import Configuration File</dt>
 
 <dd>
 <p>XML input adjustment data (<i>Configuration File</i>) contains
 information on points, observations and other adjustment parameters,
-for details see GNU gama 
+for details see GNU gama
 <a href="http://www.gnu.org/software/gama/manual/index.html">documentation</a>.
 After selection the file (with .xml or .gkf extension), the dialog
 displays <i>existing configuration names</i> and user can either
@@ -88,7 +88,7 @@ configuration name</i>. The configuration name can be arbitrary, but
 </dd>
 
 
-<dt>Plugins ...</dd>
+<dt>Plugins ...</dt>
 <dd>
 <p>if plugins are available, they are listed here.
 </p>
@@ -101,7 +101,7 @@ configuration name</i>. The configuration name can be arbitrary, but
 close <i>Main Control Panel</i> and have one or more <i>Network
 Adjustment Panels</i> open and continue work. In situations like this
 the exit dialog asks if you want to exit just the <i>Main Control
-Panel</i> (yes) or all other opened panels as well (yes to all). 
+Panel</i> (yes) or all other opened panels as well (yes to all).
 </p>
 </dd>
 
@@ -111,12 +111,13 @@ Panel</i> (yes) or all other opened panels as well (yes to all).
 <h3>Adjustment menu</h3>
 
 <dl>
-<dt>Network Adjustment<dt>
+<dt>Network Adjustment</dt>
 
 <dd><p>Opens dialog for selecting <i>network configuration</i> stored
 in the database. If the configuration is selected, a new <i>Network
 Adjustment Panel</i> is created.
-<dd>
+</p>
+</dd>
 
 </dl>
 
@@ -163,7 +164,114 @@ version and the GPL licence.
 <h2>Network Adjustment Panel</h2>
 
 
+<h3>File menu</h3>
 
-</table>
+<dl>
+<dt>Save</dt>
+<dd><p>Save network data into database.
+</p>
+</dd>
+
+<dt>Save As ...</dt>
+<dd><p>Save copy of network data into database under a new name.
+</p>
+</dd>
+
+<dt>Print</dt>
+<dt>Print as PDF</dt>
+<dd><p>Print adjustment results or save as a PDF file.
+</p>
+</dd>
+
+<dt>Save XML adjustment results</dt>
+<dt>Save adjustment results as HTML file</dt>
+<dt>Save adjustment results as a plaint text file</dt>
+<dt>Save network configurationoutline</dt>
+
+<dd><p>Save adjustment results in different formats (XML,  HTML, TXT or SVG).
+</p>
+</dd>
+
+<dt>Close</dt>
+<dd><p>Close current <i>Network Adjustment Panel</i> (or all opened panels).
+</p>
+</dd>
+
+</dl>
+
+
+<h3>Adjustment menu</h3>
+
+<dl>
+<dt>Run</dt>
+<dd><p>Start adjustment of the network.
+</p>
+</dd>
+</dl>
+
+
+<h3>Edit Menu</h3>
+
+<dl>
+<dt>Parameters</dt>
+<dt>Points</dt>
+<dt>Observations</dt>
+<dd><p>Implicitly editing of network adjustment parameters, points'
+data and observations are disabled. In the <i>Edit menu</i> users can
+enable/disable one or all three editors.
+</p>
+</dd>
+</dl>
+
+
+<h3>Settings</h3>
+
+<dl>
+<dt>Outline draw</dt>
+<dd><p>Opens dialog for changing parameters of the network outline draw.
+</p>
+</dd>
+</dl>
+
+
+<h3>Help</h3>
+
+<dl>
+<dt>Gama-q2 help</dt>
+
+<dd><p>this text.
+</p>
+</dd>
+</dl>
+
+<h2>Editors and adjustment results</h2>
+
+<p><i>Network Adjustment Results</i> has three editor panels for
+adjustment paramater, points and observations and two output panels,
+the <i>outline draw</i> and the adjustment results text output. These
+five panels can be organized as tabbed or docked (as indicated by the
+user on opening a new adjustment configuration).
+</p>
+
+<p>Adjustment parameters editor is strightforward, the meaning of
+individual parameters is described in GNU gama
+<a href="http://www.gnu.org/software/gama/manual/index.html">documentation</a>.
+Points' editor is also simple, attributes <i>Txx</i> and <i>Tz</i>
+define how the role of the point coordinates in the adjustment:</p>
+
+<dl>
+<dt>fixed</dt>
+<dd><p>given coordinates</p></dd>
+<dt>free</dt>
+<dd><p>adjusted coordinates (ie. unknown adjustment parameter)</p></dd>
+<dt>constrained</dt>
+<dd><p>adjusted coordinates that are subject to a second adjustment
+constraint (the sum of squares of constrained coordinates is
+minimal)</p></dd>
+</dl>
+
+<p>All other points/coordinates (not explicitly specified) are unused in the
+adjustment.</p>
+
 </body>
 </html>
