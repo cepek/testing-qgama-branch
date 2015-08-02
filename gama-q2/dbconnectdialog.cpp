@@ -57,10 +57,14 @@ DBConnectDialog::~DBConnectDialog()
 
 void DBConnectDialog::switchStackedWidgets()
 {
-    if (ui->comboBox_Driver->currentText() == "QSQLITE")
+    if (ui->comboBox_Driver->currentText() == "QSQLITE") {
         ui->stackedWidget->setCurrentIndex(1);
-    else
+        ui->buttonBox->button(QDialogButtonBox::Help)->show();
+    }
+    else {
         ui->stackedWidget->setCurrentIndex(0);
+        ui->buttonBox->button(QDialogButtonBox::Help)->hide();
+    }
 }
 
 void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
@@ -214,4 +218,13 @@ void DBConnectDialog::on_buttonBox_accepted()
     }
 
     emit input_data_open(true);
+}
+
+void DBConnectDialog::on_buttonBox_helpRequested()
+{
+    QMessageBox::information(this, tr("SQLite In-Memory Database"),
+       tr("You can use SQLite database with special filename :memory: "
+          "to exist purely in memory. "
+          "No information is implicitly stored at the disk "
+          "after exiting the program."));
 }

@@ -46,10 +46,9 @@ private:
 private slots:
     void switchStackedWidgets();
     void on_pushButton_OpenFileDialog_clicked();
-
     void on_buttonBox_rejected();
-
     void on_buttonBox_accepted();
+    void on_buttonBox_helpRequested();
 
 signals:
     void input_data_open(bool);
