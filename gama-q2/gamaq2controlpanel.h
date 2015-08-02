@@ -55,6 +55,7 @@ private slots:
 private:
     QAction *actionDbConnect, *actionDbImport, *actionDbDropSchema,
             *actionDbDeleteData, *actionDbDeleteConfiguration,
+            *actionImportExamples,
             *actionDbExit;
     QAction *actionAdjAdjustment;
     QAction *actionAdjResultsLanguage;
@@ -69,6 +70,8 @@ private:
 
     bool cmp(QString s, QString c);
     bool init_language_list;
+
+    void import_examples();
 
 signals:
     void gamaCloseSignal();

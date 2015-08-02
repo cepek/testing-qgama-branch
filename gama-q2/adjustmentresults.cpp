@@ -55,6 +55,7 @@ void AdjustmentResults::update_adjustment_results()
 
     ui->textEdit->clear();
     ui->textEdit->insertHtml(QString::fromUtf8(utf8.c_str(), utf8.length()));
+    ui->textEdit->moveCursor(QTextCursor::Start);
 }
 
 QString AdjustmentResults::getHtmlUtf8() const

@@ -3,6 +3,9 @@
         <file>lib/gama/xml/gama-local-schema.sql</file>
         <file>lib/gama/configure.ac</file>
         <file>help/gama-q2.html</file>
+        <file>examples/example_01.gkf</file>
+        <file>examples/example_02.gkf</file>
+        <file>examples/example_03.gkf</file>
     </qresource>
     <qresource prefix="/img">
         <file>q2-icon.png</file>

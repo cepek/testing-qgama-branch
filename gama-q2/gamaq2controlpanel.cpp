@@ -37,8 +37,10 @@
 #include "selectadjresultslanguage.h"
 #include "gamaq2help.h"
 
+#include <gnu_gama/local/localnetwork2sql.h>
 #include <gnu_gama/version.h>
 #include <gnu_gama/local/language.h>
+#include <sstream>
 
 namespace
 {
@@ -190,6 +192,11 @@ void GamaQ2ControlPanel::build_menus()
     connect(actionDbDeleteData, SIGNAL(triggered()), SLOT(on_action_Delete_all_Data_from_the_Schema_triggered()));
     actionDbDeleteConfiguration = menuDb->addAction(tr("Delete &Network Configuration"));
     connect(actionDbDeleteConfiguration, SIGNAL(triggered()), SLOT(on_action_Delete_Network_Configuration_triggered()));
+
+    menuDb->addSeparator();
+    actionImportExamples = menuDb->addAction(tr("Import Examples"));
+    connect(actionImportExamples, &QAction::triggered, this, &GamaQ2ControlPanel::import_examples);
+
     if (!mapDbPlugins.empty())
     {
         menuDb->addSeparator();
@@ -310,6 +317,7 @@ void GamaQ2ControlPanel::disable_input_data(bool yes)
     actionDbDeleteConfiguration->setEnabled(yes);
 
     actionDbImport->setEnabled(yes);
+    actionImportExamples->setEnabled(yes);
     actionAdjAdjustment->setEnabled(yes);
     actionAdjResultsLanguage->setEnabled(yes);
 
@@ -357,7 +365,7 @@ void GamaQ2ControlPanel::load_plugins()
 {
     QDir gamaq2plugins(qApp->applicationDirPath());
     gamaq2plugins.cd("plugins");
-    foreach (QString fileName, gamaq2plugins.entryList(QDir::Files)) {
+    for (QString fileName : gamaq2plugins.entryList(QDir::Files)) {
         QPluginLoader pluginLoader(gamaq2plugins.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
@@ -456,4 +464,61 @@ void GamaQ2ControlPanel::adjustmentPanel(bool newPanel)
     else          count--;
 
     actionDbDropSchema->setDisabled(count > 0);
+}
+
+void GamaQ2ControlPanel::import_examples()
+{
+    QString exdir { ":/examples/" };
+    int count {0};
+
+    QDir examples (exdir);
+    for (QString fileName : examples.entryList(QDir::Files)) {
+
+        count++;
+        QString confName = fileName.left(10);
+        QFile file(exdir + fileName);
+        file.open(QIODevice::ReadOnly);
+
+        std::istringstream xml { file.readAll().toStdString() };
+
+        GNU_gama::local::LocalNetwork lnet;
+        GNU_gama::local::LocalNetwork2sql imp(lnet);
+        imp.readGkf(xml);
+
+        std::stringstream sql;
+        imp.write(sql, confName.toStdString());
+
+        QSqlDatabase db = QSqlDatabase::database(GamaQ2::connection_implicit_db);
+        QSqlQuery query(db);
+
+        db.transaction();
+
+        std::string text;
+        while (std::getline(sql, text))
+        {
+            while (sql && text.back() != ';') text += char(sql.get());
+            if (text.back() != ';') break;
+
+            // avoid nested transactions
+            if (text.find("begin;" ) != std::string::npos) continue;
+            if (text.find("commit;") != std::string::npos) continue;
+
+            query.exec(text.c_str());
+            if (query.lastError().isValid())
+            {
+                QMessageBox::critical(this, tr("Database error"),
+                                      query.lastError().databaseText() + "\n" + text.c_str());
+                db.rollback();
+                close();
+                return;
+            }
+        }
+
+        db.commit();
+
+        qDebug() << "import examples" << fileName << confName;
+    }
+
+    QMessageBox::information(this, tr("Import Examples"),
+                             tr("All %1 examples imported into the database").arg(count));
 }
