@@ -24,7 +24,7 @@ ui_*.h
 *.pro.user.*
 *-build-*
 Makefile
-./dox
+dox
 
 # GNU Gama source codes located at the subdirectory lib/gama
 ############################################################
