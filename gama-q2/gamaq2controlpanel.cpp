@@ -515,8 +515,6 @@ void GamaQ2ControlPanel::import_examples()
         }
 
         db.commit();
-
-        qDebug() << "import examples" << fileName << confName;
     }
 
     QMessageBox::information(this, tr("Import Examples"),

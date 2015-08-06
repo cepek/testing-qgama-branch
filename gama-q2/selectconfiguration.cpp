@@ -90,13 +90,13 @@ void SelectConfiguration::select()
             empty = false;
         }
 
-        if (empty)
-        {
-            QMessageBox::warning(this, tr(" Database %1").arg(db.databaseName()),
-                                 tr("There are no configuration names in the database"));
-            close();
-            return;
-        }
+        //if (empty) ... new empty configuration can be created
+        //{
+        //    QMessageBox::warning(this, tr(" Database %1").arg(db.databaseName()),
+        //                         tr("There are no configuration names in the database"));
+        //    close();
+        //    return;
+        //}
     }
 
     QCompleter *completer = new QCompleter(confs, this);

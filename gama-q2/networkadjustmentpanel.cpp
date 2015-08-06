@@ -106,7 +106,7 @@ void NetworkAdjustmentPanel::update_adjustment_results(bool solved)
 
 void NetworkAdjustmentPanel::exec()
 {
-    SelectConfiguration* sc = new SelectConfiguration(connection_name, true, false, this);
+    SelectConfiguration* sc = new SelectConfiguration(connection_name, true, true, this);
     connect(sc, SIGNAL(selectConfiguration(QString,bool)), this, SLOT(getConfigurationName(QString,bool)));
     sc->select();
 }
@@ -133,6 +133,18 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
 
     try
     {
+        query.exec("select conf_name FROM gnu_gama_local_configurations "
+                   " where conf_name = '" + conf + "'");
+
+        if (!query.next()) {
+            db.transaction();
+            query.exec(" insert into gnu_gama_local_configurations (conf_id, conf_name) "
+                       " select new_id, '" + conf + "' from (select coalesce(max(conf_id), 0)+1 as new_id from gnu_gama_local_configurations)x");
+            qDebug() << query.lastQuery();
+            qDebug() << query.lastError();
+            db.commit();
+        }
+
         adj.read_configuration(query, configuration_name);
     }
     catch (...)

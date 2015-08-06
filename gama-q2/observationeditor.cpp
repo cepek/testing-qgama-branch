@@ -233,7 +233,13 @@ void ObservationEditor::insertObservation()
     //ui->tableView->selectRow(observationLogicalIndex);
     SelectGroup selectGroup(model, ui->tableView, observationLogicalIndex);
 
-    InsertObservationDialog dialog(model->currentClusterName(observationLogicalIndex));
+    QString name = model->currentClusterName(observationLogicalIndex);
+    if (name.isEmpty()) {
+        QMessageBox::warning(this, tr("Insert Observation Failed"),
+                             tr("Observation cannot be inserted without a cluster."));
+        return;
+    }
+    InsertObservationDialog dialog(name);
     if (dialog.exec() == QDialog::Rejected) return;
 
     model->insertObservation(observationLogicalIndex, dialog);

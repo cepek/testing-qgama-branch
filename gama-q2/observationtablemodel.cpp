@@ -940,7 +940,8 @@ void ObservationTableModel::deleteObservation(int logicalIndex)
 
 QString ObservationTableModel::currentClusterName(int logicalIndex) const
 {
-    while (obsMap[logicalIndex].rowType != clusterHeader) logicalIndex--;
+    while (logicalIndex >= 0 && obsMap[logicalIndex].rowType != clusterHeader) logicalIndex--;
+    if (logicalIndex < 0) return QString();
 
     return obsMap[logicalIndex].clusterName;
 }
