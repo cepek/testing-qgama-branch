@@ -26,6 +26,8 @@ ui_*.h
 Makefile
 dox
 
+.idea
+
 # GNU Gama source codes located at the subdirectory lib/gama
 ############################################################
 lib/gama

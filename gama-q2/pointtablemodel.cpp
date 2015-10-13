@@ -300,7 +300,7 @@ bool PointTableModel::insertRows(int row, int count,
 {
     beginInsertRows(parent, row, row + count - 1);
 
-    if (count > 0) pointData.allocate(count);
+    if (count > 0) pointData.get_allocator().allocate(count);
 
     endInsertRows();
     return true;
