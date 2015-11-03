@@ -469,6 +469,8 @@ void Adjustment::exec()
 {
     /*if (!solved)*/ try
     {
+        lnet->remove_inconsistency();
+
         GNU_gama::local::Acord acord(lnet->PD, lnet->OD);
         acord.execute();
 
@@ -687,7 +689,7 @@ double Adjustment::scale() const
 // y coordinates have internaly changed its sign for inconsistent systems
 int Adjustment::y_sign() const
 {
-    return GNU_gama::local::GaMaConsistent(lnet->PD) ? +1 : -1;
+    return lnet->y_sign();
 }
 
 
