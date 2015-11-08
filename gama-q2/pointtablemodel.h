@@ -78,6 +78,10 @@ private:
     void insertPoint(GNU_gama::local::PointID id,
                      GNU_gama::local::LocalPoint point = GNU_gama::local::LocalPoint());
     void warning(int row, int col, QString text, QString value=QString(), bool ok=false);
+
+    double y_sign() const {
+        return (pointData.left_handed_coordinates() == pointData.left_handed_angles()) ? +1.0 : -1.0;
+    }
 };
 
 #endif // GAMALOCALPOINTMODEL_H

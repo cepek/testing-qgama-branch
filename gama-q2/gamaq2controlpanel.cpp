@@ -1,5 +1,5 @@
 /*  Qt based GUI for GNU Gama -- adjustment of geodetic networks
-    Copyright (C) 2014  Ales Cepek <cepek@gnu.org>
+    Copyright (C) 2014, 2015  Ales Cepek <cepek@gnu.org>
 
     This file is a part of GNU Gama.
 
@@ -73,8 +73,9 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
 
     init_schema_lists();
     {
-        GamaQ2::name    = "gama-g2";
-        GamaQ2::version = "0.83";
+        GamaQ2::name      = "gama-g2";
+        GamaQ2::version   = "0.84";
+        GamaQ2::copyright = "2015";
 
         QFile rfile(":/lib/gama/configure.ac");
         rfile.open(QIODevice::ReadOnly);
@@ -387,7 +388,7 @@ void GamaQ2ControlPanel::on_action_About_gama_q2_triggered()
     about.setText(tr("<p>Adjustment of geodetic networks with database support</p>") +
 
                   "<p><b>" + GamaQ2::name + "&nbsp;" + GamaQ2::version + "</b>"
-                  " Copyright (C) 2014 Aleš Čepek</p>"
+                  " Copyright (C) " + GamaQ2::copyright + " Aleš Čepek</p>"
                   "<p>" +
                   QString(tr("Based on <a href='http://www.gnu.org/software/gama'>"
                              "GNU gama</a> version %1")).arg(GamaQ2::gnu_gama_version) +
@@ -475,7 +476,12 @@ void GamaQ2ControlPanel::import_examples()
     for (QString fileName : examples.entryList(QDir::Files)) {
 
         count++;
-        QString confName = fileName.left(10);
+        //QString confName = fileName.left(10);
+        QString confName;
+        for (auto c : fileName) {
+            if (c == '.') break;
+            confName += c;
+        }
         QFile file(exdir + fileName);
         file.open(QIODevice::ReadOnly);
 

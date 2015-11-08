@@ -70,6 +70,8 @@ void ParameterEditor::connectParameters(GNU_gama::local::LocalNetwork *ln)
 {
     lnet = ln;
 
+    lnet->remove_inconsistency();
+
     ui->plainTextEdit->setPlainText( QString::fromUtf8(lnet->description.c_str()) );
     ui->lineEdit_sigma_apr->setText( QString::number(lnet->apriori_m_0()) );
     ui->lineEdit_conf_pr  ->setText( QString::number( lnet->conf_pr()) );
@@ -85,6 +87,31 @@ void ParameterEditor::connectParameters(GNU_gama::local::LocalNetwork *ln)
         ui->comboBox_sigma_act->setCurrentIndex(0);
     else
         ui->comboBox_sigma_act->setCurrentIndex(1);
+
+    {
+        using CS = GNU_gama::local::LocalCoordinateSystem::CS;
+
+        QComboBox * cb = ui->comboBox_axes_xy;
+        bool editable = cb->isEditable();
+        cb->setEditable(false);
+
+        // lcoords.h  EN= 1, NW= 2, SE= 4, WS=  8, NE=16, SW=32, ES=64, WN=128
+        CS lcs = ln->PD.local_coordinate_system;
+        switch (lcs) {
+        case CS::EN: cb->setCurrentText("en"); break;
+        case CS::NW: cb->setCurrentText("nw"); break;
+        case CS::SE: cb->setCurrentText("se"); break;
+        case CS::WS: cb->setCurrentText("ws"); break;
+        case CS::NE: cb->setCurrentText("ne"); break;
+        case CS::SW: cb->setCurrentText("sw"); break;
+        case CS::ES: cb->setCurrentText("es"); break;
+        case CS::WN: cb->setCurrentText("wn"); break;
+        default:
+                     cb->setCurrentText("en"); break;
+        }
+
+        cb->setEditable(editable);
+    }
 
     if (lnet->PD.left_handed_angles())
         ui->comboBox_angles->setCurrentIndex(0);
@@ -218,6 +245,7 @@ void ParameterEditor::on_comboBox_axes_xy_currentIndexChanged(const QString &arg
     using namespace GNU_gama::local;
 
     LocalCoordinateSystem::CS& lcs = lnet->PD.local_coordinate_system;
+    lnet->return_inconsistency();
 
     if      (arg1 == "ne") lcs = LocalCoordinateSystem::NE;
     else if (arg1 == "sw") lcs = LocalCoordinateSystem::SW;
@@ -230,16 +258,20 @@ void ParameterEditor::on_comboBox_axes_xy_currentIndexChanged(const QString &arg
     else
          ;
 
+    lnet->remove_inconsistency();
     lnet->update_points();
 }
 
 void ParameterEditor::on_comboBox_angles_currentIndexChanged(const QString &arg1)
 {
+    lnet->return_inconsistency();
+
     if (arg1 == "clockwise")
         lnet->PD.setAngularObservations_Lefthanded();
     else
         lnet->PD.setAngularObservations_Righthanded();
 
+    lnet->remove_inconsistency();
     lnet->update_points();
 }
 

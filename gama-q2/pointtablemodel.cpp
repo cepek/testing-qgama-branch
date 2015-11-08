@@ -76,7 +76,7 @@ QVariant PointTableModel::data(const QModelIndex &index, int role) const
         else if (col == indPointY)
         {
             if (lp.test_xy() && (ptxy[row] == 3 || ptxy[row] == 2))
-                return QString("%1").arg(lp.y(), 0, 'F', dprec);
+                return QString("%1").arg(y_sign()*lp.y(), 0, 'F', dprec);
         }
         else if (col == indPointTxy)
         {
@@ -221,7 +221,7 @@ bool PointTableModel::setData (const QModelIndex &index,
         }
         else if (ptxy[row] == 0 || ptxy[row] == 2)
         {
-            double y = value.toDouble(&ok);
+            double y = y_sign()*value.toDouble(&ok);
             if (ok)
             {
                 lp.set_xy(0, y);
@@ -231,7 +231,7 @@ bool PointTableModel::setData (const QModelIndex &index,
         else if (ptxy[row] == 1 || ptxy[row] == 3)
         {
             double x = lp.x();
-            double y = value.toDouble(&ok);
+            double y = y_sign()*value.toDouble(&ok);
             if (ok)
             {
                 lp.set_xy(x, y);
