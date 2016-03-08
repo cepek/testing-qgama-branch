@@ -73,6 +73,8 @@ private:
 
     void import_examples();
 
+    QWidgetList localPluginsList;
+
 signals:
     void gamaCloseSignal();
 };

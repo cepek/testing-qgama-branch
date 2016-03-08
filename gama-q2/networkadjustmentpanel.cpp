@@ -30,6 +30,7 @@
 #include "observationeditor.h"
 #include "adjustmentresults.h"
 #include "gamaq2help.h"
+#include "gamaq2interfaces.h"
 
 #include <sstream>
 #include <fstream>
@@ -49,6 +50,25 @@
 bool        NetworkAdjustmentPanel::closeAllNetworkAdjustmentPanels = false;
 QWidgetList NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList;
 
+namespace
+{
+    // Solution after software.rtcm-ntrip.org by Leos Mervart (C) 2013
+    template<typename Interface>
+    class PluginAction : public QAction {
+    public:
+        PluginAction(QObject* parent, Interface* intface)
+            : QAction(intface->getName(), parent), interface_(intface)
+        {
+        }
+
+        Interface*  interface()  { return interface_; }
+
+    private:
+        Interface* interface_;
+    };
+
+}
+
 
 NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *parent) :
     QMainWindow(parent),
@@ -60,12 +80,41 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
 
     ui->setupUi(this);
 
+    QMenu* menu_tools = ui->menu_Tools;
+    {
+        QMap<QString, AdjustmentInterface*> map;
+
+        QDir gamaq2plugins(qApp->applicationDirPath());
+        gamaq2plugins.cd("plugins");
+        for (QString fileName : gamaq2plugins.entryList(QDir::Files)) {
+            QPluginLoader pluginLoader(gamaq2plugins.absoluteFilePath(fileName));
+            QObject *plugin = pluginLoader.instance();
+            if (plugin) {
+                if (AdjustmentInterface* adjinterface = qobject_cast<AdjustmentInterface*>(plugin))
+                {
+                    map[adjinterface->getName() + fileName] = adjinterface;
+                }
+            }
+        }
+
+        if (!map.empty())
+        {
+            menu_tools->setEnabled(true);
+            for (auto i : map)
+            {
+                PluginAction<AdjustmentInterface>* action = new PluginAction<AdjustmentInterface>(this, i);
+                menu_tools->addAction(action);
+                connect(action, SIGNAL(triggered()), SLOT(AdjustmentPluginSlot()));
+            }
+        }
+    }
 
     set_gui_adjustment_functions_status(false);
 }
 
 NetworkAdjustmentPanel::~NetworkAdjustmentPanel()
 {
+    for (auto w : localPluginsList) delete w;
     allNetworkAdjustmentPanelsList.removeOne(this);
 
     delete ui;
@@ -618,4 +667,16 @@ void NetworkAdjustmentPanel::set_gui_adjustment_functions_status(bool isvalid)
 void NetworkAdjustmentPanel::on_actionGama_q2_help_triggered()
 {
     GamaQ2help::get()->show();
+}
+
+void NetworkAdjustmentPanel::AdjustmentPluginSlot()
+{
+    if (PluginAction<AdjustmentInterface>* plugin_action = dynamic_cast<PluginAction<AdjustmentInterface>*>(sender()))
+    {
+        if (QWidget* widget = plugin_action->interface()->create(configuration_name, adj.get_local_network()))
+        {
+            localPluginsList.append(widget);
+            widget->show();
+        }
+    }
 }

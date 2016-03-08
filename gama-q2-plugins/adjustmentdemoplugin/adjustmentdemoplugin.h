@@ -17,11 +17,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GAMAQ2INTERFACES_gama_q2_interfaces_H
-#define GAMAQ2INTERFACES_gama_q2_interfaces_H
+#ifndef ADJUSTEMENTDEMOPLUGIN_H
+#define ADJUSTEMENTDEMOPLUGIN_H
 
+#include <QObject>
 #include <QString>
-class QWidget;
+#include "gamaq2interfaces.h"
 
 namespace GNU_gama {
 namespace local {
@@ -31,29 +32,28 @@ namespace local {
 
 using LocalNetwork = GNU_gama::local::LocalNetwork;
 
-class DbInterface
+class QFrame;
+
+class AdjustmentDemoPlugin : public QObject, AdjustmentInterface
 {
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.gnu.gama.gama-q2.AdjustmentInterface/1.0")
+    Q_INTERFACES(AdjustmentInterface)
+
 public:
-    virtual ~DbInterface() {}
-    virtual QString getName() = 0;
-    virtual QWidget* create() = 0;
+    AdjustmentDemoPlugin();
+
+    QString getName();
+    QWidget* create(QString cname, LocalNetwork* ln);
+
+private:
+    QString confName;
+    LocalNetwork* lnet {nullptr};
+    QFrame* frame;
+
+    QFrame* getFrame();
+
+private slots:
 };
 
-QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(DbInterface, "org.gnu.gama.gama-q2.DbInterface/1.0")
-QT_END_NAMESPACE
-
-
-class AdjustmentInterface
-{
-public:
-    virtual ~AdjustmentInterface() {}
-    virtual QString getName() = 0;
-    virtual QWidget* create(QString confName, LocalNetwork*) = 0;
-};
-
-QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(AdjustmentInterface, "org.gnu.gama.gama-q2.AdjustmentInterface/1.0")
-QT_END_NAMESPACE
-
-#endif // GAMAQ2INTERFACES_gama_q2_interfaces_H
+#endif // ADJUSTEMENTDEMOPLUGIN_H

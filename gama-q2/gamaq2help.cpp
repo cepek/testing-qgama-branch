@@ -51,6 +51,4 @@ GamaQ2help::GamaQ2help(QWidget *parent) : QMainWindow(parent)
     edit->setReadOnly(true);
 
     setCentralWidget(edit);
-
-    show();
 }

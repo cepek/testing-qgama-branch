@@ -74,8 +74,8 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
     init_schema_lists();
     {
         GamaQ2::name      = "gama-g2";
-        GamaQ2::version   = "0.84";
-        GamaQ2::copyright = "2015";
+        GamaQ2::version   = "0.85";
+        GamaQ2::copyright = "2016";
 
         QFile rfile(":/lib/gama/configure.ac");
         rfile.open(QIODevice::ReadOnly);
@@ -247,7 +247,7 @@ void GamaQ2ControlPanel::dbSlot()
     {
         if (QWidget* widget = plugin_action->interface_->create())
         {
-            NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList.append(widget);
+            localPluginsList.append(widget);
             widget->show();
         }
     }
@@ -269,6 +269,7 @@ void GamaQ2ControlPanel::closeEvent(QCloseEvent * event)
     {
         event->accept();
         GamaQ2help::get()->close();
+        for (auto p : localPluginsList) p->close();
     }
     else if (dialogCode == QMessageBox::YesAll)
     {
@@ -280,6 +281,7 @@ void GamaQ2ControlPanel::closeEvent(QCloseEvent * event)
 
         event->accept();
         GamaQ2help::get()->close();
+        for (auto p : localPluginsList) p->close();
     }
     else
     {

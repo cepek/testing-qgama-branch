@@ -22,7 +22,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>32</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -74,11 +74,20 @@
     </property>
     <addaction name="actionGama_q2_help"/>
    </widget>
+   <widget class="QMenu" name="menu_Tools">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Adjustment"/>
    <addaction name="menu_View"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_Settings"/>
+   <addaction name="menu_Tools"/>
    <addaction name="menu_Hrlp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

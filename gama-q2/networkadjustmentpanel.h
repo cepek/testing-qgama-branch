@@ -45,6 +45,7 @@ public:
 
     void exec();
     bool isValid() const { return valid; }
+    Adjustment* adjustment() {return &adj; }
 
     static bool        closeAllNetworkAdjustmentPanels;
     static QWidgetList allNetworkAdjustmentPanelsList;
@@ -60,6 +61,8 @@ private:
     ObservationEditor *obs;
     NetworkSVG        *svg;
     AdjustmentResults *res;
+
+    QWidgetList localPluginsList;
 
     QString connection_name;
     QString configuration_name;
@@ -99,6 +102,7 @@ private slots:
 
     void on_actionGama_q2_help_triggered();
 
+    void AdjustmentPluginSlot();
 signals:
 
     void networkAdjustmentPanel(bool newPanel);
