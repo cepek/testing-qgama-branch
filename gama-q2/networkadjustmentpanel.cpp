@@ -19,7 +19,6 @@
 */
 
 #include "networkadjustmentpanel.h"
-#include "ui_networkadjustmentpanel.h"
 #include "selectconfiguration.h"
 #include "constants.h"
 #include "xml2txt.h"
@@ -41,6 +40,10 @@
 #include <QCloseEvent>
 #include <QSvgRenderer>
 #include <QDockWidget>
+#include <QAction>
+#include <QMenu>
+#include <QMenuBar>
+#include <QStatusBar>
 
 #include <gnu_gama/local/network.h>
 #include <gnu_gama/local/localnetwork2sql.h>
@@ -72,15 +75,59 @@ namespace
 
 NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::NetworkAdjustmentPanel), connection_name(connectionName),
+    connection_name(connectionName),
     par(0), ped(0), obs(0), svg(0), res(0)
 {
     qDebug() << "***  NetworkAdjustmentPanel" << __FILE__ << __LINE__;
     allNetworkAdjustmentPanelsList.push_back(this);
 
-    ui->setupUi(this);
+    QAction* action {nullptr};
 
-    QMenu* menu_tools = ui->menu_Tools;
+    QMenu* menuFile  = new QMenu(tr("&File"), this);
+    action = menuFile->addAction(tr("&Save"));
+    connect(action, &QAction::triggered, [this](){action_Save_into_db();});
+    action = menuFile->addAction(tr("Save &As"));
+    connect(action, &QAction::triggered, [this](){action_Save_As_into_db();});
+    action = menuFile->addAction(tr("&Export as SQL file"));
+    connect(action, &QAction::triggered, [this](){action_Save_as_SQL_file();});
+    action = menuFile->addAction(tr("&Print"));
+    connect(action, &QAction::triggered, [this](){action_Print();});
+    action = menuFile->addAction(tr("Print as PD&F"));
+    connect(action, &QAction::triggered, [this](){action_Print_as_PDF();});
+    action = menuFile->addAction(tr("Save &XML adjustment results"));
+    connect(action, &QAction::triggered, [this](){action_Save_XML_adjustment_results();});
+    action = menuFile->addAction(tr("Save adjustment results as &HTML file"));
+    connect(action, &QAction::triggered, [this](){action_Save_adjustment_results_as_HTML();});
+    action = menuFile->addAction(tr("Save adjustment results as plain &text"));
+    connect(action, &QAction::triggered, [this](){action_Save_adjustment_results_as_plain_text();});
+    action = menuFile->addAction(tr("Save network configuration &outline"));
+    connect(action, &QAction::triggered, [this](){action_Save_network_configuration_outline();});
+    menuFile->addSeparator();
+    action = menuFile->addAction(tr("&Close"));
+    connect(action, &QAction::triggered, [this](){action_Close();});
+
+    QMenu* menuAdjustment = new QMenu(tr("&Adjustment"), this);
+    action = menuAdjustment->addAction(tr("&Run"));
+    connect(action, &QAction::triggered, [this](){action_Run();});
+
+    menuView  = new QMenu(tr("&View"), this);
+
+    QMenu* menuEdit  = new QMenu(tr("&Edit"), this);
+    actionParameters = menuEdit->addAction(tr("Pa&rameters"));
+    actionParameters->setCheckable(true);
+    connect(actionParameters, &QAction::toggled, [this](){action_Parameters_changed();});
+    actionPoints = menuEdit->addAction(tr("&Points"));
+    actionPoints->setCheckable(true);
+    connect(actionPoints, &QAction::toggled, [this](){action_Points_changed();});
+    actionObservations = menuEdit->addAction(tr("&Observations"));
+    actionObservations->setCheckable(true);
+    connect(actionObservations, &QAction::toggled, [this](){action_Observations_changed();});
+
+    QMenu* menuSetup = new QMenu(tr("&Settings"), this);
+    action = menuSetup->addAction(tr("Outline &draw"));
+    connect(action, &QAction::triggered, [this](){action_Outline_draw();});
+
+    QMenu* menuTools = new QMenu(tr("&Tools"), this);
     {
         QMap<QString, AdjustmentInterface*> map;
 
@@ -99,16 +146,29 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
 
         if (!map.empty())
         {
-            menu_tools->setEnabled(true);
+            menuTools->setEnabled(true);
             for (auto i : map)
             {
                 PluginAction<AdjustmentInterface>* action = new PluginAction<AdjustmentInterface>(this, i);
-                menu_tools->addAction(action);
+                menuTools->addAction(action);
                 connect(action, SIGNAL(triggered()), SLOT(AdjustmentPluginSlot()));
             }
         }
     }
 
+    QMenu* menuHelp  = new QMenu(tr("&Help"), this);
+    action = menuHelp->addAction(tr("Gama-q2 &Help"));
+    connect(action, &QAction::triggered, [this](){action_Gama_q2_help();});
+
+    menuBar()->addMenu(menuFile);
+    menuBar()->addMenu(menuAdjustment);
+    if (!useTabbedWidgets) menuBar()->addMenu(menuView);
+    menuBar()->addMenu(menuEdit);
+    menuBar()->addMenu(menuSetup);
+    menuBar()->addMenu(menuTools);
+    menuBar()->addMenu(menuHelp);
+
+    status_bar("");
     set_gui_adjustment_functions_status(false);
 }
 
@@ -116,11 +176,9 @@ NetworkAdjustmentPanel::~NetworkAdjustmentPanel()
 {
     for (auto w : localPluginsList) delete w;
     allNetworkAdjustmentPanelsList.removeOne(this);
-
-    delete ui;
 }
 
-void NetworkAdjustmentPanel::on_action_Close_triggered()
+void NetworkAdjustmentPanel::action_Close()
 {
     close();
 }
@@ -227,9 +285,6 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
 
         setCentralWidget(tab);
 
-        QAction* view = ui->menubar->actions()[2];
-        ui->menubar->removeAction(view);
-
         connect(tab, SIGNAL(currentChanged(int)),this,SLOT(tabIndexChanged(int)));
     }
     else
@@ -238,28 +293,28 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
         QDockWidget* dockpar = new QDockWidget(tr("Parameters"), this);
         dockpar->setWidget(par);
         addDockWidget(Qt::LeftDockWidgetArea, dockpar);
-        ui->menu_View->addAction(dockpar->toggleViewAction());
+        menuView->addAction(dockpar->toggleViewAction());
 
         // ... others are included using tabifyDockWidget for the first one
         QDockWidget* dockped = new QDockWidget(tr("Points"), this);
         dockped->setWidget(ped);
         tabifyDockWidget(dockpar, dockped);
-        ui->menu_View->addAction(dockped->toggleViewAction());
+        menuView->addAction(dockped->toggleViewAction());
 
         QDockWidget* dockoed = new QDockWidget(tr("Observations"), this);
         dockoed->setWidget(obs);
         tabifyDockWidget(dockpar, dockoed);
-        ui->menu_View->addAction(dockoed->toggleViewAction());
+        menuView->addAction(dockoed->toggleViewAction());
 
         QDockWidget* docksvg = new QDockWidget(tr("Configuration"), this);
         docksvg->setWidget(svg);
         tabifyDockWidget(dockpar, docksvg);
-        ui->menu_View->addAction(docksvg->toggleViewAction());
+        menuView->addAction(docksvg->toggleViewAction());
 
         QDockWidget* dockres = new QDockWidget(tr("Results"), this);
         dockres->setWidget(res);
         tabifyDockWidget(dockpar, dockres);
-        ui->menu_View->addAction(dockres->toggleViewAction());
+        menuView->addAction(dockres->toggleViewAction());
 
         connect(docksvg, SIGNAL(visibilityChanged(bool)),this,SLOT(draw_network_configuration()));
     }
@@ -323,7 +378,7 @@ void NetworkAdjustmentPanel::closeEvent(QCloseEvent* event)
     }
 }
 
-void NetworkAdjustmentPanel::on_actionSave_XML_adjustment_results_triggered()
+void NetworkAdjustmentPanel::action_Save_XML_adjustment_results()
 {
     QFileDialog fileDialog(0,trUtf8("Open XML Output File"));
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
@@ -341,7 +396,7 @@ void NetworkAdjustmentPanel::on_actionSave_XML_adjustment_results_triggered()
     stream << adj.xml();
 }
 
-void NetworkAdjustmentPanel::on_actionSave_adjustment_results_as_plain_text_triggered()
+void NetworkAdjustmentPanel::action_Save_adjustment_results_as_plain_text()
 {
     QFileDialog fileDialog(0,trUtf8("Open Adjustment Output File"));
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
@@ -378,7 +433,7 @@ void NetworkAdjustmentPanel::on_actionSave_adjustment_results_as_plain_text_trig
     GNU_gama::xml2txt_adjusted_observations(cout, adjres);
 }
 
-void NetworkAdjustmentPanel::on_actionSave_as_SQL_file_triggered()
+void NetworkAdjustmentPanel::action_Save_as_SQL_file()
 {    
     QFileDialog fileDialog(0,trUtf8("Export current configuration as a SQL file"));
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
@@ -405,7 +460,7 @@ void NetworkAdjustmentPanel::on_actionSave_as_SQL_file_triggered()
     status_bar(tr("SQL batch file was written: %1").arg(fileName));
 }
 
-void NetworkAdjustmentPanel::on_action_Run_triggered()
+void NetworkAdjustmentPanel::action_Run()
 {
     status_bar(tr("Runnig adjustement '%1'").arg(configuration_name));
     try {
@@ -423,7 +478,7 @@ void NetworkAdjustmentPanel::on_action_Run_triggered()
     status_bar(tr("Network '%1' adjusted").arg(configuration_name));
 }
 
-void NetworkAdjustmentPanel::on_actionSave_network_configuration_outline_triggered()
+void NetworkAdjustmentPanel::action_Save_network_configuration_outline()
 {
     // Qt supported suffixes
     //  << "svg" << "bmp" <<  "jpg" << "jpeg" << "png"
@@ -496,7 +551,7 @@ void NetworkAdjustmentPanel::on_actionSave_network_configuration_outline_trigger
     }
 }
 
-void NetworkAdjustmentPanel::on_actionOutline_draw_triggered()
+void NetworkAdjustmentPanel::action_Outline_draw()
 {
     DrawSettings *draw = new DrawSettings(adj.get_svg());
 
@@ -510,12 +565,12 @@ void NetworkAdjustmentPanel::on_actionOutline_draw_triggered()
 
 void NetworkAdjustmentPanel::status_bar(QString text)
 {
-    ui->statusbar->showMessage(text, 6000);
+    statusBar()->showMessage(text, 6000);
 }
 
-void NetworkAdjustmentPanel::on_actionParameters_changed()
+void NetworkAdjustmentPanel::action_Parameters_changed()
 {
-    bool edit = ui->menu_Edit->actions()[menu_parameters]->isChecked();
+    bool edit = actionParameters->isChecked();
     QString text;
     if (edit)
     {
@@ -530,9 +585,9 @@ void NetworkAdjustmentPanel::on_actionParameters_changed()
     status_bar(text);
 }
 
-void NetworkAdjustmentPanel::on_action_Points_changed()
+void NetworkAdjustmentPanel::action_Points_changed()
 {
-    bool edit = ui->menu_Edit->actions()[menu_points]->isChecked();
+    bool edit = actionPoints->isChecked();
     QString text;
     if (edit)
     {
@@ -547,9 +602,9 @@ void NetworkAdjustmentPanel::on_action_Points_changed()
     status_bar(text);
 }
 
-void NetworkAdjustmentPanel::on_actionObservations_changed()
+void NetworkAdjustmentPanel::action_Observations_changed()
 {
-    bool edit = ui->menu_Edit->actions()[menu_observations]->isChecked();
+    bool edit = actionObservations->isChecked();
     QString text;
     if (edit)
     {
@@ -564,12 +619,12 @@ void NetworkAdjustmentPanel::on_actionObservations_changed()
     status_bar(text);
 }
 
-void NetworkAdjustmentPanel::on_action_Save_into_database_triggered()
+void NetworkAdjustmentPanel::action_Save_into_db()
 {
     save_configuration(configuration_name);
 }
 
-void NetworkAdjustmentPanel::on_actionSave_As_triggered()
+void NetworkAdjustmentPanel::action_Save_As_into_db()
 {
     SelectConfiguration* sc = new SelectConfiguration(connection_name, false, true, this);
     connect(sc, SIGNAL(selectConfiguration(QString)), SLOT(save_configuration(QString)));
@@ -609,12 +664,12 @@ void NetworkAdjustmentPanel::save_configuration(QString confname)
     }
 }
 
-void NetworkAdjustmentPanel::on_actionPrint_triggered()
+void NetworkAdjustmentPanel::action_Print()
 {
     QMessageBox::critical(this, "Print", "NOT IMPLEMENTED");
 }
 
-void NetworkAdjustmentPanel::on_actionPrint_as_PDF_triggered()
+void NetworkAdjustmentPanel::action_Print_as_PDF()
 {
     QMessageBox::critical(this, "Print", "NOT IMPLEMENTED");
     /*
@@ -631,7 +686,7 @@ void NetworkAdjustmentPanel::on_actionPrint_as_PDF_triggered()
     */
 }
 
-void NetworkAdjustmentPanel::on_actionSave_adjustment_results_as_HTML_file_triggered()
+void NetworkAdjustmentPanel::action_Save_adjustment_results_as_HTML()
 {
     QFileDialog fileDialog(0,trUtf8("Save adjustment results as HTML file"));
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
@@ -656,15 +711,17 @@ void NetworkAdjustmentPanel::on_actionSave_adjustment_results_as_HTML_file_trigg
 void NetworkAdjustmentPanel::set_gui_adjustment_functions_status(bool isvalid)
 {
     valid = isvalid;
+    /*
     ui->actionPrint->setEnabled(valid);
     ui->actionPrint_as_PDF->setEnabled(valid);
     ui->actionSave_adjustment_results_as_HTML_file->setEnabled(valid);
     ui->actionSave_adjustment_results_as_plain_text->setEnabled(valid);
     ui->actionSave_network_configuration_outline->setEnabled(valid);
     ui->actionSave_XML_adjustment_results->setEnabled(valid);
+    */
 }
 
-void NetworkAdjustmentPanel::on_actionGama_q2_help_triggered()
+void NetworkAdjustmentPanel::action_Gama_q2_help()
 {
     GamaQ2help::get()->show();
 }

@@ -25,10 +25,6 @@
 
 #include <QMainWindow>
 
-namespace Ui {
-    class NetworkAdjustmentPanel;
-}
-
 class ParameterEditor;
 class PointEditor;
 class ObservationEditor;
@@ -51,7 +47,6 @@ public:
     static QWidgetList allNetworkAdjustmentPanelsList;
 
 private:
-    Ui::NetworkAdjustmentPanel *ui;
 
     enum {menu_parameters, menu_points, menu_observations };
 
@@ -69,6 +64,11 @@ private:
     bool    useTabbedWidgets;
     bool    valid;
 
+    QMenu*   menuView           {nullptr};
+    QAction* actionParameters   {nullptr};
+    QAction* actionPoints       {nullptr};
+    QAction* actionObservations {nullptr};
+
     void set_gui_adjustment_functions_status(bool isvalid);
 
 private slots:
@@ -83,24 +83,24 @@ private slots:
     void status_bar(QString text);
     void save_configuration(QString confname);
 
-    void on_actionSave_XML_adjustment_results_triggered();
-    void on_actionSave_adjustment_results_as_plain_text_triggered();
-    void on_action_Close_triggered();
-    void on_actionSave_as_SQL_file_triggered();
-    void on_action_Run_triggered();
-    void on_actionSave_network_configuration_outline_triggered();
-    void on_actionOutline_draw_triggered();
+    void action_Save_XML_adjustment_results();
+    void action_Save_adjustment_results_as_plain_text();
+    void action_Close();
+    void action_Save_as_SQL_file();
+    void action_Run();
+    void action_Save_network_configuration_outline();
+    void action_Outline_draw();
     void closeEvent(QCloseEvent *event);
-    void on_action_Points_changed();
-    void on_actionParameters_changed();
-    void on_actionObservations_changed();
-    void on_action_Save_into_database_triggered();
-    void on_actionSave_As_triggered();
-    void on_actionPrint_triggered();
-    void on_actionPrint_as_PDF_triggered();
-    void on_actionSave_adjustment_results_as_HTML_file_triggered();
+    void action_Points_changed();
+    void action_Parameters_changed();
+    void action_Observations_changed();
+    void action_Save_into_db();
+    void action_Save_As_into_db();
+    void action_Print();
+    void action_Print_as_PDF();
+    void action_Save_adjustment_results_as_HTML();
 
-    void on_actionGama_q2_help_triggered();
+    void action_Gama_q2_help();
 
     void AdjustmentPluginSlot();
 signals:

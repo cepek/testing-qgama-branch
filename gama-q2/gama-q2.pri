@@ -55,7 +55,6 @@ HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
 FORMS    += $$GAMAQ2SRC/importconfigurationfile.ui \
     $$GAMAQ2SRC/insertclusterdialog.ui \
     $$GAMAQ2SRC/insertobservationdialog.ui \
-    $$GAMAQ2SRC/networkadjustmentpanel.ui \
     $$GAMAQ2SRC/selectconfiguration.ui \
     $$GAMAQ2SRC/drawsettings.ui \
     $$GAMAQ2SRC/pointeditor.ui \
