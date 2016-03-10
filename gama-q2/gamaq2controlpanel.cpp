@@ -74,7 +74,7 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
     init_schema_lists();
     {
         GamaQ2::name      = "gama-g2";
-        GamaQ2::version   = "0.85.01";
+        GamaQ2::version   = "0.85.02";
         GamaQ2::copyright = "2016";
 
         QFile rfile(":/lib/gama/configure.ac");

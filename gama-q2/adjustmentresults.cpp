@@ -25,18 +25,20 @@
 #include <QDebug>
 
 AdjustmentResults::AdjustmentResults(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::AdjustmentResults),
-    html(0)
+    QWidget(parent), html(nullptr)
 {
     qDebug() << "***  AdjustmentResults" << __FILE__ << __LINE__;
-    ui->setupUi(this);
-    ui->textEdit->setReadOnly(true);
+
+    textEdit = new QTextEdit;
+    textEdit->setReadOnly(true);
+
+    QGridLayout* layout = new QGridLayout;
+    layout->addWidget(textEdit);
+    setLayout(layout);
 }
 
 AdjustmentResults::~AdjustmentResults()
 {
-    delete ui;
     delete html;
 }
 
@@ -53,9 +55,9 @@ void AdjustmentResults::update_adjustment_results()
     html->exec();
     const std::string& utf8 = html->str();
 
-    ui->textEdit->clear();
-    ui->textEdit->insertHtml(QString::fromUtf8(utf8.c_str(), utf8.length()));
-    ui->textEdit->moveCursor(QTextCursor::Start);
+    textEdit->clear();
+    textEdit->insertHtml(QString::fromUtf8(utf8.c_str(), utf8.length()));
+    textEdit->moveCursor(QTextCursor::Start);
 }
 
 QString AdjustmentResults::getHtmlUtf8() const

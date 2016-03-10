@@ -23,14 +23,12 @@
 
 #include <QWidget>
 
-namespace Ui {
-class AdjustmentResults;
-}
-
 namespace GNU_gama { namespace local {
 class LocalNetwork;
 class GamaLocalHTML;
 }}
+
+class QTextEdit;
 
 class AdjustmentResults : public QWidget
 {
@@ -49,7 +47,7 @@ public slots:
     void update_adjustment_results();
 
 private:
-    Ui::AdjustmentResults *ui;
+    QTextEdit* textEdit {nullptr};
     GNU_gama::local::GamaLocalHTML *html;
 };
 
