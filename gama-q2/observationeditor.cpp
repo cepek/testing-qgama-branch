@@ -19,7 +19,6 @@
 */
 
 #include "observationeditor.h"
-#include "ui_observationeditor.h"
 #include "insertclusterdialog.h"
 #include "insertobservationdialog.h"
 #include "lineeditdelegate.h"
@@ -27,6 +26,9 @@
 #include <gnu_gama/local/gamadata.h>
 #include <QMenu>
 #include <QMessageBox>
+#include <QTableView>
+#include <QHeaderView>
+#include <QGridLayout>
 #include <QDebug>
 #include <typeinfo>
 
@@ -95,16 +97,14 @@ bool ObservationEditor::SelectGroup::isValid() const
 
 ObservationEditor::ObservationEditor(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ObservationEditor),
+    tableView(new QTableView),
     model(0), readonly(true)
 {
-    ui->setupUi(this);
+    LineEditDelegate* item = new LineEditDelegate(tableView);
+    tableView->setItemDelegate(item);
+    tableView->setStyleSheet(GamaQ2::delegate_style_sheet);
 
-    LineEditDelegate* item = new LineEditDelegate(ui->tableView);
-    ui->tableView->setItemDelegate(item);
-    ui->tableView->setStyleSheet(GamaQ2::delegate_style_sheet);
-
-    ui->tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+    tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     observationMenu = new QMenu(this);
 
     QAction* menuInsertObservation = new QAction(tr("Insert observation"), this);
@@ -125,22 +125,27 @@ ObservationEditor::ObservationEditor(QWidget *parent) :
     observationMenu->addAction(menuDeleteCluster);
     connect(menuDeleteCluster, SIGNAL(triggered()), this, SLOT(deleteCluster()));
 
-    connect(ui->tableView->verticalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
+    connect(tableView->verticalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(observationContextMenu(QPoint)));
 
     enableEdit(false);
+
+    tableView->horizontalHeader()->setVisible(false);
+
+    QGridLayout* layout = new QGridLayout;
+    layout->addWidget(tableView);
+    setLayout(layout);
 }
 
 ObservationEditor::~ObservationEditor()
 {
-    delete ui;
 }
 
 void ObservationEditor::connectObservationData(GNU_gama::local::LocalNetwork *lnet)
 {
     ObservationTableModel* old = model;
     model = new ObservationTableModel(lnet, this);
-    ui->tableView->setModel(model);
+    tableView->setModel(model);
     delete old;
 
     connect(model, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
@@ -152,11 +157,11 @@ void ObservationEditor::enableEdit(bool edit)
     if (edit)
     {
         // implicit behaviour is "double click for editing"
-        ui->tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
+        tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
     }
     else
     {
-        ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     }
 }
 
@@ -164,7 +169,7 @@ void ObservationEditor::observationContextMenu(QPoint p)
 {
     if (readonly) return;
 
-    observationLogicalIndex = ui->tableView->verticalHeader()->logicalIndexAt(p);
+    observationLogicalIndex = tableView->verticalHeader()->logicalIndexAt(p);
     QModelIndex index = model->index(observationLogicalIndex, 0);
     if (!index.isValid()) return;
 
@@ -176,7 +181,7 @@ void ObservationEditor::deleteCluster()
     QModelIndex index = model->index(observationLogicalIndex, 0);
     if (!index.isValid()) return;
 
-    SelectCluster selectCluster(model, ui->tableView, observationLogicalIndex);
+    SelectCluster selectCluster(model, tableView, observationLogicalIndex);
     if (!selectCluster.isValid()) return;
 
     int q = QMessageBox::warning(this, tr("Delete Cluster"),
@@ -193,7 +198,7 @@ void ObservationEditor::insertCluster()
     QModelIndex index = model->index(observationLogicalIndex, 0);
     if (!index.isValid()) return;
 
-    SelectCluster selectCluster(model, ui->tableView, observationLogicalIndex);
+    SelectCluster selectCluster(model, tableView, observationLogicalIndex);
 
     InsertClusterDialog dialog;
     if (dialog.exec() == QDialog::Rejected) return;
@@ -209,9 +214,9 @@ void ObservationEditor::deleteObservation()
 
     if (!model->isObservationRow(observationLogicalIndex)) return;
 
-    //ui->tableView->clearSelection();
-    //ui->tableView->selectRow(observationLogicalIndex);
-    SelectGroup selectGroup(model, ui->tableView, observationLogicalIndex);
+    //tableView->clearSelection();
+    //tableView->selectRow(observationLogicalIndex);
+    SelectGroup selectGroup(model, tableView, observationLogicalIndex);
 
     int q = QMessageBox::warning(this, tr("Delete Observation"),
              tr("Do you want to delete selected observation?"),
@@ -229,9 +234,9 @@ void ObservationEditor::insertObservation()
     QModelIndex index = model->index(observationLogicalIndex, 0);
     if (!index.isValid()) return;
 
-    //ui->tableView->clearSelection();
-    //ui->tableView->selectRow(observationLogicalIndex);
-    SelectGroup selectGroup(model, ui->tableView, observationLogicalIndex);
+    //tableView->clearSelection();
+    //tableView->selectRow(observationLogicalIndex);
+    SelectGroup selectGroup(model, tableView, observationLogicalIndex);
 
     QString name = model->currentClusterName(observationLogicalIndex);
     if (name.isEmpty()) {
@@ -243,5 +248,5 @@ void ObservationEditor::insertObservation()
     if (dialog.exec() == QDialog::Rejected) return;
 
     model->insertObservation(observationLogicalIndex, dialog);
-    ui->tableView->clearSelection();
+    tableView->clearSelection();
 }

@@ -23,16 +23,13 @@
 
 #include <QWidget>
 
-namespace Ui {
-class PointEditor;
-}
-
 namespace GNU_gama { namespace local {
     class PointData;
 }}
 
 class PointTableModel;
 class QMenu;
+class QTableView;
 
 class PointEditor : public QWidget
 {
@@ -46,7 +43,7 @@ public:
     void enableEdit(bool edit);
     
 private:
-    Ui::PointEditor *ui;
+    QTableView* tableView;
     PointTableModel* model;
     QMenu* pointMenu;
     bool   readonly;

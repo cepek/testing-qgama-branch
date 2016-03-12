@@ -24,10 +24,6 @@
 #include <QWidget>
 #include "observationtablemodel.h"
 
-namespace Ui {
-class ObservationEditor;
-}
-
 namespace GNU_gama { namespace local {
     class LocalNetwork;
 }}
@@ -48,7 +44,7 @@ public:
     void enableEdit(bool edit);
 
 private:
-    Ui::ObservationEditor *ui;
+    QTableView* tableView;
     ObservationTableModel* model;
     QMenu* observationMenu;
     bool   readonly;

@@ -57,10 +57,7 @@ FORMS    += $$GAMAQ2SRC/importconfigurationfile.ui \
     $$GAMAQ2SRC/insertobservationdialog.ui \
     $$GAMAQ2SRC/selectconfiguration.ui \
     $$GAMAQ2SRC/drawsettings.ui \
-    $$GAMAQ2SRC/pointeditor.ui \
     $$GAMAQ2SRC/dbconnectdialog.ui \
-    $$GAMAQ2SRC/observationeditor.ui \
-    $$GAMAQ2SRC/parametereditor.ui \
     $$GAMAQ2SRC/selectadjresultslanguage.ui
 
 RESOURCES += \

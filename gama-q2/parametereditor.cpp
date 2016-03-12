@@ -19,51 +19,119 @@
 */
 
 #include "parametereditor.h"
-#include "ui_parametereditor.h"
 #include <QMessageBox>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QPlainTextEdit>
+#include <QHBoxLayout>
+#include <QFormLayout>
 #include <QDebug>
 
 ParameterEditor::ParameterEditor(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ParameterEditor),
     lnet(0)
 {
-    qDebug() << "***  ParameterEditor" << __FILE__ << __LINE__;
-    ui->setupUi(this);
+    checkBox_update_cc   = new QCheckBox;
+    comboBox_sigma_act   = new QComboBox;
+    comboBox_axes_xy     = new QComboBox;
+    comboBox_angles      = new QComboBox;
+    comboBox_algorithm   = new QComboBox;
+    comboBox_ang_units   = new QComboBox;
+    comboBox_ellipsoid   = new QComboBox;
+    lineEdit_sigma_apr   = new QLineEdit;
+    lineEdit_conf_pr     = new QLineEdit;
+    lineEdit_tol_abs     = new QLineEdit;
+    lineEdit_epoch       = new QLineEdit;
+    lineEdit_adj_covband = new QLineEdit;
+    lineEdit_latitude    = new QLineEdit;
+
+    plainTextEdit = new QPlainTextEdit;
 
     enableEdit(false);
 
-    ui->label_latitude->hide();
-    ui->lineEdit_latitude->hide();
-    ui->label_ellipsoid->hide();
-    ui->comboBox_ellipsoid->hide();
-    this->adjustSize();
+    comboBox_sigma_act->addItems({"a posteriori", "a priori"});
+    comboBox_axes_xy  ->addItems({"ne","sw","es","wn","en","nw","se","ws"});
+    comboBox_angles   ->addItems({"clockwise","counter-clocwise"});
+    comboBox_algorithm->addItems({"gso","svd","cholesky","envelope"});
+    comboBox_ang_units->addItems({"400","360"});
+    // comboBox_ellipsoid;
+
+    connect(checkBox_update_cc,  &QCheckBox::stateChanged,
+            [this](int state){on_checkBox_update_cc_stateChanged(state);});
+    connect(comboBox_sigma_act,  &QComboBox::currentTextChanged,
+            [this](const QString& text){on_comboBox_sigma_act_currentTextChanged(text);});
+    connect(comboBox_axes_xy,    &QComboBox::currentTextChanged,
+            [this](const QString& text){on_comboBox_axes_xy_currenTextChanged(text);});
+    connect(comboBox_angles,     &QComboBox::currentTextChanged,
+            [this](const QString& text){on_comboBox_angles_currentTextChanged(text);});
+    connect(comboBox_algorithm,  &QComboBox::currentTextChanged,
+            [this](const QString& text){on_comboBox_algorithm_currentTextChanged(text);});
+    connect(comboBox_ang_units,  &QComboBox::currentTextChanged,
+            [this](const QString& text){on_comboBox_ang_units_currentTextChanged(text);});
+    connect(comboBox_ellipsoid,  &QComboBox::currentTextChanged,
+            [this](const QString& text){on_comboBox_ellipsoid_currentTextChanged(text);});
+
+    connect(lineEdit_sigma_apr,  &QLineEdit::editingFinished,
+            [this](){on_lineEdit_sigma_apr_editingFinished();});
+    connect(lineEdit_conf_pr,    &QLineEdit::editingFinished,
+            [this](){on_lineEdit_conf_pr_editingFinished();});
+    connect(lineEdit_tol_abs,    &QLineEdit::editingFinished,
+            [this](){on_lineEdit_tol_abs_editingFinished();});
+    connect(lineEdit_epoch,      &QLineEdit::editingFinished,
+            [this](){on_lineEdit_epoch_editingFinished();});
+    connect(lineEdit_adj_covband,&QLineEdit::editingFinished,
+            [this](){on_lineEdit_adj_covband_editingFinished();});
+    connect(lineEdit_latitude,   &QLineEdit::editingFinished,
+            [this](){on_lineEdit_latitude_editingFinished();});
+
+    connect(plainTextEdit,       &QPlainTextEdit::textChanged,
+            [this](){on_plainTextEdit_textChanged();});
+
+    QFormLayout* formLayout = new QFormLayout;
+    formLayout->addRow(tr("a priori stdev (sigma)"),    lineEdit_sigma_apr);
+    formLayout->addRow(tr("confidence probability"),    lineEdit_conf_pr);
+    formLayout->addRow(tr("tolerance for abs. terms"),  lineEdit_tol_abs);
+    formLayout->addRow(tr("actual type of stdev used"), comboBox_sigma_act);
+    formLayout->addRow(tr("update constrained coord."), checkBox_update_cc);
+    formLayout->addRow(tr("axes x and y are oriented"), comboBox_axes_xy);
+    formLayout->addRow(tr("angles are observed"),       comboBox_angles);
+    formLayout->addRow(tr("algorithm"),                 comboBox_algorithm);
+    formLayout->addRow(tr("angular units"),             comboBox_ang_units);
+    formLayout->addRow(tr("adjusted cxx band witdth"),  lineEdit_adj_covband);
+    formLayout->addRow(tr("epoch"),                     lineEdit_epoch);
+    // formLayout->addRow(tr("latitude"),               lineEdit_latitude);
+    // formLayout->addRow(tr("ellipsoid"),              comboBox_ellipsoid);
+
+    QHBoxLayout* hBoxLayout = new QHBoxLayout;
+    hBoxLayout->addLayout(formLayout);
+    hBoxLayout->addWidget(plainTextEdit,1);
+    setLayout(hBoxLayout);
 }
 
 ParameterEditor::~ParameterEditor()
 {
-    delete ui;
 }
 
 void ParameterEditor::enableEdit(bool edit)
 {
     readonly = !edit;
 
-    ui->plainTextEdit->setReadOnly(readonly);
+    plainTextEdit->setReadOnly(readonly);
 
-    ui->lineEdit_sigma_apr  ->setEnabled(edit);
-    ui->lineEdit_conf_pr    ->setEnabled(edit);
-    ui->lineEdit_tol_abs    ->setEnabled(edit);
-    ui->comboBox_sigma_act  ->setEnabled(edit);
-    ui->checkBox_update_cc  ->setEnabled(edit);
-    ui->comboBox_axes_xy    ->setEnabled(edit);
-    ui->comboBox_angles     ->setEnabled(edit);
-    ui->lineEdit_epoch      ->setEnabled(edit);
-    ui->comboBox_algorithm  ->setEnabled(edit);
-    ui->comboBox_ang_units  ->setEnabled(edit);
-    ui->lineEdit_adj_covband->setEnabled(edit);
-    ui->lineEdit_latitude   ->setEnabled(edit && false);
-    ui->comboBox_ellipsoid  ->setEnabled(edit && false);
+    lineEdit_sigma_apr  ->setEnabled(edit);
+    lineEdit_conf_pr    ->setEnabled(edit);
+    lineEdit_tol_abs    ->setEnabled(edit);
+    comboBox_sigma_act  ->setEnabled(edit);
+    checkBox_update_cc  ->setEnabled(edit);
+    comboBox_axes_xy    ->setEnabled(edit);
+    comboBox_angles     ->setEnabled(edit);
+    lineEdit_epoch      ->setEnabled(edit);
+    comboBox_algorithm  ->setEnabled(edit);
+    comboBox_ang_units  ->setEnabled(edit);
+    lineEdit_adj_covband->setEnabled(edit);
+    lineEdit_latitude   ->setEnabled(edit && false);
+    comboBox_ellipsoid  ->setEnabled(edit && false);
 }
 
 void ParameterEditor::connectParameters(GNU_gama::local::LocalNetwork *ln)
@@ -72,26 +140,26 @@ void ParameterEditor::connectParameters(GNU_gama::local::LocalNetwork *ln)
 
     lnet->remove_inconsistency();
 
-    ui->plainTextEdit->setPlainText( QString::fromUtf8(lnet->description.c_str()) );
-    ui->lineEdit_sigma_apr->setText( QString::number(lnet->apriori_m_0()) );
-    ui->lineEdit_conf_pr  ->setText( QString::number( lnet->conf_pr()) );
-    ui->lineEdit_tol_abs  ->setText( QString::number(lnet->tol_abs()) );
+    plainTextEdit->setPlainText( QString::fromUtf8(lnet->description.c_str()) );
+    lineEdit_sigma_apr->setText( QString::number(lnet->apriori_m_0()) );
+    lineEdit_conf_pr  ->setText( QString::number( lnet->conf_pr()) );
+    lineEdit_tol_abs  ->setText( QString::number(lnet->tol_abs()) );
 
     if(double epoch = lnet->epoch()) {
-        ui->lineEdit_epoch->setText( QString::number(epoch) );
+        lineEdit_epoch->setText( QString::number(epoch) );
     } else {
-        ui->lineEdit_epoch->clear();
+        lineEdit_epoch->clear();
     }
 
     if (lnet->m_0_aposteriori())
-        ui->comboBox_sigma_act->setCurrentIndex(0);
+        comboBox_sigma_act->setCurrentIndex(0);
     else
-        ui->comboBox_sigma_act->setCurrentIndex(1);
+        comboBox_sigma_act->setCurrentIndex(1);
 
     {
         using CS = GNU_gama::local::LocalCoordinateSystem::CS;
 
-        QComboBox * cb = ui->comboBox_axes_xy;
+        QComboBox * cb = comboBox_axes_xy;
         bool editable = cb->isEditable();
         cb->setEditable(false);
 
@@ -114,40 +182,40 @@ void ParameterEditor::connectParameters(GNU_gama::local::LocalNetwork *ln)
     }
 
     if (lnet->PD.left_handed_angles())
-        ui->comboBox_angles->setCurrentIndex(0);
+        comboBox_angles->setCurrentIndex(0);
     else
-        ui->comboBox_angles->setCurrentIndex(1);
+        comboBox_angles->setCurrentIndex(1);
 
     QString algorithm = lnet->algorithm().c_str();
     int index_alg = 0;
-    for (int i=0; i<ui->comboBox_algorithm->count(); i++)
-        if (ui->comboBox_algorithm->itemText(i) == algorithm)
+    for (int i=0; i<comboBox_algorithm->count(); i++)
+        if (comboBox_algorithm->itemText(i) == algorithm)
         {
             index_alg = i;
             break;
         }
-    ui->comboBox_algorithm->setCurrentIndex(index_alg);
+    comboBox_algorithm->setCurrentIndex(index_alg);
 
     if (lnet->gons())
-        ui->comboBox_ang_units->setCurrentIndex(0);
+        comboBox_ang_units->setCurrentIndex(0);
     else
-        ui->comboBox_ang_units->setCurrentIndex(1);
+        comboBox_ang_units->setCurrentIndex(1);
 
     bool bcc = lnet->update_constrained_coordinates();
-    ui->checkBox_update_cc->setChecked(bcc);
+    checkBox_update_cc->setChecked(bcc);
 
-    ui->lineEdit_adj_covband->setText(QString::number(lnet->adj_covband()));
+    lineEdit_adj_covband->setText(QString::number(lnet->adj_covband()));
 }
 
 void ParameterEditor::on_plainTextEdit_textChanged()
 {
-    lnet->description = ui->plainTextEdit->toPlainText().toUtf8().data();
+    lnet->description = plainTextEdit->toPlainText().toUtf8().data();
 }
 
 void ParameterEditor::on_lineEdit_sigma_apr_editingFinished()
 {
     bool ok;
-    double value = ui->lineEdit_sigma_apr->text().toDouble(&ok);
+    double value = lineEdit_sigma_apr->text().toDouble(&ok);
 
     if (ok && value > 0)
     {
@@ -160,13 +228,13 @@ void ParameterEditor::on_lineEdit_sigma_apr_editingFinished()
     if (!ok) QMessageBox::critical(this, adjpar,tr("Conversion error"));
     else     QMessageBox::critical(this, adjpar,tr("Must greater than 0"));
 
-    ui->lineEdit_sigma_apr->setFocus();
+    lineEdit_sigma_apr->setFocus();
 }
 
 void ParameterEditor::on_lineEdit_conf_pr_editingFinished()
 {
     bool ok;
-    double value = ui->lineEdit_conf_pr->text().toDouble(&ok);
+    double value = lineEdit_conf_pr->text().toDouble(&ok);
 
     if (ok && value > 0 && value < 1)
     {
@@ -179,13 +247,13 @@ void ParameterEditor::on_lineEdit_conf_pr_editingFinished()
     if (!ok) QMessageBox::critical(this, adjpar,tr("Conversion error"));
     else     QMessageBox::critical(this, adjpar,tr("Must from from interval 0 and 1"));
 
-    ui->lineEdit_conf_pr->setFocus();
+    lineEdit_conf_pr->setFocus();
 }
 
 void ParameterEditor::on_lineEdit_tol_abs_editingFinished()
 {
     bool ok;
-    double value = ui->lineEdit_tol_abs->text().toDouble(&ok);
+    double value = lineEdit_tol_abs->text().toDouble(&ok);
 
     if (ok && value > 0)
     {
@@ -198,19 +266,19 @@ void ParameterEditor::on_lineEdit_tol_abs_editingFinished()
     if (!ok) QMessageBox::critical(this, adjpar,tr("Conversion error"));
     else     QMessageBox::critical(this, adjpar,tr("Must from greater than 0"));
 
-    ui->lineEdit_tol_abs->setFocus();
+    lineEdit_tol_abs->setFocus();
 }
 
 void ParameterEditor::on_lineEdit_epoch_editingFinished()
 {
-    if (ui->lineEdit_epoch->text().simplified().isEmpty())
+    if (lineEdit_epoch->text().simplified().isEmpty())
     {
         lnet->set_epoch(0);
         return;
     }
 
     bool ok;
-    double value = ui->lineEdit_epoch->text().toDouble(&ok);
+    double value = lineEdit_epoch->text().toDouble(&ok);
 
     if (ok)
     {
@@ -222,7 +290,7 @@ void ParameterEditor::on_lineEdit_epoch_editingFinished()
     if (!ok) QMessageBox::critical(this, adjpar,tr("Conversion error"));
     //else     QMessageBox::critical(this, adjpar,tr("????"));
 
-    ui->lineEdit_epoch->setFocus();
+    lineEdit_epoch->setFocus();
 }
 
 void ParameterEditor::on_lineEdit_latitude_editingFinished()
@@ -230,7 +298,7 @@ void ParameterEditor::on_lineEdit_latitude_editingFinished()
     QMessageBox::warning(this, "Latitude", "Latitude corrections not implemented");
 }
 
-void ParameterEditor::on_comboBox_sigma_act_currentIndexChanged(const QString &arg1)
+void ParameterEditor::on_comboBox_sigma_act_currentTextChanged(const QString &arg1)
 {
     if (arg1 == "a posteriori")
         lnet->set_m_0_aposteriori();
@@ -240,7 +308,7 @@ void ParameterEditor::on_comboBox_sigma_act_currentIndexChanged(const QString &a
     lnet->update_adjustment();
 }
 
-void ParameterEditor::on_comboBox_axes_xy_currentIndexChanged(const QString &arg1)
+void ParameterEditor::on_comboBox_axes_xy_currenTextChanged(const QString &arg1)
 {
     using namespace GNU_gama::local;
 
@@ -262,7 +330,7 @@ void ParameterEditor::on_comboBox_axes_xy_currentIndexChanged(const QString &arg
     lnet->update_points();
 }
 
-void ParameterEditor::on_comboBox_angles_currentIndexChanged(const QString &arg1)
+void ParameterEditor::on_comboBox_angles_currentTextChanged(const QString &arg1)
 {
     lnet->return_inconsistency();
 
@@ -275,12 +343,12 @@ void ParameterEditor::on_comboBox_angles_currentIndexChanged(const QString &arg1
     lnet->update_points();
 }
 
-void ParameterEditor::on_comboBox_algorithm_currentIndexChanged(const QString &arg1)
+void ParameterEditor::on_comboBox_algorithm_currentTextChanged(const QString &arg1)
 {
     lnet->set_algorithm(arg1.toStdString());
 }
 
-void ParameterEditor::on_comboBox_ang_units_currentIndexChanged(const QString &arg1)
+void ParameterEditor::on_comboBox_ang_units_currentTextChanged(const QString &arg1)
 {
     if (arg1 == "360")
         lnet->set_degrees();
@@ -290,7 +358,7 @@ void ParameterEditor::on_comboBox_ang_units_currentIndexChanged(const QString &a
     emit angular_units_changed();
 }
 
-void ParameterEditor::on_comboBox_ellipsoid_currentIndexChanged(const QString &arg1)
+void ParameterEditor::on_comboBox_ellipsoid_currentTextChanged(const QString &arg1)
 {
     QMessageBox::warning(this, "Ellipsoid", "Ellipsoid selection not implemented");
 }
@@ -303,11 +371,11 @@ void ParameterEditor::on_checkBox_update_cc_stateChanged(int arg1)
 
 void ParameterEditor::on_lineEdit_adj_covband_editingFinished()
 {
-    QString s = ui->lineEdit_adj_covband->text().simplified();
+    QString s = lineEdit_adj_covband->text().simplified();
     int n = s.toInt();
     if (n == 0) s.clear();
     else if (n < 0) s = "-1";
-    ui->lineEdit_adj_covband->setText(s);
+    lineEdit_adj_covband->setText(s);
 
     lnet->set_adj_covband(n);
 }

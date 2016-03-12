@@ -18,7 +18,8 @@
 */
 
 #include "adjustmentresults.h"
-#include "ui_adjustmentresults.h"
+#include <QTextEdit>
+#include <QGridLayout>
 #include <gnu_gama/local/html.h>
 #include <gnu_gama/local/network.h>
 

@@ -20,48 +20,53 @@
 
 #include "pointeditor.h"
 #include "pointtablemodel.h"
-#include "ui_pointeditor.h"
 #include "lineeditdelegate.h"
 #include "pointtypecombobox.h"
 #include "constants.h"
 
 #include <QMenu>
 #include <QMessageBox>
+#include <QTableView>
+#include <QHeaderView>
+#include <QGridLayout>
 #include <QDebug>
 
 PointEditor::PointEditor(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::PointEditor),
+    tableView(new QTableView),
     model(0), readonly(true)
 {
     qDebug() << "***  PointEditor" << __FILE__ << __LINE__;
-    ui->setupUi(this);
 
-    LineEditDelegate* item = new LineEditDelegate(ui->tableView);
-    ui->tableView->setItemDelegate(item);
-    PointTypeComboBox* combobox = new PointTypeComboBox(ui->tableView);
-    ui->tableView->setItemDelegateForColumn(3, combobox);
-    ui->tableView->setItemDelegateForColumn(5, combobox);
-    ui->tableView->setStyleSheet(GamaQ2::delegate_style_sheet);
+    LineEditDelegate* item = new LineEditDelegate(tableView);
+    tableView->setItemDelegate(item);
+    PointTypeComboBox* combobox = new PointTypeComboBox(tableView);
+    tableView->setItemDelegateForColumn(3, combobox);
+    tableView->setItemDelegateForColumn(5, combobox);
+    tableView->setStyleSheet(GamaQ2::delegate_style_sheet);
 
     enableEdit(false);
 
-    ui->tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+    tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     pointMenu = new QMenu(this);
 
     QAction* pdelete = new QAction(tr("Delete point"), this);
     pointMenu->addAction(pdelete);
     connect(pdelete, SIGNAL(triggered()), this, SLOT(pointDelete()));
 
-    connect(ui->tableView->verticalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
+    connect(tableView->verticalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(pointContextMenu(QPoint)));
+
+    QGridLayout* layout = new QGridLayout;
+    layout->addWidget(tableView);
+    setLayout(layout);
 }
 
 void PointEditor::pointContextMenu(QPoint p)
 {
     if (readonly) return;
 
-    pointLogicalIndex = ui->tableView->verticalHeader()->logicalIndexAt(p);
+    pointLogicalIndex = tableView->verticalHeader()->logicalIndexAt(p);
     pointMenu->exec(QCursor::pos());
 }
 
@@ -73,7 +78,7 @@ void PointEditor::pointDelete()
     QString ID = index.data().toString();
     if (ID.isEmpty()) return;   // last table row used to insert new points
 
-    ui->tableView->selectRow(pointLogicalIndex);
+    tableView->selectRow(pointLogicalIndex);
 
     int q = QMessageBox::warning(this, tr("Delete Point"),
              tr("Do you want to delete the point Id %1").arg(ID),
@@ -85,14 +90,13 @@ void PointEditor::pointDelete()
 
 PointEditor::~PointEditor()
 {
-    delete ui;
 }
 
 void PointEditor::connectPointData(GNU_gama::local::PointData* pd)
 {
     PointTableModel* old = model;
     model = new PointTableModel(*pd, this);
-    ui->tableView->setModel(model);
+    tableView->setModel(model);
     delete old;
 
     connect(model, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
@@ -104,10 +108,10 @@ void PointEditor::enableEdit(bool edit)
     if (edit)
     {
         // implicit behaviour is "double click for editing"
-        ui->tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
+        tableView->setEditTriggers(QAbstractItemView::AllEditTriggers);
     }
     else
     {
-        ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     }
 }
