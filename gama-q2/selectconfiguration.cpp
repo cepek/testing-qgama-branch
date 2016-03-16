@@ -19,7 +19,6 @@
 */
 
 #include "selectconfiguration.h"
-#include "ui_selectconfiguration.h"
 #include "constants.h"
 
 #include <QSqlDatabase>
@@ -33,6 +32,8 @@
 #include <QRadioButton>
 #include <QTableWidget>
 #include <QDialogButtonBox>
+#include <QLabel>
+#include <QHeaderView>
 #include <QDebug>
 
 SelectConfiguration::SelectConfiguration(QString connectionName, bool tabsDocks,

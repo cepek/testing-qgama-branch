@@ -1,5 +1,5 @@
 /*  Qt based GUI for GNU Gama -- adjustment of geodetic networks
-    Copyright (C) 2014  Ales Cepek <cepek@gnu.org>
+    Copyright (C) 2014, 2016  Ales Cepek <cepek@gnu.org>
 
     This file is a part of GNU Gama.
 
@@ -18,7 +18,6 @@
 */
 
 #include "insertobservationdialog.h"
-#include "ui_insertobservationdialog.h"
 #include "constants.h"
 #include <gnu_gama/local/observation.h>
 #include <gnu_gama/gon2deg.h>
@@ -27,6 +26,7 @@
 #include <QLineEdit>
 #include <QFormLayout>
 #include <QTextEdit>
+#include <QDialogButtonBox>
 #include <QDebug>
 
 InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *parent) :
