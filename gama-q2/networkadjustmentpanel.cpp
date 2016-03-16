@@ -83,7 +83,7 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
 
     QAction* action {nullptr};
 
-    QMenu* menuFile  = new QMenu(tr("&File"), this);
+    menuFile  = new QMenu(tr("&File"), this);
     action = menuFile->addAction(tr("&Save"));
     connect(action, &QAction::triggered, [this](){action_Save_into_db();});
     action = menuFile->addAction(tr("Save &As"));
@@ -106,13 +106,13 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     action = menuFile->addAction(tr("&Close"));
     connect(action, &QAction::triggered, [this](){action_Close();});
 
-    QMenu* menuAdjustment = new QMenu(tr("&Adjustment"), this);
+    menuAdjustment = new QMenu(tr("&Adjustment"), this);
     action = menuAdjustment->addAction(tr("&Run"));
     connect(action, &QAction::triggered, [this](){action_Run();});
 
     menuView  = new QMenu(tr("&View"), this);
 
-    QMenu* menuEdit  = new QMenu(tr("&Edit"), this);
+    menuEdit  = new QMenu(tr("&Edit"), this);
     actionParameters = menuEdit->addAction(tr("Pa&rameters"));
     actionParameters->setCheckable(true);
     connect(actionParameters, &QAction::toggled, [this](){action_Parameters_changed();});
@@ -123,11 +123,11 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     actionObservations->setCheckable(true);
     connect(actionObservations, &QAction::toggled, [this](){action_Observations_changed();});
 
-    QMenu* menuSetup = new QMenu(tr("&Settings"), this);
+    menuSetup = new QMenu(tr("&Settings"), this);
     action = menuSetup->addAction(tr("Outline &draw"));
     connect(action, &QAction::triggered, [this](){action_Outline_draw();});
 
-    QMenu* menuTools = new QMenu(tr("&Tools"), this);
+    menuTools = new QMenu(tr("&Tools"), this);
     {
         QMap<QString, AdjustmentInterface*> map;
 
@@ -156,18 +156,18 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
         }
     }
 
-    QMenu* menuHelp  = new QMenu(tr("&Help"), this);
+    menuHelp  = new QMenu(tr("&Help"), this);
     action = menuHelp->addAction(tr("Gama-q2 &Help"));
     connect(action, &QAction::triggered, [this](){action_Gama_q2_help();});
-
+    /*
     menuBar()->addMenu(menuFile);
     menuBar()->addMenu(menuAdjustment);
-    if (!useTabbedWidgets) menuBar()->addMenu(menuView);
+    menuBar()->addMenu(menuView);
     menuBar()->addMenu(menuEdit);
     menuBar()->addMenu(menuSetup);
     menuBar()->addMenu(menuTools);
     menuBar()->addMenu(menuHelp);
-
+    */
     status_bar("");
     set_gui_adjustment_functions_status(false);
 }
@@ -232,6 +232,25 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
     }
 
     useTabbedWidgets   = tabbed;
+    if (tabbed) {
+        menuBar()->addMenu(menuFile);
+        menuBar()->addMenu(menuAdjustment);
+        //menuBar()->addMenu(menuView);
+        menuBar()->addMenu(menuEdit);
+        menuBar()->addMenu(menuSetup);
+        if (!menuTools->isEmpty()) menuBar()->addMenu(menuTools);
+        menuBar()->addMenu(menuHelp);
+    }
+    else {
+        menuBar()->addMenu(menuFile);
+        menuBar()->addMenu(menuAdjustment);
+        menuBar()->addMenu(menuView);
+        menuBar()->addMenu(menuEdit);
+        menuBar()->addMenu(menuSetup);
+        if (!menuTools->isEmpty()) menuBar()->addMenu(menuTools);
+        menuBar()->addMenu(menuHelp);
+    }
+
     configuration_name = conf;
     setWindowTitle(tr("Network Adjustment '%1'").arg(conf));
 

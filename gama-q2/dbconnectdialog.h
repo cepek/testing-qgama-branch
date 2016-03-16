@@ -1,6 +1,6 @@
 /*
   GNU Gama Qt based GUI
-  Copyright (C) 2013 Ales Cepek <cepek@gnu.org>
+  Copyright (C) 2013, 2016 Ales Cepek <cepek@gnu.org>
 
   This file is part of GNU Gama.
 
@@ -23,9 +23,14 @@
 
 #include <QDialog>
 
-namespace Ui {
-class DBConnectDialog;
-}
+class QDialogButtonBox;
+class QStackedWidget;
+class QFormLayout;
+class QComboBox;
+class QLabel;
+class QLineEdit;
+class QCheckBox;
+class QPushButton;
 
 class QSqlDatabase;
 
@@ -38,10 +43,22 @@ public:
     ~DBConnectDialog();
     
 private:
-    Ui::DBConnectDialog *ui;
     QString connection_name;
 
     void create_missing_tables(QSqlDatabase& db);
+
+    QComboBox* comboBox_Driver {};
+    QComboBox* comboBox_Driver2 {};
+    QLineEdit* lineEdit_DatabaseName {};
+    QLineEdit* lineEdit_DatabaseFile {};
+    QLineEdit* lineEdit_Hostname {};
+    QLineEdit* lineEdit_Username {};
+    QLineEdit* lineEdit_Password {};
+    QLineEdit* lineEdit_Port {};
+    QStackedWidget* stackedWidget {};
+    QDialogButtonBox* buttonBox {};
+    QPushButton* pushButton_CreateNewDbFile {};
+    QCheckBox* checkBox_CreateNewDbFile {};
 
 private slots:
     void switchStackedWidgets();

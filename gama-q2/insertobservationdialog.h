@@ -24,12 +24,10 @@
 #include <QDialog>
 #include <QSet>
 
-namespace Ui {
-class InsertObservationDialog;
-}
-
 class QLineEdit;
 class QComboBox;
+class QFormLayout;
+class QTextEdit;
 
 namespace GNU_gama { namespace local {
     class Observation;
@@ -55,8 +53,6 @@ public slots:
     void accept();
 
 private:
-    Ui::InsertObservationDialog *ui;
-
     bool acceptDegrees;
     bool isObsAngle;
     QString clusterName;
@@ -80,6 +76,9 @@ private:
     QLineEdit* lineEditX;
     QLineEdit* lineEditY;
     QLineEdit* lineEditZ;
+
+    QFormLayout* formLayout {};
+    QTextEdit* warnings {};
 
     QList<ObsInfo> obsinfo;
 

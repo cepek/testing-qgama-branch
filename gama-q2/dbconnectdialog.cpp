@@ -18,7 +18,6 @@
 */
 
 #include "dbconnectdialog.h"
-#include "ui_dbconnectdialog.h"
 #include "constants.h"
 
 #include <QFileDialog>
@@ -26,44 +25,108 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
+#include <QDialogButtonBox>
+#include <QStackedWidget>
+#include <QVBoxLayout>
+#include <QFormLayout>
+#include <QComboBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QPushButton>
 
 #include <QDebug>
 
 DBConnectDialog::DBConnectDialog(QString connectionName, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::DBConnectDialog),
     connection_name(connectionName)
 {
-    qDebug() << "***  DBConnectDialog" << __FILE__ << __LINE__;
-    ui->setupUi(this);
-
     setWindowTitle(tr("DB Connection"));
 
-    const QStringList drivers = QSqlDatabase::drivers();
-    ui->comboBox_Driver ->addItems(drivers);
-    ui->comboBox_Driver2->addItems(drivers);
+    comboBox_Driver = new QComboBox;
+    comboBox_Driver2 = new QComboBox;
+    lineEdit_DatabaseName = new QLineEdit;
+    lineEdit_DatabaseFile = new QLineEdit(":memory:");
+    lineEdit_Hostname = new QLineEdit;
+    lineEdit_Username = new QLineEdit;
+    lineEdit_Password = new QLineEdit;
+    lineEdit_Port = new QLineEdit;
+    pushButton_CreateNewDbFile = new QPushButton(tr("Open File Dialog"));
+    checkBox_CreateNewDbFile = new QCheckBox(tr("Create a New Sqlite Database File"));
 
-    connect(ui->comboBox_Driver,  SIGNAL(currentIndexChanged(int)), ui->comboBox_Driver2, SLOT(setCurrentIndex(int)));
-    connect(ui->comboBox_Driver2, SIGNAL(currentIndexChanged(int)), ui->comboBox_Driver,  SLOT(setCurrentIndex(int)));
-    connect(ui->comboBox_Driver,  SIGNAL(currentIndexChanged(int)), this, SLOT(switchStackedWidgets()));
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok |
+                                     QDialogButtonBox::Cancel |
+                                     QDialogButtonBox::Help);
+
+    const QStringList drivers = QSqlDatabase::drivers();
+    comboBox_Driver ->addItems(drivers);
+    comboBox_Driver2->addItems(drivers);
+
+    connect(comboBox_Driver,  SIGNAL(currentIndexChanged(int)), comboBox_Driver2, SLOT(setCurrentIndex(int)));
+    connect(comboBox_Driver2, SIGNAL(currentIndexChanged(int)), comboBox_Driver,  SLOT(setCurrentIndex(int)));
+    connect(comboBox_Driver,  SIGNAL(currentIndexChanged(int)), this, SLOT(switchStackedWidgets()));
+
+    QWidget* page_0 = new QWidget;
+    QWidget* page_1 = new QWidget;
+    stackedWidget = new QStackedWidget;
+    stackedWidget->addWidget(page_0);
+    stackedWidget->addWidget(page_1);
+
+    QFormLayout* form_0 = new QFormLayout;
+    form_0->addRow(tr("Database Driver"), comboBox_Driver);
+    form_0->addRow(tr("Database Name"), lineEdit_DatabaseName);
+    form_0->addRow(tr("Username"), lineEdit_Username);
+    form_0->addRow(tr("Password"), lineEdit_Password);
+    form_0->addRow(tr("Hostname"), lineEdit_Hostname);
+    form_0->addRow(tr("Port"), lineEdit_Port);
+    page_0->setLayout(form_0);
+
+    QFormLayout* form_1 = new QFormLayout;
+    form_1->addRow(tr("Database driver"), comboBox_Driver2);
+    form_1->addRow(tr("SQLite File"), lineEdit_DatabaseFile);
+    form_1->addRow("", new QLabel);
+    form_1->addRow("", pushButton_CreateNewDbFile);
+    form_1->addRow("", checkBox_CreateNewDbFile);
+    page_1->setLayout(form_1);
 
     switchStackedWidgets();
+
+    QVBoxLayout* vbox = new QVBoxLayout;
+    vbox->addWidget(stackedWidget);
+    vbox->addWidget(buttonBox);
+    setLayout(vbox);
+
+    connect(buttonBox, &QDialogButtonBox::clicked, [this](QAbstractButton* button){
+        switch (buttonBox->buttonRole(button)) {
+        case QDialogButtonBox::RejectRole:
+            close();
+            break;
+        case QDialogButtonBox::AcceptRole:
+            on_buttonBox_accepted();
+            break;
+        case QDialogButtonBox::HelpRole:
+            on_buttonBox_helpRequested();
+            break;
+        default:
+            break;
+        }});
+    connect(pushButton_CreateNewDbFile, &QPushButton::pressed,
+            [this](){on_pushButton_OpenFileDialog_clicked();});
 }
 
 DBConnectDialog::~DBConnectDialog()
 {
-    delete ui;
 }
 
 void DBConnectDialog::switchStackedWidgets()
 {
-    if (ui->comboBox_Driver->currentText() == "QSQLITE") {
-        ui->stackedWidget->setCurrentIndex(1);
-        ui->buttonBox->button(QDialogButtonBox::Help)->show();
+    if (comboBox_Driver->currentText() == "QSQLITE") {
+        stackedWidget->setCurrentIndex(1);
+        buttonBox->button(QDialogButtonBox::Help)->show();
     }
     else {
-        ui->stackedWidget->setCurrentIndex(0);
-        ui->buttonBox->button(QDialogButtonBox::Help)->hide();
+        stackedWidget->setCurrentIndex(0);
+        buttonBox->button(QDialogButtonBox::Help)->hide();
     }
 }
 
@@ -73,7 +136,7 @@ void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
     fileDialog.setFileMode(QFileDialog::AnyFile);     // a single file only
     fileDialog.setDefaultSuffix("db");
 
-    if (ui->checkBox_CreateNewDbFile->isChecked())
+    if (checkBox_CreateNewDbFile->isChecked())
         fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     else
         fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
@@ -86,7 +149,7 @@ void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
 
     if (!fileDialog.exec()) return;
 
-    ui->lineEdit_DatabaseFile->setText( fileDialog.selectedFiles()[0] );
+    lineEdit_DatabaseFile->setText( fileDialog.selectedFiles()[0] );
     on_buttonBox_accepted();
     hide();
 }
@@ -125,19 +188,19 @@ void DBConnectDialog::on_buttonBox_rejected()
 
 void DBConnectDialog::on_buttonBox_accepted()
 {
-    QString driver = ui->comboBox_Driver->currentText();
-    QString database_name = ui->lineEdit_DatabaseName->text();
-    if (driver == "QSQLITE") database_name = ui->lineEdit_DatabaseFile->text();
+    QString driver = comboBox_Driver->currentText();
+    QString database_name = lineEdit_DatabaseName->text();
+    if (driver == "QSQLITE") database_name = lineEdit_DatabaseFile->text();
 
     QSqlDatabase::removeDatabase(connection_name);
     QSqlDatabase db = QSqlDatabase::addDatabase(driver, connection_name);
-    db.setHostName    (ui->lineEdit_Hostname->text().simplified());
+    db.setHostName    (lineEdit_Hostname->text().simplified());
     db.setDatabaseName(database_name);
-    db.setUserName    (ui->lineEdit_Username->text().simplified());
-    db.setPassword    (ui->lineEdit_Password->text().simplified());
-    if (!ui->lineEdit_Port->text().simplified().isEmpty())
+    db.setUserName    (lineEdit_Username->text().simplified());
+    db.setPassword    (lineEdit_Password->text().simplified());
+    if (!lineEdit_Port->text().simplified().isEmpty())
     {
-        db.setPort(ui->lineEdit_Port->text().toInt());
+        db.setPort(lineEdit_Port->text().toInt());
     }
 
     if (!db.open())

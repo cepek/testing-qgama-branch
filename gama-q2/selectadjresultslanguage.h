@@ -3,9 +3,9 @@
 
 #include <QDialog>
 
-namespace Ui {
-class SelectAdjResultsLanguage;
-}
+class QComboBox;
+class QLabel;
+class QDialogButtonBox;
 
 class SelectAdjResultsLanguage : public QDialog
 {
@@ -19,7 +19,9 @@ private slots:
     void on_buttonBox_accepted();
 
 private:
-    Ui::SelectAdjResultsLanguage *ui;
+    QLabel* label {nullptr};
+    QComboBox* comboBox {nullptr};
+    QDialogButtonBox* buttonBox {nullptr};
 };
 
 #endif // SELECTADJRESULTSLANGUAGE_H

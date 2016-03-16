@@ -25,21 +25,22 @@
 
 #include <QComboBox>
 #include <QLineEdit>
+#include <QFormLayout>
+#include <QTextEdit>
 #include <QDebug>
 
 InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::InsertObservationDialog),
     obsInfo(obsinfo),
     acceptDegrees(false),
     isObsAngle(false),
     clusterName(cluster_name)
 {
-    qDebug() << "***  InsertObservationDialog" << __FILE__ << __LINE__;
-    ui->setupUi(this);
+    formLayout = new QFormLayout;
+    warnings = new QTextEdit;
 
-    ui->warnings->hide();
-    ui->warnings->setReadOnly(true);
+    warnings->hide();
+    warnings->setReadOnly(true);
 
     comboPosition = new QComboBox(this);
     comboPosition->addItem(tr("Last Observation in the Cluster"));
@@ -59,48 +60,59 @@ InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *
         comboObservation->addItem(GamaQ2::slopeObsName);
         comboObservation->addItem(GamaQ2::zangleObsName);
 
-        ui->formLayout->addRow(tr("Observation"), comboObservation);
-        ui->formLayout->addRow(tr("Position"),    comboPosition);
-        ui->formLayout->addRow(tr("From" ), lineEditFrom  = new QLineEdit(this));
-        ui->formLayout->addRow(tr("To"   ), lineEditTo    = new QLineEdit(this));
-        ui->formLayout->addRow(tr("Value"), lineEditValue = new QLineEdit(this));
+        formLayout->addRow(tr("Observation"), comboObservation);
+        formLayout->addRow(tr("Position"),    comboPosition);
+        formLayout->addRow(tr("From" ), lineEditFrom  = new QLineEdit(this));
+        formLayout->addRow(tr("To"   ), lineEditTo    = new QLineEdit(this));
+        formLayout->addRow(tr("Value"), lineEditValue = new QLineEdit(this));
     }
     else if (clusterName == GamaQ2::xyzClusterName)
     {
         setWindowTitle(tr("Insert coordinates"));
 
-        ui->formLayout->addRow(tr("Position"), comboPosition);
-        ui->formLayout->addRow(tr("Point"), lineEditPoint = new QLineEdit(this));
-        ui->formLayout->addRow(tr("X"), lineEditX = new QLineEdit(this));
-        ui->formLayout->addRow(tr("Y"), lineEditY = new QLineEdit(this));
-        ui->formLayout->addRow(tr("Z"), lineEditZ = new QLineEdit(this));
+        formLayout->addRow(tr("Position"), comboPosition);
+        formLayout->addRow(tr("Point"), lineEditPoint = new QLineEdit(this));
+        formLayout->addRow(tr("X"), lineEditX = new QLineEdit(this));
+        formLayout->addRow(tr("Y"), lineEditY = new QLineEdit(this));
+        formLayout->addRow(tr("Z"), lineEditZ = new QLineEdit(this));
 
     }
     else if (clusterName == GamaQ2::hdfClusterName)
     {
         setWindowTitle(tr("Insert height difference"));
 
-        ui->formLayout->addRow(tr("Position"), comboPosition);
-        ui->formLayout->addRow(tr("From" ),    lineEditFrom  = new QLineEdit(this));
-        ui->formLayout->addRow(tr("To"   ),    lineEditTo    = new QLineEdit(this));
-        ui->formLayout->addRow(tr("H diff"),   lineEditHdiff = new QLineEdit(this));
+        formLayout->addRow(tr("Position"), comboPosition);
+        formLayout->addRow(tr("From" ),    lineEditFrom  = new QLineEdit(this));
+        formLayout->addRow(tr("To"   ),    lineEditTo    = new QLineEdit(this));
+        formLayout->addRow(tr("H diff"),   lineEditHdiff = new QLineEdit(this));
     }
     else if (clusterName == GamaQ2::vecClusterName)
     {
         setWindowTitle(tr("Insert vector"));
 
-        ui->formLayout->addRow(tr("Position"), comboPosition);
-        ui->formLayout->addRow(tr("From" ),    lineEditFrom  = new QLineEdit(this));
-        ui->formLayout->addRow(tr("To"   ),    lineEditTo    = new QLineEdit(this));
-        ui->formLayout->addRow(tr("X diff"),   lineEditXdiff = new QLineEdit(this));
-        ui->formLayout->addRow(tr("Y diff"),   lineEditYdiff = new QLineEdit(this));
-        ui->formLayout->addRow(tr("Z diff"),   lineEditZdiff = new QLineEdit(this));
+        formLayout->addRow(tr("Position"), comboPosition);
+        formLayout->addRow(tr("From" ),    lineEditFrom  = new QLineEdit(this));
+        formLayout->addRow(tr("To"   ),    lineEditTo    = new QLineEdit(this));
+        formLayout->addRow(tr("X diff"),   lineEditXdiff = new QLineEdit(this));
+        formLayout->addRow(tr("Y diff"),   lineEditYdiff = new QLineEdit(this));
+        formLayout->addRow(tr("Z diff"),   lineEditZdiff = new QLineEdit(this));
     }
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok |
+                                                       QDialogButtonBox::Cancel);
+
+    QVBoxLayout* vBoxLayout = new QVBoxLayout;
+    vBoxLayout->addLayout(formLayout);
+    vBoxLayout->addWidget(buttonBox);
+    vBoxLayout->addWidget(warnings);
+    setLayout(vBoxLayout);
+
+    connect(buttonBox, &QDialogButtonBox::accepted, [this](){accept();});
+    connect(buttonBox, &QDialogButtonBox::rejected, [this](){rejected();});
 }
 
 InsertObservationDialog::~InsertObservationDialog()
 {
-    delete ui;
 }
 
 int InsertObservationDialog::position() const
@@ -338,12 +350,12 @@ void InsertObservationDialog::accept()
     }
 
     html += "</dl>";
-    ui->warnings->clear();
-    ui->warnings->insertHtml(html);
-    ui->warnings->moveCursor(QTextCursor::Start);
+    warnings->clear();
+    warnings->insertHtml(html);
+    warnings->moveCursor(QTextCursor::Start);
 
     if (OK) done(Accepted);
-    else    ui->warnings->show();
+    else    warnings->show();
 }
 
 void InsertObservationDialog::getPointID(QString tag, QLineEdit *edit, bool isTarget)

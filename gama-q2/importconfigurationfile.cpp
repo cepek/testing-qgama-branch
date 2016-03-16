@@ -30,7 +30,11 @@
 #include <QMessageBox>
 #include <QDialogButtonBox>
 #include <QPlainTextEdit>
+#include <QTableWidget>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 #include <QDebug>
+
 
 // headers from gala-local-xml2sql.cpp
 #include <gnu_gama/local/localnetwork2sql.h>
@@ -41,19 +45,53 @@
 #include <cctype>
 
 ImportConfigurationFile::ImportConfigurationFile(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::ImportConfigurationFile)
+    QWidget(parent)
 {
-    qDebug() << "***  ImportConfigurationFile" << __FILE__ << __LINE__;
-    ui->setupUi(this);
-
     setWindowTitle(tr("Import XML input data"));
     setWindowModality(Qt::ApplicationModal);
+
+    label_File = new QLabel;
+    tableWidget_ExistingConfigurationNames = new QTableWidget;
+    lineEdit_ConfigurationName = new QLineEdit;
+    pushButton_Import = new QPushButton;
+
+    QFormLayout* formLayout = new QFormLayout;
+    formLayout->addRow(tr("XML input file"), label_File);
+    formLayout->addRow(tr("Existing configuration names"), tableWidget_ExistingConfigurationNames);
+    formLayout->addRow(tr("New configuration name"), lineEdit_ConfigurationName);
+
+    buttons = new QDialogButtonBox(QDialogButtonBox::Cancel |
+                                                     QDialogButtonBox::Reset);
+    buttons->addButton(tr("Import"), QDialogButtonBox::AcceptRole);
+
+    QVBoxLayout* vBoxLayout = new QVBoxLayout;
+    vBoxLayout->addLayout(formLayout);
+    vBoxLayout->addWidget(buttons);
+    setLayout(vBoxLayout);
+
+    connect(buttons, &QDialogButtonBox::clicked, [this](QAbstractButton* button){
+        switch (buttons->buttonRole(button)) {
+        case QDialogButtonBox::RejectRole:
+            close();
+            break;
+        case QDialogButtonBox::AcceptRole:
+            import_configuration();
+            break;
+        case QDialogButtonBox::ResetRole:
+            lineEdit_ConfigurationName->setText(basename);
+            break;
+        default:
+            break;
+        }});
+    connect(lineEdit_ConfigurationName, &QLineEdit::textChanged,
+            [this](const QString& text){on_lineEdit_ConfigurationName_textChanged(text);});
+    connect(tableWidget_ExistingConfigurationNames, &QTableWidget::cellDoubleClicked,
+            [this](int row, int col){lineEdit_ConfigurationName->setText(
+                    tableWidget_ExistingConfigurationNames->item(row,col)->text());});
 }
 
 ImportConfigurationFile::~ImportConfigurationFile()
 {
-    delete ui;
 }
 
 void ImportConfigurationFile::exec()
@@ -82,13 +120,13 @@ void ImportConfigurationFile::configure()
     QSqlQuery query(db);
 
     {
-        ui->tableWidget_ExistingConfigurationNames->setColumnCount(1);
+        tableWidget_ExistingConfigurationNames->setColumnCount(1);
 
-        QHeaderView* hv = new QHeaderView(Qt::Horizontal, ui->tableWidget_ExistingConfigurationNames);
-        ui->tableWidget_ExistingConfigurationNames->setHorizontalHeader(hv);
+        QHeaderView* hv = new QHeaderView(Qt::Horizontal, tableWidget_ExistingConfigurationNames);
+        tableWidget_ExistingConfigurationNames->setHorizontalHeader(hv);
         hv->setStretchLastSection(true);
         hv->setVisible(false);
-        ui->tableWidget_ExistingConfigurationNames->
+        tableWidget_ExistingConfigurationNames->
                 setHorizontalHeaderItem(0, new QTableWidgetItem(tr("Existing Configuration Names")));
 
         query.exec("SELECT conf_name "
@@ -96,37 +134,32 @@ void ImportConfigurationFile::configure()
                    "ORDER BY conf_name DESC ");
         while (query.next())
         {
-            ui->tableWidget_ExistingConfigurationNames->insertRow(0);
+            tableWidget_ExistingConfigurationNames->insertRow(0);
 
             QString conf = query.value(0).toString();
             QTableWidgetItem* item = new QTableWidgetItem(conf);
             item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-            ui->tableWidget_ExistingConfigurationNames->setItem(0,0,item);
+            tableWidget_ExistingConfigurationNames->setItem(0,0,item);
         }
     }
 
     QFileInfo info(file);
-    const QString basename = info.baseName();
-    ui->label_File->setText(info.fileName());
-    ui->lineEdit_ConfigurationName->setText(basename);
-}
-
-void ImportConfigurationFile::on_pushButton_Cancel_clicked()
-{
-    close();
+    basename = info.baseName();
+    label_File->setText(info.fileName());
+    lineEdit_ConfigurationName->setText(basename);
 }
 
 void ImportConfigurationFile::on_lineEdit_ConfigurationName_textChanged(const QString &arg1)
 {
     const QRegExp whitespaces("\\s");
-    ui->lineEdit_ConfigurationName->setText(QString(arg1).remove(whitespaces));
+    lineEdit_ConfigurationName->setText(QString(arg1).remove(whitespaces));
 
     bool found  = false;
     int  row  = 0;
-    int  rows = ui->tableWidget_ExistingConfigurationNames->rowCount();
+    int  rows = tableWidget_ExistingConfigurationNames->rowCount();
     for (int i=rows-1; i>=0; i--)
     {
-        QString item = ui->tableWidget_ExistingConfigurationNames->item(i, 0)->text();
+        QString item = tableWidget_ExistingConfigurationNames->item(i, 0)->text();
         if (item.startsWith(arg1)) row = i;
         if (item == arg1)
         {
@@ -135,14 +168,14 @@ void ImportConfigurationFile::on_lineEdit_ConfigurationName_textChanged(const QS
         }
     }
 
-    ui->tableWidget_ExistingConfigurationNames->selectRow(row);
-    ui->pushButton_Import->setEnabled(!found);
+    tableWidget_ExistingConfigurationNames->selectRow(row);
+    pushButton_Import->setEnabled(!found);
 }
 
-void ImportConfigurationFile::on_pushButton_Import_clicked()
+void ImportConfigurationFile::import_configuration()
 {
     std::stringstream sql;
-    QString qnm = ui->label_File->text();
+    QString qnm = label_File->text();
 
     QString xmlString;
     QFile inputFile(file);
@@ -164,7 +197,7 @@ void ImportConfigurationFile::on_pushButton_Import_clicked()
         repeat = false;
         std::istringstream xml(xmlString.toUtf8().data());
 
-        const QString qconfname = ui->lineEdit_ConfigurationName->text();
+        const QString qconfname = lineEdit_ConfigurationName->text();
         GNU_gama::local::LocalNetwork lnet;
         GNU_gama::local::LocalNetwork2sql imp(lnet);
         imp.readGkf(xml);

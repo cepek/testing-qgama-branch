@@ -1,6 +1,6 @@
 /*
   GNU Gama Qt based GUI
-  Copyright (C) 2013 Ales Cepek <cepek@gnu.org>
+  Copyright (C) 2013, 2016 Ales Cepek <cepek@gnu.org>
 
   This file is part of GNU Gama.
 
@@ -23,9 +23,13 @@
 
 #include <QDialog>
 
-namespace Ui {
-    class SelectConfiguration;
-}
+class QVBoxLayout;
+class QFormLayout;
+class QLineEdit;
+class QRadioButton;
+class QTableWidget;
+class QDialogButtonBox;
+class QLabel;
 
 class SelectConfiguration : public QDialog
 {
@@ -40,20 +44,20 @@ public:
 
 private slots:
     void on_lineEdit_ConfigurationName_textChanged(const QString &arg1);
-    void on_tableWidget_ExistingConfigurationNames_cellClicked(int row, int column);
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
-    void on_radioButton_tabs_toggled(bool checked);
 
 private:
-    Ui::SelectConfiguration *ui;
-
-
     QString connection_name;
     QString configuration_name;
     bool    tabDockRadioButtons;
     bool    enableNewConfigurationName;
     bool    tabbedWidgets;
+
+    QDialogButtonBox* buttonBox {};
+    QRadioButton* radioButton_tabs {};
+    QRadioButton* radioButton_dock {};
+    QTableWidget* tableWidget_ExistingConfigurationNames {};
+    QLineEdit* lineEdit_ConfigurationName {};
+    QLabel* label_DatabaseName {};
 
 signals:
     void selectConfiguration(QString conf, bool useTabbedWidgets=true);

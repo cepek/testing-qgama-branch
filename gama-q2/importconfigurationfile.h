@@ -25,9 +25,10 @@
 #include <QLabel>
 #include <QPlainTextEdit>
 
-namespace Ui {
-    class ImportConfigurationFile;
-}
+class QTableWidget;
+class QLineEdit;
+class QPushButton;
+class QDialogButtonBox;
 
 class ImportConfigurationFile : public QWidget
 {
@@ -40,17 +41,20 @@ public:
     void exec();
 
 private slots:
-    void on_pushButton_Cancel_clicked();
     void on_lineEdit_ConfigurationName_textChanged(const QString &arg1);
-
-    void on_pushButton_Import_clicked();
+    void import_configuration();
     void setXmlLine();
 
 private:
-    Ui::ImportConfigurationFile *ui;
     QString file;
-    QLabel* line {nullptr};
-    QPlainTextEdit* edit {nullptr};
+    QLabel* line {};
+    QLabel* label_File {};
+    QPlainTextEdit* edit {};
+    QLineEdit* lineEdit_ConfigurationName {};
+    QTableWidget* tableWidget_ExistingConfigurationNames {};
+    QPushButton* pushButton_Import;
+    QDialogButtonBox* buttons;
+    QString basename;
 
     void configure();
 };

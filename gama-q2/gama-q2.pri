@@ -51,15 +51,6 @@ HEADERS  += $$GAMAQ2SRC/gamaq2controlpanel.h \
     $$GAMAQ2SRC/selectadjresultslanguage.h \
     $$GAMAQ2SRC/gamaq2help.h
 
-
-FORMS    += $$GAMAQ2SRC/importconfigurationfile.ui \
-    $$GAMAQ2SRC/insertclusterdialog.ui \
-    $$GAMAQ2SRC/insertobservationdialog.ui \
-    $$GAMAQ2SRC/selectconfiguration.ui \
-    $$GAMAQ2SRC/drawsettings.ui \
-    $$GAMAQ2SRC/dbconnectdialog.ui \
-    $$GAMAQ2SRC/selectadjresultslanguage.ui
-
 RESOURCES += \
     gama-q2.qrc
 

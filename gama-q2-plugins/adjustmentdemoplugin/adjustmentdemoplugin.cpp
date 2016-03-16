@@ -1,5 +1,5 @@
 /*  Qt based GUI for GNU Gama -- adjustment of geodetic networks
-    Copyright (C) 2014  Ales Cepek <cepek@gnu.org>
+    Copyright (C) 2014, 2016  Ales Cepek <cepek@gnu.org>
 
     This file is a part of GNU Gama.
 
@@ -72,8 +72,8 @@ QFrame* AdjustmentDemoPlugin::getFrame()
         for (auto t : lnet->OD)
         {
             obs++;
-            if      (Distance*  ds = dynamic_cast<Distance*> (t)) dis++;
-            else if (Direction* dr = dynamic_cast<Direction*>(t)) dir++;
+            if      (/*Distance*  ds =*/ dynamic_cast<Distance*> (t)) dis++;
+            else if (/*Direction* dr =*/ dynamic_cast<Direction*>(t)) dir++;
         }
         layout->addWidget(new QLabel("Observations"), 2, 0);
         layout->addWidget(new QLabel(QString::number(obs)), 2, 1);

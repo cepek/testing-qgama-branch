@@ -64,7 +64,13 @@ private:
     bool    useTabbedWidgets;
     bool    valid;
 
+    QMenu*   menuFile           {nullptr};
+    QMenu*   menuAdjustment     {nullptr};
     QMenu*   menuView           {nullptr};
+    QMenu*   menuEdit           {nullptr};
+    QMenu*   menuSetup          {nullptr};
+    QMenu*   menuTools          {nullptr};
+    QMenu*   menuHelp           {nullptr};
     QAction* actionParameters   {nullptr};
     QAction* actionPoints       {nullptr};
     QAction* actionObservations {nullptr};

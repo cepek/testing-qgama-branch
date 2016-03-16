@@ -22,9 +22,7 @@
 
 #include <QDialog>
 
-namespace Ui {
-class InsertClusterDialog;
-}
+class QComboBox;
 
 class InsertClusterDialog : public QDialog
 {
@@ -38,7 +36,8 @@ public:
     int     position() const;
     
 private:
-    Ui::InsertClusterDialog *ui;
+    QComboBox* comboBoxClusterName {};
+    QComboBox* comboBoxPosition {};
 };
 
 #endif // INSERTCLUSTERDIALOG_H

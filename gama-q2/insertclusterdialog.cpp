@@ -18,39 +18,55 @@
 */
 
 #include "insertclusterdialog.h"
-#include "ui_insertclusterdialog.h"
 #include "constants.h"
+#include <QComboBox>
+#include <QDialogButtonBox>
+#include <QFormLayout>
+
 #include <QDebug>
 
 InsertClusterDialog::InsertClusterDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::InsertClusterDialog)
+    QDialog(parent)
 {
     qDebug() << "***  InsertClusterDialog" << __FILE__ << __LINE__;
-    ui->setupUi(this);
+    comboBoxClusterName = new QComboBox(this);
+    comboBoxPosition = new QComboBox(this);
 
-    ui->comboBoxClusterName->addItem(GamaQ2::obsClusterName);
-    ui->comboBoxClusterName->addItem(GamaQ2::xyzClusterName);
-    ui->comboBoxClusterName->addItem(GamaQ2::hdfClusterName);
-    ui->comboBoxClusterName->addItem(GamaQ2::vecClusterName);
+    comboBoxClusterName->addItem(GamaQ2::obsClusterName);
+    comboBoxClusterName->addItem(GamaQ2::xyzClusterName);
+    comboBoxClusterName->addItem(GamaQ2::hdfClusterName);
+    comboBoxClusterName->addItem(GamaQ2::vecClusterName);
 
-    ui->comboBoxPosition->addItem(tr("Last item in the cluster list"));
-    ui->comboBoxPosition->addItem(tr("After the selected cluster"));
-    ui->comboBoxPosition->addItem(tr("Before the selected cluster"));
-    ui->comboBoxPosition->addItem(tr("First item in the cluster list"));
+    comboBoxPosition->addItem(tr("Last item in the cluster list"));
+    comboBoxPosition->addItem(tr("After the selected cluster"));
+    comboBoxPosition->addItem(tr("Before the selected cluster"));
+    comboBoxPosition->addItem(tr("First item in the cluster list"));
+
+    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok |
+                                                     QDialogButtonBox::Cancel);
+    QFormLayout* form = new QFormLayout;
+    form->addRow(tr("Cluster"),  comboBoxClusterName);
+    form->addRow(tr("Position"), comboBoxPosition);
+
+    QVBoxLayout* vbox = new QVBoxLayout;
+    vbox->addLayout(form);
+    vbox->addWidget(buttons);
+    setLayout(vbox);
+
+    connect(buttons, &QDialogButtonBox::accepted, [this](){accept();});
+    connect(buttons, &QDialogButtonBox::rejected, [this](){reject();});
 }
 
 InsertClusterDialog::~InsertClusterDialog()
 {
-    delete ui;
 }
 
 QString InsertClusterDialog::clusterName() const
 {
-    return ui->comboBoxClusterName->currentText();
+    return comboBoxClusterName->currentText();
 }
 
 int InsertClusterDialog::position() const
 {
-    return ui->comboBoxPosition->currentIndex();
+    return comboBoxPosition->currentIndex();
 }

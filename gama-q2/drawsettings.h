@@ -25,9 +25,9 @@
 #include <QDoubleSpinBox>
 #include <QAbstractButton>
 
-namespace Ui {
-class DrawSettings;
-}
+class QComboBox;
+class QCheckBox;
+class QDoubleSpinBox;
 
 namespace GNU_gama { namespace local {
     class LocalNetwork;
@@ -50,7 +50,24 @@ private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
 
 private:
-    Ui::DrawSettings *ui;
+    QComboBox* comboBoxFixedSymbol;
+    QComboBox* comboBoxConstrainedSymbol;
+    QComboBox* comboBoxFreeSymbol;
+    QComboBox* comboBoxFixedFill;
+    QComboBox* comboBoxConstrainedFill;
+    QComboBox* comboBoxFreeFill;
+
+    QDoubleSpinBox* doubleSpinBoxFontSize;
+    QDoubleSpinBox* doubleSpinBoxSymbolSize;
+    QDoubleSpinBox* doubleSpinBoxStrokeWidth;
+    QDoubleSpinBox* doubleSpinBoxEllipsesScale;
+
+    QCheckBox* checkBoxDrawPointSymbols;
+    QCheckBox* checkBoxDrawPointIDs;
+    QCheckBox* checkBoxDrawEllipses;
+    QCheckBox* checkBoxDrawObservations;
+    QCheckBox* checkBoxDrawAxes;
+
     GNU_gama::local::GamaLocalSVG *svg;
     QStringList pointsymbols;
     QStringList pointfill;

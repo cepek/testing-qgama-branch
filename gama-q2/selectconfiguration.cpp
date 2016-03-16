@@ -1,6 +1,6 @@
 /*
   GNU Gama Qt based GUI
-  Copyright (C) 2013 Ales Cepek <cepek@gnu.org>
+  Copyright (C) 2013, 2016 Ales Cepek <cepek@gnu.org>
 
   This file is part of GNU Gama.
 
@@ -27,37 +27,80 @@
 #include <QCompleter>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QVBoxLayout>
+#include <QFormLayout>
+#include <QLineEdit>
+#include <QRadioButton>
+#include <QTableWidget>
+#include <QDialogButtonBox>
 #include <QDebug>
 
 SelectConfiguration::SelectConfiguration(QString connectionName, bool tabsDocks,
                                          bool newConfName, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SelectConfiguration), connection_name(connectionName),
+    connection_name(connectionName),
     tabDockRadioButtons(tabsDocks),
     enableNewConfigurationName(newConfName),
     tabbedWidgets(true)
 {
-    qDebug() << "***  SelectConfiguration" << __FILE__ << __LINE__;
-    ui->setupUi(this);
     setWindowModality(Qt::ApplicationModal);
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(tr("Select Configuration Name"));
 
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok |
+                                     QDialogButtonBox::Cancel);
+    radioButton_tabs = new QRadioButton(tr("Tabbed windows"));
+    radioButton_dock = new QRadioButton(tr("Docked windows"));
+    tableWidget_ExistingConfigurationNames = new QTableWidget;
+    lineEdit_ConfigurationName = new QLineEdit;
+    label_DatabaseName = new QLabel;
+
     // Ok button is disabled until a valid configurations is selected
-    QPushButton *okButton=ui->buttonBox->button(QDialogButtonBox::Ok);
+    QPushButton *okButton=buttonBox->button(QDialogButtonBox::Ok);
     okButton->setEnabled(false);
 
-    if (!tabDockRadioButtons)
+    QFormLayout* form = new QFormLayout;
+    form->addRow(tr("Database Name"), label_DatabaseName);
+    form->addRow(tr("Existing Configurations"), tableWidget_ExistingConfigurationNames);
+    form->addRow(tr("Configuration Name"), lineEdit_ConfigurationName);
+    if (tabDockRadioButtons)
     {
-        ui->radioButton_tabs->hide();
-        ui->radioButton_dock->hide();
-        this->adjustSize();
+        radioButton_tabs->setChecked(true);
+        form->addRow("", radioButton_tabs);
+        form->addRow("", radioButton_dock);
     }
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->addLayout(form);
+    layout->addWidget(buttonBox);
+    setLayout(layout);
+
+    connect(buttonBox, &QDialogButtonBox::clicked, [this](QAbstractButton* button){
+        switch (buttonBox->buttonRole(button)) {
+        case QDialogButtonBox::RejectRole:
+            close();
+            break;
+        case QDialogButtonBox::AcceptRole:
+            emit selectConfiguration(lineEdit_ConfigurationName->text(), tabbedWidgets);
+            close();
+            break;
+        default:
+            break;
+        }
+    });
+    connect(lineEdit_ConfigurationName, &QLineEdit::textChanged, [this](const QString & text){
+        on_lineEdit_ConfigurationName_textChanged(text);
+    });
+    connect(tableWidget_ExistingConfigurationNames, &QTableWidget::cellClicked, [this](int row, int col){
+        QString txt = tableWidget_ExistingConfigurationNames->item(row,col)->text();
+        lineEdit_ConfigurationName->setText(txt);
+    });
+    connect(radioButton_tabs, &QRadioButton::toggled, [this](bool){
+        tabbedWidgets = radioButton_tabs->isChecked();
+    });
 }
 
 SelectConfiguration::~SelectConfiguration()
 {
-    delete ui;
 }
 
 void SelectConfiguration::select()
@@ -65,44 +108,34 @@ void SelectConfiguration::select()
     QStringList confs;
     {
         QSqlDatabase db = QSqlDatabase::database(connection_name);
-        ui->label_DatabaseName->setText(db.databaseName());
+        label_DatabaseName->setText(db.databaseName());
 
-        ui->tableWidget_ExistingConfigurationNames->setColumnCount(1);
-        QHeaderView* hv = new QHeaderView(Qt::Horizontal, ui->tableWidget_ExistingConfigurationNames);
+        tableWidget_ExistingConfigurationNames->setColumnCount(1);
+        QHeaderView* hv = new QHeaderView(Qt::Horizontal, tableWidget_ExistingConfigurationNames);
         hv->setStretchLastSection(true);
         hv->setVisible(false);
-        ui->tableWidget_ExistingConfigurationNames->setHorizontalHeader(hv);
+        tableWidget_ExistingConfigurationNames->setHorizontalHeader(hv);
 
         QSqlQuery query(db);
         query.exec("SELECT conf_name FROM gnu_gama_local_configurations "
                    "ORDER BY conf_name DESC");
-        bool empty = true;
         while (query.next())
         {
-            ui->tableWidget_ExistingConfigurationNames->insertRow(0);
+            tableWidget_ExistingConfigurationNames->insertRow(0);
             QString conf = query.value(0).toString();
             QTableWidgetItem* item = new QTableWidgetItem(conf);
             item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);  // the table must be readonly
 
-            ui->tableWidget_ExistingConfigurationNames->setItem(0,0,item);
+            tableWidget_ExistingConfigurationNames->setItem(0,0,item);
 
             confs << query.value(0).toString();
-            empty = false;
         }
-
-        //if (empty) ... new empty configuration can be created
-        //{
-        //    QMessageBox::warning(this, tr(" Database %1").arg(db.databaseName()),
-        //                         tr("There are no configuration names in the database"));
-        //    close();
-        //    return;
-        //}
     }
 
     QCompleter *completer = new QCompleter(confs, this);
     completer->setCaseSensitivity(Qt::CaseSensitive);
     completer->setCompletionMode(QCompleter::PopupCompletion);
-    ui->lineEdit_ConfigurationName->setCompleter(completer);
+    lineEdit_ConfigurationName->setCompleter(completer);
 
     show();
 }
@@ -110,14 +143,14 @@ void SelectConfiguration::select()
 void SelectConfiguration::on_lineEdit_ConfigurationName_textChanged(const QString &arg1)
 {
     const QRegExp whitespaces("\\s");
-    ui->lineEdit_ConfigurationName->setText(QString(arg1).remove(whitespaces));
+    lineEdit_ConfigurationName->setText(QString(arg1).remove(whitespaces));
 
     bool found  = false;
     int  row  = 0;
-    int  rows = ui->tableWidget_ExistingConfigurationNames->rowCount();
+    int  rows = tableWidget_ExistingConfigurationNames->rowCount();
     for (int i=rows-1; i>=0; i--)
     {
-        QString item = ui->tableWidget_ExistingConfigurationNames->item(i, 0)->text();
+        QString item = tableWidget_ExistingConfigurationNames->item(i, 0)->text();
         if (item.startsWith(arg1)) row = i;
         if (item == arg1)
         {
@@ -126,29 +159,8 @@ void SelectConfiguration::on_lineEdit_ConfigurationName_textChanged(const QStrin
         }
     }
 
-    ui->tableWidget_ExistingConfigurationNames->selectRow(row);
-    QPushButton *okButton=ui->buttonBox->button(QDialogButtonBox::Ok);
+    tableWidget_ExistingConfigurationNames->selectRow(row);
+    QPushButton *okButton=buttonBox->button(QDialogButtonBox::Ok);
     okButton->setEnabled(found || enableNewConfigurationName);
 }
 
-void SelectConfiguration::on_tableWidget_ExistingConfigurationNames_cellClicked(int row, int column)
-{
-    QString txt = ui->tableWidget_ExistingConfigurationNames->item(row,column)->text();
-    ui->lineEdit_ConfigurationName->setText(txt);
-}
-
-void SelectConfiguration::on_buttonBox_accepted()
-{
-    emit selectConfiguration(ui->lineEdit_ConfigurationName->text(), tabbedWidgets);
-    close();
-}
-
-void SelectConfiguration::on_buttonBox_rejected()
-{
-    close();
-}
-
-void SelectConfiguration::on_radioButton_tabs_toggled(bool /*checked*/)
-{
-    tabbedWidgets = ui->radioButton_tabs->isChecked();
-}
