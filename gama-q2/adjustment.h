@@ -1,6 +1,6 @@
 /*
   GNU Gama Qt based GUI
-  Copyright (C) 2013 Ales Cepek <cepek@gnu.org>
+  Copyright (C) 2013, 2016 Ales Cepek <cepek@gnu.org>
 
   This file is part of GNU Gama.
 

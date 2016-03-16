@@ -1,6 +1,6 @@
 /*
   GNU Gama Qt based GUI
-  Copyright (C) 2013 Ales Cepek <cepek@gnu.org>
+  Copyright (C) 2013, 2016 Ales Cepek <cepek@gnu.org>
 
   This file is part of GNU Gama.
 
@@ -44,6 +44,9 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QTextEdit>
+#include <QPrintDialog>
+#include <QPrinter>
 
 #include <gnu_gama/local/network.h>
 #include <gnu_gama/local/localnetwork2sql.h>
@@ -92,8 +95,6 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     connect(action, &QAction::triggered, [this](){action_Save_as_SQL_file();});
     action = menuFile->addAction(tr("&Print"));
     connect(action, &QAction::triggered, [this](){action_Print();});
-    action = menuFile->addAction(tr("Print as PD&F"));
-    connect(action, &QAction::triggered, [this](){action_Print_as_PDF();});
     action = menuFile->addAction(tr("Save &XML adjustment results"));
     connect(action, &QAction::triggered, [this](){action_Save_XML_adjustment_results();});
     action = menuFile->addAction(tr("Save adjustment results as &HTML file"));
@@ -685,24 +686,12 @@ void NetworkAdjustmentPanel::save_configuration(QString confname)
 
 void NetworkAdjustmentPanel::action_Print()
 {
-    QMessageBox::critical(this, "Print", "NOT IMPLEMENTED");
-}
+    QPrintDialog dialog;
+    dialog.setWindowTitle(tr("Print Adjustment Results ") + configuration_name);
+    if (dialog.exec() != QDialog::Accepted) return;
 
-void NetworkAdjustmentPanel::action_Print_as_PDF()
-{
-    QMessageBox::critical(this, "Print", "NOT IMPLEMENTED");
-    /*
-    std::ofstream file("/tmp/zzz.html");
-    file << html->str();
-
-    QString filename = "/tmp/zzz.pdf";
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setOutputFileName(filename);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setPaperSize(QPrinter::A4);
-    ui->textEdit->print(&printer);
-    qDebug() << "                   see /tmp/zzz.html and /tmp/zzz.pdf";
-    */
+    QPrinter printer;
+    res->textEdit->print(&printer);
 }
 
 void NetworkAdjustmentPanel::action_Save_adjustment_results_as_HTML()

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT        += core gui sql svg
+QT        += core gui sql svg printsupport
 TARGET     = gama-q2
 TEMPLATE   = app
 
@@ -26,8 +26,7 @@ DEFINES   += VERSION=\\\"configure.ac\\\"
 LIBGAMASRC = lib/gama
 include(libgama.pri)
 
-OTHER_FILES += \
-    Poznamky.txt
+OTHER_FILES +=
 
 RESOURCES +=
 CONFIG    += c++11

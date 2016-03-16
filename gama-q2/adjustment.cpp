@@ -1,5 +1,5 @@
 /*  Qt based GUI for GNU Gama -- adjustment of geodetic networks
-    Copyright (C) 2014  Ales Cepek <cepek@gnu.org>
+    Copyright (C) 2014, 2016  Ales Cepek <cepek@gnu.org>
 
     This file is a part of GNU Gama.
 

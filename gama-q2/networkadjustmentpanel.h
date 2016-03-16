@@ -1,6 +1,6 @@
 /*
   GNU Gama Qt based GUI
-  Copyright (C) 2013 Ales Cepek <cepek@gnu.org>
+  Copyright (C) 2013, 2016 Ales Cepek <cepek@gnu.org>
 
   This file is part of GNU Gama.
 
@@ -103,7 +103,6 @@ private slots:
     void action_Save_into_db();
     void action_Save_As_into_db();
     void action_Print();
-    void action_Print_as_PDF();
     void action_Save_adjustment_results_as_HTML();
 
     void action_Gama_q2_help();
