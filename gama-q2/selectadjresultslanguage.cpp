@@ -34,6 +34,7 @@ SelectAdjResultsLanguage::SelectAdjResultsLanguage(QWidget *parent) :
     comboBox = new QComboBox;
     label = new QLabel;
     comboBox->insertItems(0, GamaQ2::languages);
+    comboBox->setCurrentText(GamaQ2::currentLanguage);
     label->setText(GamaQ2::currentLanguage);
 
     QFormLayout* formLayout = new QFormLayout;

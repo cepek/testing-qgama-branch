@@ -111,7 +111,9 @@ DBConnectDialog::DBConnectDialog(QString connectionName, QWidget *parent) :
             break;
         }});
     connect(pushButton_CreateNewDbFile, &QPushButton::pressed,
-            [this](){on_pushButton_OpenFileDialog_clicked();});
+        [this](){on_pushButton_OpenFileDialog_clicked();});
+    connect(this, &DBConnectDialog::input_data_open,
+        [this](bool open){ if (open) close();});
 }
 
 DBConnectDialog::~DBConnectDialog()
