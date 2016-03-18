@@ -84,9 +84,9 @@ DBConnectDialog::DBConnectDialog(QString connectionName, QWidget *parent) :
     QFormLayout* form_1 = new QFormLayout;
     form_1->addRow(tr("Database driver"), comboBox_Driver2);
     form_1->addRow(tr("SQLite File"), lineEdit_DatabaseFile);
-    form_1->addRow("", new QLabel);
-    form_1->addRow("", pushButton_CreateNewDbFile);
-    form_1->addRow("", checkBox_CreateNewDbFile);
+    form_1->addRow(new QLabel, new QLabel);
+    form_1->addRow(new QLabel, pushButton_CreateNewDbFile);
+    form_1->addRow(new QLabel, checkBox_CreateNewDbFile);
     page_1->setLayout(form_1);
 
     switchStackedWidgets();
