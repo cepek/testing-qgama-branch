@@ -467,7 +467,7 @@ void Adjustment::fetch_height_differences(QSqlQuery& q, QString cluster, GNU_gam
 
 void Adjustment::exec()
 {
-    /*if (!solved)*/ try
+    try
     {
         lnet->remove_inconsistency();
 
@@ -489,6 +489,7 @@ void Adjustment::exec()
         {
                 lnet->increment_linearization_iterations();
                 lnet->refine_approx();
+                lnet->solve();
         }
 
         solved = true;
