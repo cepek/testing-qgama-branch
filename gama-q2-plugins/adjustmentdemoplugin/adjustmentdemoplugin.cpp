@@ -27,6 +27,7 @@
 #include <QMessageBox>
 
 #include "adjustmentdemoplugin.h"
+#include "networkadjustmentpanel.h"
 #include <gnu_gama/local/network.h>
 
 #include <QGridLayout>
@@ -43,10 +44,11 @@ QString AdjustmentDemoPlugin::getName()
     return "Adjustment demo plugin";
 }
 
-QWidget* AdjustmentDemoPlugin::create(QString cname, LocalNetwork* ln)
+QWidget* AdjustmentDemoPlugin::create(NetworkAdjustmentPanel* adjp)
 {
-    confName = cname;
-    lnet = ln;
+    NetworkAdjustmentPanel* nap = adjp;
+    confName = nap->configurationName();
+    lnet = nap->adjustment()->get_local_network();
 
     return getFrame();
 }

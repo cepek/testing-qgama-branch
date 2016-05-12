@@ -29,6 +29,7 @@ namespace local {
     class LocalNetwork;
 }
 }
+class NetworkAdjustmentPanel;
 
 using LocalNetwork = GNU_gama::local::LocalNetwork;
 
@@ -44,9 +45,10 @@ public:
     AdjustmentDemoPlugin();
 
     QString getName();
-    QWidget* create(QString cname, LocalNetwork* ln);
+    QWidget* create(NetworkAdjustmentPanel* nadjp);
 
 private:
+    NetworkAdjustmentPanel* nap {nullptr};
     QString confName;
     LocalNetwork* lnet {nullptr};
     QFrame* frame;

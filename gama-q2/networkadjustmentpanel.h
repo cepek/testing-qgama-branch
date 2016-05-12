@@ -43,6 +43,8 @@ public:
     bool isValid() const { return valid; }
     Adjustment* adjustment() {return &adj; }
 
+    QString configurationName() const { return configuration_name; }
+
     static bool        closeAllNetworkAdjustmentPanels;
     static QWidgetList allNetworkAdjustmentPanelsList;
 

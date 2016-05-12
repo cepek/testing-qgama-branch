@@ -734,7 +734,7 @@ GNU_gama::local::GamaLocalSVG* Adjustment::get_svg()
     return lsvg;
 }
 
-GNU_gama::local::LocalNetwork* Adjustment::get_local_network()
-{
-    return lnet;
-}
+//GNU_gama::local::LocalNetwork* Adjustment::get_local_network()
+//{
+//    return lnet;
+//}

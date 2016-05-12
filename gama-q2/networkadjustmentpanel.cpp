@@ -738,7 +738,7 @@ void NetworkAdjustmentPanel::AdjustmentPluginSlot()
 {
     if (PluginAction<AdjustmentInterface>* plugin_action = dynamic_cast<PluginAction<AdjustmentInterface>*>(sender()))
     {
-        if (QWidget* widget = plugin_action->interface()->create(configuration_name, adj.get_local_network()))
+        if (QWidget* widget = plugin_action->interface()->create(this))
         {
             localPluginsList.append(widget);
             widget->show();

@@ -23,13 +23,7 @@
 #include <QString>
 class QWidget;
 
-namespace GNU_gama {
-namespace local {
-    class LocalNetwork;
-}
-}
-
-using LocalNetwork = GNU_gama::local::LocalNetwork;
+class NetworkAdjustmentPanel;
 
 class DbInterface
 {
@@ -49,7 +43,7 @@ class AdjustmentInterface
 public:
     virtual ~AdjustmentInterface() {}
     virtual QString getName() = 0;
-    virtual QWidget* create(QString confName, LocalNetwork*) = 0;
+    virtual QWidget* create(NetworkAdjustmentPanel* nap) = 0;
 };
 
 QT_BEGIN_NAMESPACE

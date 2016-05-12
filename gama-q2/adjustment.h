@@ -149,7 +149,7 @@ public:
     std::string svg();
 
     GNU_gama::local::GamaLocalSVG* get_svg();
-    GNU_gama::local::LocalNetwork* get_local_network();
+    GNU_gama::local::LocalNetwork* get_local_network() { return lnet; }
 
 signals:
     void adjustment_signal(bool solved);
