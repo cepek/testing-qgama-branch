@@ -8,6 +8,9 @@ QT        += core gui sql svg printsupport
 TARGET     = gama-q2
 TEMPLATE   = app
 
+DEFINES   += GNU_gama_expat_1_1
+DEFINES   += VERSION=\\\"configure.ac\\\"
+
 INCLUDEPATH += lib/gama/lib
 
 CONFIG(release, debug|release) {
