@@ -1,26 +1,17 @@
-#-------------------------------------------------
-#
-# Project gama-q2
-#
-#-------------------------------------------------
+TEMPLATE = app
+CONFIG += console c++11
+CONFIG -= app_bundle
+CONFIG -= qt
 
-QT        += core gui sql svg printsupport
-TARGET     = gama-q2
-TEMPLATE   = app
+DEFINES += VERSION=\\\"1.18-qt\\\"
 
-INCLUDEPATH += lib/gama/lib
+INCLUDEPATH += $$PWD/../gama-q2/lib/gama/lib/
 
-CONFIG(release, debug|release) {
-    DEFINES += QT_NO_DEBUG_OUTPUT
-}
+SOURCES += main.cpp \
+    $$PWD/../gama-q2/lib/gama/lib/gnu_gama/version.cpp
 
-GAMAQ2SRC  = .
-include(gama-q2.pri)
-
-OTHER_FILES +=
-
-RESOURCES +=
-CONFIG    += c++11
+HEADERS += \
+    $$PWD/../gama-q2/lib/gama/lib/gnu_gama/version.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../gama/release/ -lgama
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../gama/debug/ -lgama
