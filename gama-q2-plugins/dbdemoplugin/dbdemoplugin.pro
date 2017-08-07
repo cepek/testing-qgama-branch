@@ -14,5 +14,3 @@ win32 {
  } else {
      DESTDIR = ../../gama-q2/plugins
  }
-
-CONFIG += c++11

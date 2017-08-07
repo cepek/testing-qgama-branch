@@ -3,7 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-DEFINES += VERSION=\\\"1.18-qt\\\"
+include("../gama-qt.pri")
 
 INCLUDEPATH += $$PWD/../gama-q2/lib/gama/lib/
 

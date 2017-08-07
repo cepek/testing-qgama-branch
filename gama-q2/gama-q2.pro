@@ -8,8 +8,7 @@ QT        += core gui sql svg printsupport
 TARGET     = gama-q2
 TEMPLATE   = app
 
-DEFINES   += GNU_gama_expat_1_1
-DEFINES   += VERSION=\\\"configure.ac\\\"
+include("../gama-qt.pri")
 
 INCLUDEPATH += lib/gama/lib
 
@@ -23,7 +22,6 @@ include(gama-q2.pri)
 OTHER_FILES +=
 
 RESOURCES +=
-CONFIG    += c++11
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../gama/release/ -lgama
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../gama/debug/ -lgama
