@@ -50,6 +50,7 @@
 
 #include <gnu_gama/local/network.h>
 #include <gnu_gama/local/localnetwork2sql.h>
+#include <gnu_gama/xml/localnetworkoctave.h>
 
 #include <QDebug>
 
@@ -86,6 +87,8 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
 
     QAction* action {nullptr};
 
+    // File menu
+
     menuFile  = new QMenu(tr("&File"), this);
     action = menuFile->addAction(tr("&Save"));
     connect(action, &QAction::triggered, [this](){action_Save_into_db();});
@@ -95,23 +98,37 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     connect(action, &QAction::triggered, [this](){action_Save_as_SQL_file();});
     action = menuFile->addAction(tr("&Print"));
     connect(action, &QAction::triggered, [this](){action_Print();});
-    action = menuFile->addAction(tr("Save &XML adjustment results"));
-    connect(action, &QAction::triggered, [this](){action_Save_XML_adjustment_results();});
-    action = menuFile->addAction(tr("Save adjustment results as &HTML file"));
-    connect(action, &QAction::triggered, [this](){action_Save_adjustment_results_as_HTML();});
-    action = menuFile->addAction(tr("Save adjustment results as plain &text"));
-    connect(action, &QAction::triggered, [this](){action_Save_adjustment_results_as_plain_text();});
+
+    // ... Export submenu
+
+    menuAdjExport = menuFile->addMenu(tr("Export Adjustment Results As"));
+    //menuAdjExport->setEnabled(false);
+    action = menuAdjExport->addAction(tr("Gama-local &XML adjustment format"));
+    connect(action, &QAction::triggered, [this](){action_Export_XML_adjustment_results();});
+    action = menuAdjExport->addAction(tr("&HTML file"));
+    connect(action, &QAction::triggered, [this](){action_Export_adjustment_results_as_HTML();});
+    action = menuAdjExport->addAction(tr("Plain &text"));
+    connect(action, &QAction::triggered, [this](){action_Export_adjustment_results_as_plain_text();});
+    action = menuAdjExport->addAction(tr("Octave &matrix file"));
+    connect(action, &QAction::triggered, [this](){action_Export_adjustment_results_as_octave_file();});
+
     action = menuFile->addAction(tr("Save network configuration &outline"));
     connect(action, &QAction::triggered, [this](){action_Save_network_configuration_outline();});
     menuFile->addSeparator();
     action = menuFile->addAction(tr("&Close"));
     connect(action, &QAction::triggered, [this](){action_Close();});
 
+    // Adjustment menu
+
     menuAdjustment = new QMenu(tr("&Adjustment"), this);
     action = menuAdjustment->addAction(tr("&Run"));
     connect(action, &QAction::triggered, [this](){action_Run();});
 
+    // View menu
+
     menuView  = new QMenu(tr("&View"), this);
+
+    // Edit menu
 
     menuEdit  = new QMenu(tr("&Edit"), this);
     actionParameters = menuEdit->addAction(tr("Pa&rameters"));
@@ -123,6 +140,8 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     actionObservations = menuEdit->addAction(tr("&Observations"));
     actionObservations->setCheckable(true);
     connect(actionObservations, &QAction::toggled, [this](){action_Observations_changed();});
+
+    // Settings menu
 
     menuSetup = new QMenu(tr("&Settings"), this);
     action = menuSetup->addAction(tr("Outline &draw"));
@@ -156,6 +175,8 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
             }
         }
     }
+
+    // Help menu
 
     menuHelp  = new QMenu(tr("&Help"), this);
     action = menuHelp->addAction(tr("Gama-q2 &Help"));
@@ -398,9 +419,9 @@ void NetworkAdjustmentPanel::closeEvent(QCloseEvent* event)
     }
 }
 
-void NetworkAdjustmentPanel::action_Save_XML_adjustment_results()
+void NetworkAdjustmentPanel::action_Export_XML_adjustment_results()
 {
-    QFileDialog fileDialog(0,trUtf8("Open XML Output File"));
+    QFileDialog fileDialog(0,tr("Open XML Output File"));
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setDefaultSuffix("xml");
@@ -416,9 +437,9 @@ void NetworkAdjustmentPanel::action_Save_XML_adjustment_results()
     stream << adj.xml();
 }
 
-void NetworkAdjustmentPanel::action_Save_adjustment_results_as_plain_text()
+void NetworkAdjustmentPanel::action_Export_adjustment_results_as_plain_text()
 {
-    QFileDialog fileDialog(0,trUtf8("Open Adjustment Output File"));
+    QFileDialog fileDialog(0,tr("Open Adjustment Output File"));
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setDefaultSuffix("txt");
@@ -453,9 +474,26 @@ void NetworkAdjustmentPanel::action_Save_adjustment_results_as_plain_text()
     GNU_gama::xml2txt_adjusted_observations(cout, adjres);
 }
 
+void NetworkAdjustmentPanel::action_Export_adjustment_results_as_octave_file()
+{
+    QFileDialog fileDialog(0,tr("Open Octave file"));
+    fileDialog.setAcceptMode(QFileDialog::AcceptSave);
+    fileDialog.setFileMode(QFileDialog::AnyFile);
+    fileDialog.setDefaultSuffix("m");
+    fileDialog.setNameFilter(tr("Octave file (*.m)"));
+    fileDialog.setViewMode(QFileDialog::Detail);
+
+    if (!fileDialog.exec()) return;
+
+    GNU_gama::LocalNetworkOctave octave(adj.get_local_network());
+
+    std::ofstream out(fileDialog.selectedFiles()[0].toStdString().c_str());
+    octave.write(out);
+}
+
 void NetworkAdjustmentPanel::action_Save_as_SQL_file()
 {    
-    QFileDialog fileDialog(0,trUtf8("Export current configuration as a SQL file"));
+    QFileDialog fileDialog(0,tr("Export current configuration as a SQL file"));
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);   // a single file only
     fileDialog.setDefaultSuffix("sql");
@@ -519,7 +557,7 @@ void NetworkAdjustmentPanel::action_Save_network_configuration_outline()
         filters += "*." + *i;
     }
 
-    QFileDialog fileDialog(0,trUtf8("Save network outline"));
+    QFileDialog fileDialog(0,tr("Save network outline"));
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setDefaultSuffix("svg");
@@ -694,9 +732,9 @@ void NetworkAdjustmentPanel::action_Print()
     res->textEdit->print(&printer);
 }
 
-void NetworkAdjustmentPanel::action_Save_adjustment_results_as_HTML()
+void NetworkAdjustmentPanel::action_Export_adjustment_results_as_HTML()
 {
-    QFileDialog fileDialog(0,trUtf8("Save adjustment results as HTML file"));
+    QFileDialog fileDialog(0,tr("Save adjustment results as HTML file"));
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);   // a single file only
     fileDialog.setDefaultSuffix("html");

@@ -19,7 +19,6 @@ $$LIBGAMASRC/lib/gnu_gama/obsdata.h \
 $$LIBGAMASRC/lib/gnu_gama/outstream.h \
 $$LIBGAMASRC/lib/gnu_gama/pointbase.h \
 $$LIBGAMASRC/lib/gnu_gama/radian.h \
-$$LIBGAMASRC/lib/gnu_gama/rand.h \
 $$LIBGAMASRC/lib/gnu_gama/statan.h \
 $$LIBGAMASRC/lib/gnu_gama/utf8.h \
 $$LIBGAMASRC/lib/gnu_gama/version.h \
@@ -131,6 +130,7 @@ $$LIBGAMASRC/lib/gnu_gama/xml/gkfparser.h \
 $$LIBGAMASRC/lib/gnu_gama/xml/htmlparser.h \
 $$LIBGAMASRC/lib/gnu_gama/xml/localnetwork_adjustment_results.h \
 $$LIBGAMASRC/lib/gnu_gama/xml/localnetwork_adjustment_results_data.h \
+$$LIBGAMASRC/lib/gnu_gama/xml/localnetworkoctave.h \
 $$LIBGAMASRC/lib/gnu_gama/xml/localnetworksql.h \
 $$LIBGAMASRC/lib/gnu_gama/xml/localnetworkxml.h \
 
@@ -203,7 +203,6 @@ $$LIBGAMASRC/lib/gnu_gama/local/svg.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/test_linearization_visitor.cpp \
 $$LIBGAMASRC/lib/gnu_gama/local/xmlerror.cpp \
 $$LIBGAMASRC/lib/gnu_gama/outstream.cpp \
-$$LIBGAMASRC/lib/gnu_gama/rand.cpp \
 $$LIBGAMASRC/lib/gnu_gama/statan.cpp \
 $$LIBGAMASRC/lib/gnu_gama/utf8.cpp \
 $$LIBGAMASRC/lib/gnu_gama/version.cpp \
@@ -220,6 +219,7 @@ $$LIBGAMASRC/lib/gnu_gama/xml/gkfparser.cpp \
 $$LIBGAMASRC/lib/gnu_gama/xml/htmlparser.cpp \
 $$LIBGAMASRC/lib/gnu_gama/xml/localnetwork_adjustment_results.cpp \
 $$LIBGAMASRC/lib/gnu_gama/xml/localnetwork_adjustment_results_data.cpp \
+$$LIBGAMASRC/lib/gnu_gama/xml/localnetworkoctave.cpp \
 $$LIBGAMASRC/lib/gnu_gama/xml/localnetworksql.cpp \
 $$LIBGAMASRC/lib/gnu_gama/xml/localnetworkxml.cpp \
 

@@ -67,6 +67,7 @@ private:
     bool    valid;
 
     QMenu*   menuFile           {nullptr};
+    QMenu*   menuAdjExport      {nullptr};
     QMenu*   menuAdjustment     {nullptr};
     QMenu*   menuView           {nullptr};
     QMenu*   menuEdit           {nullptr};
@@ -91,8 +92,10 @@ private slots:
     void status_bar(QString text);
     void save_configuration(QString confname);
 
-    void action_Save_XML_adjustment_results();
-    void action_Save_adjustment_results_as_plain_text();
+    void action_Export_XML_adjustment_results();
+    void action_Export_adjustment_results_as_plain_text();
+    void action_Export_adjustment_results_as_octave_file();
+    void action_Export_adjustment_results_as_HTML();
     void action_Close();
     void action_Save_as_SQL_file();
     void action_Run();
@@ -105,7 +108,6 @@ private slots:
     void action_Save_into_db();
     void action_Save_As_into_db();
     void action_Print();
-    void action_Save_adjustment_results_as_HTML();
 
     void action_Gama_q2_help();
 

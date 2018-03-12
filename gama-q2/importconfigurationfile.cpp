@@ -99,7 +99,7 @@ ImportConfigurationFile::~ImportConfigurationFile()
 
 void ImportConfigurationFile::exec()
 {
-    QFileDialog fileDialog(0,trUtf8("Open XML Input File"));
+    QFileDialog fileDialog(0,tr("Open XML Input File"));
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setFileMode(QFileDialog::ExistingFile);
     QStringList filters;

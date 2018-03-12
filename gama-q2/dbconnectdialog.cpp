@@ -134,7 +134,7 @@ void DBConnectDialog::switchStackedWidgets()
 
 void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
 {
-    QFileDialog fileDialog(this,trUtf8("Opening Sqlite Database File"));
+    QFileDialog fileDialog(this,tr("Opening Sqlite Database File"));
     fileDialog.setFileMode(QFileDialog::AnyFile);     // a single file only
     fileDialog.setDefaultSuffix("db");
 
