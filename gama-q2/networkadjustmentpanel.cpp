@@ -47,12 +47,18 @@
 #include <QTextEdit>
 #include <QPrintDialog>
 #include <QPrinter>
+#include <QSettings>
 
 #include <gnu_gama/local/network.h>
 #include <gnu_gama/local/localnetwork2sql.h>
 #include <gnu_gama/xml/localnetworkoctave.h>
 
 #include <QDebug>
+
+// QSettings export adjustment directory
+const QString export_adjdir {"export/adjdir"};
+const QString export_sqldir {"export/sqldir"};
+const QString export_imgdir {"export/imgdir"};
 
 bool        NetworkAdjustmentPanel::closeAllNetworkAdjustmentPanels = false;
 QWidgetList NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList;
@@ -421,7 +427,10 @@ void NetworkAdjustmentPanel::closeEvent(QCloseEvent* event)
 
 void NetworkAdjustmentPanel::action_Export_XML_adjustment_results()
 {
+    QSettings settings;
+    QString adjdir = settings.value(export_adjdir).toString();
     QFileDialog fileDialog(0,tr("Open XML Output File"));
+    if (!adjdir.isEmpty()) fileDialog.setDirectory(adjdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setDefaultSuffix("xml");
@@ -430,6 +439,7 @@ void NetworkAdjustmentPanel::action_Export_XML_adjustment_results()
 
     if (!fileDialog.exec()) return;
 
+    settings.setValue(export_adjdir, fileDialog.directory().absolutePath());
     QFile file(fileDialog.selectedFiles()[0]);
     file.open(QIODevice::WriteOnly);
     QTextStream stream(&file);
@@ -439,7 +449,10 @@ void NetworkAdjustmentPanel::action_Export_XML_adjustment_results()
 
 void NetworkAdjustmentPanel::action_Export_adjustment_results_as_plain_text()
 {
+    QSettings settings;
+    QString adjdir = settings.value(export_adjdir).toString();
     QFileDialog fileDialog(0,tr("Open Adjustment Output File"));
+    if (!adjdir.isEmpty()) fileDialog.setDirectory(adjdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setDefaultSuffix("txt");
@@ -447,6 +460,7 @@ void NetworkAdjustmentPanel::action_Export_adjustment_results_as_plain_text()
     fileDialog.setViewMode(QFileDialog::Detail);
 
     if (!fileDialog.exec()) return;
+    settings.setValue(export_adjdir, fileDialog.directory().absolutePath());
 
     GNU_gama::LocalNetworkAdjustmentResults adjres;
     {
@@ -476,7 +490,10 @@ void NetworkAdjustmentPanel::action_Export_adjustment_results_as_plain_text()
 
 void NetworkAdjustmentPanel::action_Export_adjustment_results_as_octave_file()
 {
+    QSettings settings;
+    QString adjdir = settings.value(export_adjdir).toString();
     QFileDialog fileDialog(0,tr("Open Octave file"));
+    if (!adjdir.isEmpty()) fileDialog.setDirectory(adjdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setDefaultSuffix("m");
@@ -484,6 +501,7 @@ void NetworkAdjustmentPanel::action_Export_adjustment_results_as_octave_file()
     fileDialog.setViewMode(QFileDialog::Detail);
 
     if (!fileDialog.exec()) return;
+    settings.setValue(export_adjdir, fileDialog.directory().absolutePath());
 
     GNU_gama::LocalNetworkOctave octave(adj.get_local_network());
 
@@ -492,8 +510,11 @@ void NetworkAdjustmentPanel::action_Export_adjustment_results_as_octave_file()
 }
 
 void NetworkAdjustmentPanel::action_Save_as_SQL_file()
-{    
+{
+    QSettings settings;
+    QString sqldir = settings.value(export_sqldir).toString();
     QFileDialog fileDialog(0,tr("Export current configuration as a SQL file"));
+    if (!sqldir.isEmpty()) fileDialog.setDirectory(sqldir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);   // a single file only
     fileDialog.setDefaultSuffix("sql");
@@ -504,6 +525,7 @@ void NetworkAdjustmentPanel::action_Save_as_SQL_file()
     fileDialog.setViewMode(QFileDialog::Detail);
 
     if (!fileDialog.exec()) return;
+    settings.setValue(export_sqldir, fileDialog.directory().absolutePath());
 
     GNU_gama::local::LocalNetwork2sql ln2sql(*adj.get_local_network());
     std::ostringstream sqlbatch;
@@ -557,13 +579,17 @@ void NetworkAdjustmentPanel::action_Save_network_configuration_outline()
         filters += "*." + *i;
     }
 
+    QSettings settings;
+    QString imgdir = settings.value(export_imgdir).toString();
     QFileDialog fileDialog(0,tr("Save network outline"));
+    if (!imgdir.isEmpty()) fileDialog.setDirectory(imgdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setDefaultSuffix("svg");
     fileDialog.setNameFilter(tr("Gama network configuration outline (")
                              + filters + ")");
     fileDialog.setViewMode(QFileDialog::Detail);
+    settings.setValue(export_imgdir, fileDialog.directory().absolutePath());
 
     QString fileName;
     QString suffix;
@@ -734,17 +760,21 @@ void NetworkAdjustmentPanel::action_Print()
 
 void NetworkAdjustmentPanel::action_Export_adjustment_results_as_HTML()
 {
+    QSettings settings;
+    QString adjdir = settings.value(export_adjdir).toString();
     QFileDialog fileDialog(0,tr("Save adjustment results as HTML file"));
+    if (!adjdir.isEmpty()) fileDialog.setDirectory(adjdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);   // a single file only
     fileDialog.setDefaultSuffix("html");
     QStringList filters;
-    filters << "HTML files (*.html, *.htm, *.xhtml)"
+    filters << "HTML files (*.html *.htm *.xhtml)"
             << "All files (*.*)";
     fileDialog.setNameFilters(filters);
     fileDialog.setViewMode(QFileDialog::Detail);
 
     if (!fileDialog.exec()) return;
+    settings.setValue(export_adjdir, fileDialog.directory().absolutePath());
 
     QFile file(fileDialog.selectedFiles()[0]);
     file.open(QIODevice::WriteOnly);

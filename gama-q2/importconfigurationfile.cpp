@@ -36,6 +36,7 @@
 #include <QTableWidget>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
+#include <QSettings>
 #include <QDebug>
 
 
@@ -46,6 +47,9 @@
 #include <gnu_gama/xml/gkfparser.h>
 #include <sstream>
 #include <cctype>
+
+// QSettings
+const QString import_xmldir {"import/xmldir"};
 
 ImportConfigurationFile::ImportConfigurationFile(QWidget *parent) :
     QWidget(parent)
@@ -99,7 +103,10 @@ ImportConfigurationFile::~ImportConfigurationFile()
 
 void ImportConfigurationFile::exec()
 {
+    QSettings settings;
+    QString importdir = settings.value(import_xmldir).toString();
     QFileDialog fileDialog(0,tr("Open XML Input File"));
+    if (!importdir.isEmpty()) fileDialog.setDirectory(importdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setFileMode(QFileDialog::ExistingFile);
     QStringList filters;
@@ -111,6 +118,7 @@ void ImportConfigurationFile::exec()
     if (!fileDialog.exec()) return;
 
     file = fileDialog.selectedFiles()[0];
+    settings.setValue(import_xmldir, fileDialog.directory().absolutePath());
 
     show();
 

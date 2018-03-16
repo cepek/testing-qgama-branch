@@ -18,10 +18,15 @@
 */
 
 #include <QApplication>
+#include <QSettings>
 #include "gamaq2controlpanel.h"
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setOrganizationName("GNU Gama");
+    QCoreApplication::setOrganizationDomain("gnu.org/software/gama/");
+    QCoreApplication::setApplicationName("gama-q2");
+
     QApplication a(argc, argv);
     QIcon icon(":/img/q2-icon.png");
     a.setWindowIcon(icon);

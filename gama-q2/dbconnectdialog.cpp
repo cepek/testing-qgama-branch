@@ -34,8 +34,12 @@
 #include <QLineEdit>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QSettings>
 
 #include <QDebug>
+
+// QSettings
+const QString sqlite_dbfile {"sqlite/dbfile"};
 
 DBConnectDialog::DBConnectDialog(QString connectionName, QWidget *parent) :
     QDialog(parent),
@@ -134,7 +138,10 @@ void DBConnectDialog::switchStackedWidgets()
 
 void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
 {
+    QSettings settings;
+    QString dbfile = settings.value(sqlite_dbfile).toString();
     QFileDialog fileDialog(this,tr("Opening Sqlite Database File"));
+    if (!dbfile.isEmpty()) fileDialog.selectFile(dbfile);
     fileDialog.setFileMode(QFileDialog::AnyFile);     // a single file only
     fileDialog.setDefaultSuffix("db");
 
@@ -151,7 +158,9 @@ void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
 
     if (!fileDialog.exec()) return;
 
-    lineEdit_DatabaseFile->setText( fileDialog.selectedFiles()[0] );
+    dbfile = fileDialog.selectedFiles()[0];
+    lineEdit_DatabaseFile->setText(dbfile);
+    settings.setValue(sqlite_dbfile, dbfile);
     on_buttonBox_accepted();
     hide();
 }
