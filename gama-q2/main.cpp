@@ -28,7 +28,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("gama-q2");
 
     QApplication a(argc, argv);
-    QIcon icon(":/img/q2-icon.png");
+    // QIcon icon(":/img/q2-icon.png");
+    QIcon icon(":/img/g-icon.png");
     a.setWindowIcon(icon);
 
     GamaQ2ControlPanel w;

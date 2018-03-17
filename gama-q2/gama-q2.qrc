@@ -11,5 +11,6 @@
     </qresource>
     <qresource prefix="/img">
         <file>q2-icon.png</file>
+        <file>g-icon.png</file>
     </qresource>
 </RCC>
