@@ -3,8 +3,8 @@ lessThan(QT_MAJOR_VERSION, 5): error("requires Qt 5 or later")
 TEMPLATE = subdirs
 
 SUBDIRS  = gama-q2 \      # Qt widgets application
-           lib_gama \     # C++ static library
-           gama-local     # C++ command line tool
+           gama-local \   # C++ command line tool
+           lib_gama       # C++ static library
 
 lib_gama.subdir = gama
 gama-q2.depends = lib_gama
