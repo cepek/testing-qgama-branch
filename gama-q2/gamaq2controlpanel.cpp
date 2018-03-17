@@ -504,6 +504,9 @@ void GamaQ2ControlPanel::import_examples()
         std::string text;
         while (std::getline(sql, text))
         {
+            // skip empty lines from imp.write(sql, confName.toStdString());
+            if (text.length() == 0) continue;
+
             while (sql && text.back() != ';') text += char(sql.get());
             if (text.back() != ';') break;
 
