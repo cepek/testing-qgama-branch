@@ -879,7 +879,7 @@ void ObservationTableModel::deleteObservation(int logicalIndex)
     const Observation* observation = obsMap[logicalIndex].observation;
     Cluster* cluster = const_cast<Cluster*>(observation->ptr_cluster());
 
-    std::list<Observation*> obs;
+    GNU_gamax::List<Observation*> obs;
     int cluster_index = 0, ci = 1;
     for (ObservationList::iterator i=cluster->observation_list.begin(),
          e=cluster->observation_list.end(); i!=e; ++i, ++ci)

@@ -12,6 +12,7 @@ $$LIBGAMASRC/lib/gnu_gama/exception.h \
 $$LIBGAMASRC/lib/gnu_gama/gon2deg.h \
 $$LIBGAMASRC/lib/gnu_gama/intfloat.h \
 $$LIBGAMASRC/lib/gnu_gama/latlong.h \
+$$LIBGAMASRC/lib/gnu_gama/list.h \
 $$LIBGAMASRC/lib/gnu_gama/model.h \
 $$LIBGAMASRC/lib/gnu_gama/movetofront.h \
 $$LIBGAMASRC/lib/gnu_gama/obsdata.h \
