@@ -32,7 +32,7 @@ typedef GNU_gama::local::Azimuth         Azimuth;
 typedef GNU_gama::local::Z_Angle         Z_Angle;
 typedef GNU_gama::local::H_Diff          H_Diff;
 typedef GNU_gama::Cluster<Observation>   Cluster;
-typedef GNU_gama::List<Cluster*>         ClusterList;
+typedef std::list<Cluster*>              ClusterList;
 typedef GNU_gama::local::ObservationList ObservationList;
 typedef GNU_gama::local::LocalNetwork    LocalNetwork;
 

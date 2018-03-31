@@ -324,7 +324,8 @@ void ParameterEditor::on_comboBox_axes_xy_currenTextChanged(const QString &arg1)
     else if (arg1 == "se") lcs = LocalCoordinateSystem::SE;
     else if (arg1 == "ws") lcs = LocalCoordinateSystem::WS;
     else
-         ;
+      {
+      }
 
     lnet->remove_inconsistency();
     lnet->update_points();

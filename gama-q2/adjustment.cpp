@@ -275,7 +275,7 @@ void Adjustment::fetch_obs(QSqlQuery& q, QString cluster, GNU_gama::local::Stand
 
     std::string dir_from;
 
-    const int icluster = cluster.toInt();
+    // const int icluster = cluster.toInt();
     q.exec("select indx, tag, from_id, to_id, to_id2, val, stdev, "
            "       from_dh, to_dh, to_dh2, dist, rejected"
            "  from gnu_gama_local_obs "
@@ -285,7 +285,7 @@ void Adjustment::fetch_obs(QSqlQuery& q, QString cluster, GNU_gama::local::Stand
 
     while (q.next())
     {
-       int         indx = q.value( 0).toInt();
+       // unused :int indx = q.value( 0).toInt();
        QString     tag  = q.value( 1).toString();
        std::string from = utf8_(q.value( 2).toString());
        std::string to   = utf8_(q.value( 3).toString());
@@ -294,7 +294,7 @@ void Adjustment::fetch_obs(QSqlQuery& q, QString cluster, GNU_gama::local::Stand
        int     rejected = q.value(11).toInt();
 
        // optional attributes
-       double /*stdev,*/ from_dh, to_dh, to_dh2, dist;
+       // double /*stdev,*/ from_dh, to_dh, to_dh2, dist;
        // bool   null_stdev   = q.value( 6).isNull();
        bool   null_from_dh = q.value( 7).isNull();
        bool   null_to_dh   = q.value( 8).isNull();
@@ -339,7 +339,7 @@ void Adjustment::fetch_obs(QSqlQuery& q, QString cluster, GNU_gama::local::Stand
 
 void Adjustment::fetch_vectors(QSqlQuery& q, QString cluster, GNU_gama::local::Vectors* c)
 {
-     const int icluster = cluster.toInt();
+     // const int icluster = cluster.toInt();
      q.exec("select indx, from_id, to_id, dx, dy, dz, rejected "
             //"       ,from_dh, to_dh "
             "  from gnu_gama_local_vectors "
@@ -381,7 +381,7 @@ void Adjustment::fetch_vectors(QSqlQuery& q, QString cluster, GNU_gama::local::V
 
 void Adjustment::fetch_coordinates(QSqlQuery& q, QString cluster, GNU_gama::local::Coordinates* c)
 {
-       const int icluster = cluster.toInt();
+       // const int icluster = cluster.toInt();
        q.exec("select indx, id, x, y, z, rejected "
               "  from gnu_gama_local_coordinates "
               " where conf_id  = '" + conf_id + "'"
@@ -390,8 +390,8 @@ void Adjustment::fetch_coordinates(QSqlQuery& q, QString cluster, GNU_gama::loca
 
        while (q.next())
        {
-           double x, y, z;
-           int         indx     = q.value(0).toInt();
+           double x {}, y{}, z{};
+           // int         indx     = q.value(0).toInt();
            std::string id       = utf8_(q.value(1).toString());
            bool        xnull    = q.value(2).isNull();   if (!xnull) x = q.value(2).toDouble();
            bool        ynull    = q.value(3).isNull();   if (!ynull) y = q.value(3).toDouble();
@@ -429,7 +429,7 @@ void Adjustment::fetch_coordinates(QSqlQuery& q, QString cluster, GNU_gama::loca
 
 void Adjustment::fetch_height_differences(QSqlQuery& q, QString cluster, GNU_gama::local::HeightDifferences* c)
 {
-    const int icluster = cluster.toInt();
+    // const int icluster = cluster.toInt();
     q.exec("select indx, tag, from_id, to_id, val, rejected, dist"
            "  from gnu_gama_local_obs "
            " where conf_id  = '" + conf_id + "'"
@@ -438,14 +438,14 @@ void Adjustment::fetch_height_differences(QSqlQuery& q, QString cluster, GNU_gam
 
     while (q.next())
     {
-        int         indx = q.value(0).toInt();
+        // int         indx = q.value(0).toInt();
         QString     tag  = q.value(1).toString();
         std::string from = utf8_(q.value(2).toString());
         std::string to   = utf8_(q.value(3).toString());
         double      val  = q.value(4).toDouble();
         int     rejected = q.value(5).toInt();
 
-        double dist;
+        double dist {};
         bool   null_dist = q.value(6).isNull();
         if (!null_dist) dist = q.value(6).toDouble();
 
@@ -597,6 +597,7 @@ QString Adjustment::get_axes_xy() const
     case LocalCoordinateSystem::SW : axes = "sw"; break;
     case LocalCoordinateSystem::ES : axes = "es"; break;
     case LocalCoordinateSystem::WN : axes = "wn"; break;
+    default: break;
     }
 
     return axes;

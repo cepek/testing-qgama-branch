@@ -85,8 +85,7 @@ namespace
 
 NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *parent) :
     QMainWindow(parent),
-    connection_name(connectionName),
-    par(0), ped(0), obs(0), svg(0), res(0)
+    par(0), ped(0), obs(0), svg(0), res(0), connection_name(connectionName)
 {
     qDebug() << "***  NetworkAdjustmentPanel" << __FILE__ << __LINE__;
     allNetworkAdjustmentPanelsList.push_back(this);

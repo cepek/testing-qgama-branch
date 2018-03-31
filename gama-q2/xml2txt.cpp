@@ -32,6 +32,7 @@
 #include <gnu_gama/statan.h>
 #include <gnu_gama/gon2deg.h>
 #include <gnu_gama/outstream.h>
+#include <gnu_gama/size_to.h>
 
 using namespace GNU_gama::local;
 typedef GNU_gama::LocalNetworkAdjustmentResults Adjustment;
@@ -66,11 +67,11 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
   int w0 = 0, w_ = 8;
   {
     int n;
-    n = strlen(T_GaMa_gpar1_coordinates);              if (n > w0) w0 = n;
-    n = strlen(T_GaMa_gpar1_adjusted_coordinates);     if (n > w0) w0 = n;
-    n = strlen(T_GaMa_gpar1_constrained_coordinates);  if (n > w0) w0 = n;
-    n = strlen(T_GaMa_gpar1_fixed_coordinates);        if (n > w0) w0 = n;
-    n = strlen(T_GaMa_gpar1_total);                    if (n > w0) w0 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_coordinates));              if (n > w0) w0 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_adjusted_coordinates));     if (n > w0) w0 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_constrained_coordinates));  if (n > w0) w0 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_fixed_coordinates));        if (n > w0) w0 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_total));                    if (n > w0) w0 = n;
   }
 
   cout.setf(ios_base::left,  ios_base::adjustfield);
@@ -112,7 +113,9 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
        << setw(w_)  << f_z
        << '\n';
 
-  for (int ii=0; ii<w0+1+3*w_+1; ii++) cout << '-'; cout << "\n";
+  for (int ii=0; ii<w0+1+3*w_+1; ii++) {
+      cout << '-'; cout << "\n";
+    }
 
   cout.setf(ios_base::left,  ios_base::adjustfield);
   cout << setw(w0) << T_GaMa_gpar1_total << ":";
@@ -130,25 +133,25 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
     // n = strlen(T_GaMa_gpar1_computed_heights); if (n > w1) w1 = n;
     // n = strlen(T_GaMa_gpar1_fixed_heights);    if (n > w1) w1 = n;
     // n = strlen(T_GaMa_gpar1_points_total);     if (n > w1) w1 = n;
-    n = strlen(T_GaMa_gpar1_directions);       if (n > w1) w1 = n;
-    n = strlen(T_GaMa_gpar1_angles);           if (n > w1) w1 = n;
-    n = strlen(T_GaMa_gpar1_distances);        if (n > w1) w1 = n;
-    n = strlen(T_GaMa_gpar1_observed_coords);  if (n > w1) w1 = n;
-    n = strlen(T_GaMa_gpar1_leveling_diffs);   if (n > w1) w1 = n;
-    n = strlen(T_GaMa_gpar1_z_angles);         if (n > w1) w1 = n;
-    n = strlen(T_GaMa_gpar1_s_dists);          if (n > w1) w1 = n;
-    n = strlen(T_GaMa_gpar1_obs_total);        if (n > w1) w1 = n;
-    n = strlen(T_GaMa_gpar1_equations);        if (n > w1) w1 = n;
-    n = strlen(T_GaMa_gpar1_redundancy);       if (n > w1) w1 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_directions));       if (n > w1) w1 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_angles));           if (n > w1) w1 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_distances));        if (n > w1) w1 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_observed_coords));  if (n > w1) w1 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_leveling_diffs));   if (n > w1) w1 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_z_angles));         if (n > w1) w1 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_s_dists));          if (n > w1) w1 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_obs_total));        if (n > w1) w1 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_equations));        if (n > w1) w1 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar1_redundancy));       if (n > w1) w1 = n;
   }
   int w2 = 0;
   {
     int n;
     // n = strlen(T_GaMa_gpar2_constrained_points);  if (n > w2) w2 = n;
     // n = strlen(T_GaMa_gpar2_constrained_heights); if (n > w2) w2 = n;
-    n = strlen(T_GaMa_gpar2_bearings);            if (n > w2) w2 = n;
-    n = strlen(T_GaMa_gpar2_number_of_unknowns);  if (n > w2) w2 = n;
-    n = strlen(T_GaMa_gpar2_network_defect);      if (n > w2) w2 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar2_bearings));            if (n > w2) w2 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar2_number_of_unknowns));  if (n > w2) w2 = n;
+    n = size_to<int>(strlen(T_GaMa_gpar2_network_defect));      if (n > w2) w2 = n;
   }
   const char* tab_sep = "            ";
 
@@ -165,7 +168,7 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
   const int observations = pocdel + pocsmer + pocuhl + pocsour
     + pocnivp + poczeni + pocsikm + pocvekt;
 
-  const int pocosn  = adj.orientations.size();
+  const int pocosn  = size_to<int>(adj.orientations.size());
 
   if (pocosn)
     {
@@ -265,10 +268,10 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
       const double alfa_pul = (1 - adj.standard_deviation.probability)/2;
       if (adj.standard_deviation.using_aposteriori)
         {
-          float testm0 = adj.standard_deviation.aposteriori
+          double testm0 = adj.standard_deviation.aposteriori
             / adj.standard_deviation.apriori;
-          float lower = sqrt(GNU_gama::Chi_square(1-alfa_pul,nadb)/nadb);
-          float upper = sqrt(GNU_gama::Chi_square(  alfa_pul,nadb)/nadb);
+          double lower = sqrt(GNU_gama::Chi_square(1-alfa_pul,nadb)/nadb);
+          double upper = sqrt(GNU_gama::Chi_square(  alfa_pul,nadb)/nadb);
 
           cout << T_GaMa_Ratio_empirical_to_apriori << setprecision(3)
                << testm0 << '\n'
@@ -348,13 +351,13 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
             }
         }
       bool aprm0 = !adj.standard_deviation.using_aposteriori;
-      float krit_opr;
+      double krit_opr;
       if (aprm0)
         krit_opr = GNU_gama::Normal(alfa_pul);
       else
         {
-          float s = GNU_gama::Student(alfa_pul, nadb-1);
-          float t = s*s;
+          double s = GNU_gama::Student(alfa_pul, nadb-1);
+          double t = s*s;
           krit_opr = sqrt(nadb*t/(nadb-1+t));
         }
 
@@ -427,7 +430,7 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
 
   const int MAXWID  = 12;     // IS->maxw_id();
   const int MAXWUNK =  3;     // IS->maxw_unk();
-  const int MAXWOBS =  4;     // IS->maxw_obs();
+  //const int MAXWOBS =  4;     // IS->maxw_obs();
 
   std::string prev_id;
 
@@ -435,7 +438,8 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
 
     int pocpevb=0, pocpevv=0;
     {   // for ...
-      for (int i=0, N=adj.fixed_points.size(); i<N; ++i)
+      auto N=adj.fixed_points.size();
+      for (decltype(N) i=0 ; i<N; ++i)
         {
           const Adjustment::Point& point = adj.fixed_points[i];
 
@@ -473,7 +477,8 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
             table += 13;
           }
         cout << ostr.str() << '\n';
-        for (int i=0; i<ostr.str().size(); i++) cout << '=';
+        auto oss = ostr.str().size();
+        for (decltype(oss) i=0; i<oss; i++) cout << '=';
         cout << "\n\n";
 
         for (int i=0, N=adj.fixed_points.size(); i<N; ++i)
@@ -513,7 +518,8 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
   double kki         = adj.standard_deviation.confidence_scale;
   bool   coordinates = false;
   bool   heights     = false;
-  for (int i=0; i<adj.adjusted_points.size(); i++)
+  auto aps1 = adj.adjusted_points.size();
+  for (decltype (aps1) i=0; i<aps1; i++)
     {
       if (adj.adjusted_points[i].hxy) coordinates = true;
       if (adj.adjusted_points[i].hz ) heights     = true;
@@ -534,7 +540,8 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
       cout.setf(ios_base::fixed, ios_base::floatfield);
 
       prev_id.clear();
-      for (int ii=0; ii<adj.adjusted_points.size(); ii++)
+      auto aps2 = adj.adjusted_points.size();
+      for (decltype (aps2) ii=0; ii<aps2; ii++)
         {
           const Adjustment::Point point = adj.adjusted_points[ii];
           const Adjustment::Point aprox = adj.approximate_points[ii];
@@ -551,7 +558,7 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
               prev_id = point.id;
               double mx = std::sqrt(adj.cov(point.indx, point.indx));
               double my = std::sqrt(adj.cov(point.indy, point.indy));
-              double mp = sqrt(my*my+mx*mx);
+              // double mp = sqrt(my*my+mx*mx);
               cout << "\n";
 
               cout.width(MAXWUNK);
@@ -662,7 +669,8 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
             cout <<
               "====== [d] ========= [d] ======== [d] =========== [ss] ===\n\n";
 
-          for (int i=0; i<adj.orientations.size(); i++)
+          auto aos = adj.orientations.size();
+          for (decltype (aos) i=0; i<aos; i++)
             {
               const Adjustment::Orientation& orp = adj.orientations[i];
 
@@ -730,7 +738,8 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
         int number_of_points = 0;
 
         bool has_coordinates = false;
-        for (int i=0; i<adj.adjusted_points.size(); i++)
+        auto aps1 = adj.adjusted_points.size();
+        for (decltype (aps1) i=0; i<aps1; i++)
           if (adj.adjusted_points[i].hxy)
             {
               has_coordinates = true;
@@ -756,7 +765,8 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
                 "== [mm] == [mm] ==== a [mm] b ==== [d] ===== a' [mm] b' ========";
             cout << "\n\n";
 
-            for (int i=0; i<adj.adjusted_points.size(); i++)
+            auto aps2 = adj.adjusted_points.size();
+            for (decltype(aps2) i=0; i<aps2; i++)
               {
                 const Adjustment::Point& point = adj.adjusted_points[i];
                 if (!point.hxy) continue;
@@ -808,7 +818,7 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
 
                   a = m * std::sqrt(b+c);
                   b = m * std::sqrt(b);
-                  if (c == 0)
+                  if (fabs(c) < 1e-5) // c == 0 is unsafe
                     alfa = 0;
                   else {
                     alfa = std::atan2(2*cyx, cxx-cyy)/2;
@@ -906,7 +916,8 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
       cout << T_GaMa_adjunk_header6;
       cout.setf(ios_base::fixed, ios_base::floatfield);
 
-      for (int i=0; i<adj.adjusted_points.size(); i++)
+      auto aps = adj.adjusted_points.size();
+      for (decltype(aps) i=0; i<aps; i++)
         {
           const Adjustment::Point& point = adj.adjusted_points[i];
           if (!point.hz) continue;
@@ -950,7 +961,7 @@ void GNU_gama::xml2txt_adjusted_observations(std::ostream& cout,const Adjustment
   using std::setprecision;
 
   const int MAXWID  = 12;     // IS->maxw_id();
-  const int MAXWUNK =  3;     // IS->maxw_unk();
+  //const int MAXWUNK =  3;     // IS->maxw_unk();
   const int MAXWOBS =  4;     // IS->maxw_obs();
 
   const double kki   = adj.standard_deviation.confidence_scale;
@@ -963,7 +974,8 @@ void GNU_gama::xml2txt_adjusted_observations(std::ostream& cout,const Adjustment
 
   int minval = 12;
   int maxval = minval;   // maximal value field width (coordinates!)
-  for (int i=0; i<adj.obslist.size(); i++)
+  auto aos = adj.obslist.size();
+  for (decltype (aos) i=0; i<aos; i++)
     {
       const Adjustment::Observation& obs = adj.obslist[i];
       int z = 0;
@@ -1006,7 +1018,8 @@ void GNU_gama::xml2txt_adjusted_observations(std::ostream& cout,const Adjustment
     cout << "==== [m|d] ====== [mm|ss] ==\n\n";
 
   std::string predcs="";  // previous standpoint ID
-  for (int i=0; i<adj.obslist.size(); i++)
+  auto aos2 = adj.obslist.size();
+  for (decltype(aos2) i=0; i<aos2; i++)
     {
       const Adjustment::Observation& obs = adj.obslist[i];
 
@@ -1209,7 +1222,7 @@ void GNU_gama::xml2txt_adjusted_observations(std::ostream& cout,const Adjustment
     int imax = -1;         // index of maximal studentized residual
   {
     double maxno = 0;
-    for (int i=1; i<adj.obslist.size(); i++)
+    for (int i=1; i<size_to<int>(adj.obslist.size()); i++)
       {
         const Adjustment::Observation& obs = adj.obslist[i];
 

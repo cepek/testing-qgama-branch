@@ -12,13 +12,13 @@ $$LIBGAMASRC/lib/gnu_gama/exception.h \
 $$LIBGAMASRC/lib/gnu_gama/gon2deg.h \
 $$LIBGAMASRC/lib/gnu_gama/intfloat.h \
 $$LIBGAMASRC/lib/gnu_gama/latlong.h \
-$$LIBGAMASRC/lib/gnu_gama/list.h \
 $$LIBGAMASRC/lib/gnu_gama/model.h \
 $$LIBGAMASRC/lib/gnu_gama/movetofront.h \
 $$LIBGAMASRC/lib/gnu_gama/obsdata.h \
 $$LIBGAMASRC/lib/gnu_gama/outstream.h \
 $$LIBGAMASRC/lib/gnu_gama/pointbase.h \
 $$LIBGAMASRC/lib/gnu_gama/radian.h \
+$$LIBGAMASRC/lib/gnu_gama/size_to.h \
 $$LIBGAMASRC/lib/gnu_gama/statan.h \
 $$LIBGAMASRC/lib/gnu_gama/utf8.h \
 $$LIBGAMASRC/lib/gnu_gama/version.h \
@@ -165,6 +165,7 @@ $$LIBGAMASRC/lib/gnu_gama/adj/adj.cpp \
 $$LIBGAMASRC/lib/gnu_gama/e3.cpp \
 $$LIBGAMASRC/lib/gnu_gama/ellipsoid.cpp \
 $$LIBGAMASRC/lib/gnu_gama/ellipsoids.cpp \
+$$LIBGAMASRC/lib/gnu_gama/size_to.cpp \
 $$LIBGAMASRC/lib/gnu_gama/g3/g3_adjres.cpp \
 $$LIBGAMASRC/lib/gnu_gama/g3/g3_cluster.cpp \
 $$LIBGAMASRC/lib/gnu_gama/g3/g3_model.cpp \

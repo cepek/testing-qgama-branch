@@ -30,8 +30,8 @@ using GNU_gama::local::PointData;
 
 PointTableModel::PointTableModel(GNU_gama::local::PointData& pd,
                                  QObject *parent) :
-    pointData(pd),
-    QAbstractTableModel(parent)
+    QAbstractTableModel(parent),
+    pointData(pd)
 {
     coordinate_types << "" << "fixed" << "constr" << "free";
     scan_data();
@@ -144,6 +144,7 @@ bool PointTableModel::setData (const QModelIndex &index,
     int col = index.column();
 
     if (row == pointData.size())
+      {
         if(col == indPointId)
         {
             std::string newPointId = simple.toStdString();
@@ -168,7 +169,7 @@ bool PointTableModel::setData (const QModelIndex &index,
         {
             return false;
         }
-
+      }
 
     LocalPoint& lp = pointData[pids[row]];
 

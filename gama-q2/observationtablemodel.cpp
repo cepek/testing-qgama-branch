@@ -115,7 +115,8 @@ QString ObservationTableModel::ObsInfo::active()
 }
 QVariant ObservationTableModel::ObsInfo::fromDh()
 {
-    if (double d = observation->from_dh()) return d;
+    double d = observation->from_dh();
+    if (bool(d)) return d;
     return QVariant();
 }
 QVariant ObservationTableModel::ObsInfo::toDh()
@@ -151,9 +152,9 @@ QVariant ObservationTableModel::ObsInfo::Hdist()
 
 ObservationTableModel::ObservationTableModel(GNU_gama::local::LocalNetwork *localNetwork,
                                              QObject *parent) :
+    QAbstractTableModel(parent),
     lnet(localNetwork),
     obsData(lnet->OD),
-    QAbstractTableModel(parent),
     columnCountMax(0)
 {
     initObsMap();
@@ -278,7 +279,7 @@ void ObservationTableModel::initObsMap()
         if (obsMap[i].rowType == clusterHeader)
             testCovarianceMatrix(i);
 
-    for (int i=1, j, k; i<obsMap.size()-2; i++)
+    for (int i=1; i<obsMap.size()-2; i++)
     {
         ObsInfo& infoX = obsMap[i];
         bool vec = infoX.observationNameIndex == indXdiff;
@@ -304,12 +305,12 @@ void ObservationTableModel::initObsMap()
 
 // QAbstractTableModel functions
 
-int ObservationTableModel::rowCount(const QModelIndex &parent) const
+int ObservationTableModel::rowCount(const QModelIndex &/*parent*/) const
 {
     return obsMap.size();
 }
 
-int ObservationTableModel::columnCount(const QModelIndex &parent) const
+int ObservationTableModel::columnCount(const QModelIndex &/*parent*/) const
 {
     return columnCountMax;
 }
@@ -322,7 +323,7 @@ void ObservationTableModel::setColumnCountMax()
     for (ClusterList::const_iterator i=cl.begin(), e=cl.end(); i!=e; ++i)
     {
         int n = (*i)->covariance_matrix.rows();
-        if ((*i)->covariance_matrix.rows() > max) max = (*i)->covariance_matrix.rows();
+        if (n > max) max = n;
     }
     columnCountMax =  max + indColumnCount;
 
@@ -879,7 +880,7 @@ void ObservationTableModel::deleteObservation(int logicalIndex)
     const Observation* observation = obsMap[logicalIndex].observation;
     Cluster* cluster = const_cast<Cluster*>(observation->ptr_cluster());
 
-    GNU_gama::List<Observation*> obs;
+    std::list<Observation*> obs;
     int cluster_index = 0, ci = 1;
     for (ObservationList::iterator i=cluster->observation_list.begin(),
          e=cluster->observation_list.end(); i!=e; ++i, ++ci)
