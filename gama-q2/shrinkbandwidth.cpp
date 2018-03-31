@@ -22,16 +22,15 @@
 
 bool shrinkBandWidth(GNU_gama::CovMat<>& cov)
 {
-  using GNU_gama::Index;
-  Index N = cov.rows();
-  Index B = cov.bandWidth();
-  Index M = 0;
+  int N = cov.rows();
+  int B = cov.bandWidth();
+  int M = 0;
 
-  for (Index r=1; r<N; r++)
-      for (Index c=std::min(N,r+B); c>=r; c--)
-          if (cov(r,c))
+  for (int r=1; r<N; r++)
+      for (int c=std::min(N,r+B); c>=r; c--)
+          if (bool(cov(r,c)))     // explicit conversion is correct here
           {
-            Index b = c-r;
+            int b = c-r;
             if (b >= M)
             {
                 M = b;
@@ -40,8 +39,8 @@ bool shrinkBandWidth(GNU_gama::CovMat<>& cov)
           }
 
   GNU_gama::CovMat<> tmp(N, M);
-  for (Index r=1; r<=N; r++)
-      for (Index c=r; c<=std::min(N,r+M); c++)
+  for (int r=1; r<=N; r++)
+      for (int c=r; c<=std::min(N,r+M); c++)
           tmp(r,c) = cov(r,c);
 
   cov = tmp;
