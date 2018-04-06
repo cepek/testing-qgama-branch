@@ -43,12 +43,12 @@ PointTableModel::PointTableModel(GNU_gama::local::PointData& pd,
 
 // QAbstractTableModel functions
 
-int PointTableModel::rowCount(const QModelIndex &parent) const
+int PointTableModel::rowCount(const QModelIndex &/*parent*/) const
 {
-    return pointData.size()+1;
+    return int(pointData.size()+1);
 }
 
-int PointTableModel::columnCount(const QModelIndex &parent) const
+int PointTableModel::columnCount(const QModelIndex &/*parent*/) const
 {
     return 6;
 }
