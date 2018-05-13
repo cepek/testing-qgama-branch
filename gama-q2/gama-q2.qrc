@@ -12,5 +12,6 @@
     <qresource prefix="/img">
         <file>q2-icon.png</file>
         <file>g-icon.png</file>
+        <file>g-logo.svg</file>
     </qresource>
 </RCC>
