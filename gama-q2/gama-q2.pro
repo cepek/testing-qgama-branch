@@ -8,7 +8,7 @@ QT        += core gui sql svg printsupport
 TARGET     = gama-q2
 TEMPLATE   = app
 
-INCLUDEPATH += $$PWD/../gama-lib/gama/lib/
+include(../common.pri)
 
 CONFIG(release, debug|release) {
     DEFINES += QT_NO_DEBUG_OUTPUT

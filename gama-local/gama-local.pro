@@ -3,7 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-INCLUDEPATH += $$PWD/../gama-lib/gama/lib/
+include(../common.pri)
 
 SOURCES += main.cpp
 
