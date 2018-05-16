@@ -29,7 +29,6 @@ namespace GamaQ2
     extern QString name;
     extern QString version;
     extern QString copyright;
-    extern QString gnu_gama_version;
 
     extern QStringList gama_local_schema;
     extern QStringList gama_local_schema_table_names;

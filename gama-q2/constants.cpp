@@ -22,7 +22,6 @@
 QString GamaQ2::name;
 QString GamaQ2::version;
 QString GamaQ2::copyright;
-QString GamaQ2::gnu_gama_version;
 
 QStringList GamaQ2::gama_local_schema;
 QStringList GamaQ2::gama_local_schema_table_names;

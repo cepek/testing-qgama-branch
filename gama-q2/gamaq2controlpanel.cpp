@@ -375,7 +375,8 @@ void GamaQ2ControlPanel::on_action_About_gama_q2_triggered()
                   " Copyright (C) " + GamaQ2::copyright + " Aleš Čepek</p>"
                   "<p>" +
                   QString(tr("Based on <a href='http://www.gnu.org/software/gama'>"
-                             "GNU gama</a> version %1")).arg(GamaQ2::gnu_gama_version) +
+                             "GNU gama</a> version %1")
+                         ).arg(GNU_gama::GNU_gama_version().c_str()) +
                   "</p>"
 
                   "<p>This program is free software: you can redistribute it and/or modify "
