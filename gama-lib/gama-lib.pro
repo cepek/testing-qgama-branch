@@ -6,13 +6,14 @@
 
 QT       -= core gui
 
+DEFINES += GNU_gama_expat_1_1
+
 TARGET = gama
 TEMPLATE = lib
 CONFIG += staticlib
 
-include("../gama-qt.pri")
-
-LIBGAMASRC = ../gama-q2/lib/gama
+DEFINES += GNU_gama_expat_1_1
+LIBGAMASRC = $$PWD/gama
 include(gama.pri)
 
 unix {

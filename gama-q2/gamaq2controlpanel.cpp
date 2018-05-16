@@ -72,28 +72,10 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
     controlPanel = this;
 
     init_schema_lists();
-    {
-        GamaQ2::name      = "gama-q2";
-        GamaQ2::version   = "1.00";
-        GamaQ2::copyright = "2018";
 
-        QFile rfile(":/lib/gama/configure.ac");
-        rfile.open(QIODevice::ReadOnly);
-
-        QTextStream configure_ac(&rfile);
-        while (!configure_ac.atEnd())
-        {
-            QString ac_init = configure_ac.readLine();
-            if (ac_init.contains("AC_INIT"))
-            {
-                QString ver = ac_init.split("]")[1];
-                ver = ver.split("[")[1];
-                GamaQ2::gnu_gama_version = ver;
-                GNU_gama::GNU_gama_version = ver.toStdString();
-                break;
-            }
-        }
-    }
+    GamaQ2::name      = "gama-q2";
+    GamaQ2::version   = "1.00";
+    GamaQ2::copyright = "2018";
 
     // setting implicit adjustment results language
     set_adjustment_results_language();
@@ -129,7 +111,7 @@ void GamaQ2ControlPanel::init_schema_lists()
     QStringList& schema = GamaQ2::gama_local_schema;
     QStringList& tables = GamaQ2::gama_local_schema_table_names;
 
-    QFile rfile(":/lib/gama/xml/gama-local-schema.sql");
+    QFile rfile(":/lib/gama-local-schema.sql");
     rfile.open(QIODevice::ReadOnly);
 
     QTextStream sql(&rfile);

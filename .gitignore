@@ -28,6 +28,8 @@ dox
 
 .idea
 
+build-gama-*
+
 # GNU Gama source codes located at the subdirectory lib/gama
 ############################################################
 lib/gama
