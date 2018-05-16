@@ -4,6 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 include(../common.pri)
+INCLUDEPATH += $$PWD/../gama-lib/gama/lib/
 
 SOURCES += main.cpp
 

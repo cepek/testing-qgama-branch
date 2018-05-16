@@ -11,6 +11,7 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 include(../common.pri)
+INCLUDEPATH += $$PWD/../gama-lib/gama/lib/
 
 LIBGAMASRC = $$PWD/gama
 include(gama.pri)

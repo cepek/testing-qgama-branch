@@ -16,6 +16,7 @@ CONFIG(release, debug|release) {
 
 GAMAQ2SRC  = .
 include(gama-q2.pri)
+INCLUDEPATH += $$PWD/../gama-lib/gama/lib
 
 OTHER_FILES +=
 
@@ -26,7 +27,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../gama-lib/debug/ 
 else:unix: LIBS += -L$$OUT_PWD/../gama-lib/ -lgama
 
 #INCLUDEPATH += $$PWD/../gama-lib/gama/lib
-#DEPENDPATH += $$PWD/../gama/gama/lib
+#DEPENDPATH  += $$PWD/../gama-lib/gama/lib
 
 #win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../gama/release/libgama.a
 #else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../gama/debug/libgama.a
