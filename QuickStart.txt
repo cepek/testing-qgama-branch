@@ -27,7 +27,7 @@ Download and build
 Download source codes from the git server following the give commands
 
    $ git clone git://git.sv.gnu.org/gama/qt.git
-   $ cd  qt/gama-q2/lib/
+   $ cd  qt/gama-lib/
    $ git clone git://git.sv.gnu.org/gama.git
    $ cd  ../..
    $ qmake
