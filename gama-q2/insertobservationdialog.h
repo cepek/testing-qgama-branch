@@ -38,7 +38,7 @@ class InsertObservationDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit InsertObservationDialog(QString cluster_name, QWidget *parent = 0);
+    explicit InsertObservationDialog(QString cluster_name, QWidget *parent = nullptr);
     ~InsertObservationDialog();
 
     int position() const;

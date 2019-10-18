@@ -23,7 +23,7 @@
 
 #include <gnu_gama/local/observation.h>
 #include <gnu_gama/local/network.h>
-#include <gnu_gama/local/acord.h>
+#include <gnu_gama/local/acord/acord.h>
 #include <gnu_gama/local/orientation.h>
 #include <gnu_gama/local/gamadata.h>
 #include <gnu_gama/xml/localnetworkxml.h>
@@ -43,7 +43,7 @@ namespace {
 
 }  // unnamed namespace
 
-Adjustment::Adjustment() : lsvg(0), lnet(0), solved(false)
+Adjustment::Adjustment() : lsvg(nullptr), lnet(nullptr), solved(false)
 {
     qDebug() << "***  Adjustment" << __FILE__ << __LINE__;
 }
@@ -109,14 +109,14 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
 
        LocalCoordinateSystem::CS lcs;
        QString s = q.value(7).toString();
-       if      (s == "en") lcs = LocalCoordinateSystem::EN;
-       else if (s == "nw") lcs = LocalCoordinateSystem::NW;
-       else if (s == "se") lcs = LocalCoordinateSystem::SE;
-       else if (s == "ws") lcs = LocalCoordinateSystem::WS;
-       else if (s == "ne") lcs = LocalCoordinateSystem::NE;
-       else if (s == "sw") lcs = LocalCoordinateSystem::SW;
-       else if (s == "es") lcs = LocalCoordinateSystem::ES;
-       else if (s == "wn") lcs = LocalCoordinateSystem::WN;
+       if      (s == "en") lcs = LocalCoordinateSystem::CS::EN;
+       else if (s == "nw") lcs = LocalCoordinateSystem::CS::NW;
+       else if (s == "se") lcs = LocalCoordinateSystem::CS::SE;
+       else if (s == "ws") lcs = LocalCoordinateSystem::CS::WS;
+       else if (s == "ne") lcs = LocalCoordinateSystem::CS::NE;
+       else if (s == "sw") lcs = LocalCoordinateSystem::CS::SW;
+       else if (s == "es") lcs = LocalCoordinateSystem::CS::ES;
+       else if (s == "wn") lcs = LocalCoordinateSystem::CS::WN;
 
        lnet->PD.local_coordinate_system = lcs;
 
@@ -213,7 +213,7 @@ void Adjustment::fetch_clusters(QSqlQuery& q)
     QSqlQuery r = q;
     while (q.next())
     {
-        GNU_gama::Cluster<GNU_gama::local::Observation>* c = 0;
+        GNU_gama::Cluster<GNU_gama::local::Observation>* c = nullptr;
 
         QString cluster = q.value(0).toString();
         int     dim     = q.value(1).toInt();
@@ -301,8 +301,8 @@ void Adjustment::fetch_obs(QSqlQuery& q, QString cluster, GNU_gama::local::Stand
        bool   null_to_dh2  = q.value( 9).isNull();
        bool   null_dist    = q.value(10).isNull();
 
-       GNU_gama::local::Observation* p = 0;
-       GNU_gama::local::Angle* a = 0;
+       GNU_gama::local::Observation* p = nullptr;
+       GNU_gama::local::Angle* a = nullptr;
 
        if (tag == "direction")
           {
@@ -589,14 +589,14 @@ QString Adjustment::get_axes_xy() const
     QString axes = "ne";
     switch (lcs)
     {
-    case LocalCoordinateSystem::EN : axes = "en"; break;
-    case LocalCoordinateSystem::NW : axes = "nw"; break;
-    case LocalCoordinateSystem::SE : axes = "se"; break;
-    case LocalCoordinateSystem::WS : axes = "ws"; break;
-    case LocalCoordinateSystem::NE : axes = "ne"; break;
-    case LocalCoordinateSystem::SW : axes = "sw"; break;
-    case LocalCoordinateSystem::ES : axes = "es"; break;
-    case LocalCoordinateSystem::WN : axes = "wn"; break;
+    case LocalCoordinateSystem::CS::EN : axes = "en"; break;
+    case LocalCoordinateSystem::CS::NW : axes = "nw"; break;
+    case LocalCoordinateSystem::CS::SE : axes = "se"; break;
+    case LocalCoordinateSystem::CS::WS : axes = "ws"; break;
+    case LocalCoordinateSystem::CS::NE : axes = "ne"; break;
+    case LocalCoordinateSystem::CS::SW : axes = "sw"; break;
+    case LocalCoordinateSystem::CS::ES : axes = "es"; break;
+    case LocalCoordinateSystem::CS::WN : axes = "wn"; break;
     default: break;
     }
 

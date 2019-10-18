@@ -26,7 +26,7 @@
 class NetworkSVG : public QGraphicsView
 {
 public:
-    NetworkSVG(QWidget* parent=0);
+    NetworkSVG(QWidget* parent=nullptr);
     ~NetworkSVG();
 
 public slots:

@@ -1,5 +1,5 @@
 /*  Qt based GUI for GNU Gama -- adjustment of geodetic networks
-    Copyright (C) 2014  Ales Cepek <cepek@gnu.org>
+    Copyright (C) 2014, 2019  Ales Cepek <cepek@gnu.org>
 
     This file is a part of GNU Gama.
 
@@ -17,6 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <locale>
+
 #include <QApplication>
 #include <QSettings>
 #include "gamaq2controlpanel.h"
@@ -28,10 +30,11 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("gama-q2");
 
     QApplication a(argc, argv);
-    // QIcon icon(":/img/q2-icon.png");
-    // QIcon icon(":/img/g-icon.png");
     QIcon icon(":/img/g-logo.svg");
-    a.setWindowIcon(icon);
+    QApplication::setWindowIcon(icon);
+
+    // https://en.cppreference.com/w/cpp/locale/locale/classic
+    std::locale::global( std::locale::classic() );
 
     GamaQ2ControlPanel w;
     w.show();

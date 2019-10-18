@@ -31,7 +31,7 @@ class PointTableModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit PointTableModel(GNU_gama::local::PointData& pd,
-        QObject *parent = 0);
+        QObject *parent = nullptr);
 
         // abstract methods from QAbstractTableModel
         int        rowCount   (const QModelIndex &parent) const;

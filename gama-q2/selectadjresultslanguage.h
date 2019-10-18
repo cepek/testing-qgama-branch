@@ -31,7 +31,7 @@ class SelectAdjResultsLanguage : public QDialog
     Q_OBJECT
 
 public:
-    explicit SelectAdjResultsLanguage(QWidget *parent = 0);
+    explicit SelectAdjResultsLanguage(QWidget *parent = nullptr);
     ~SelectAdjResultsLanguage();
 
 private slots:

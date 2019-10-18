@@ -105,7 +105,7 @@ void ImportConfigurationFile::exec()
 {
     QSettings settings;
     QString importdir = settings.value(import_xmldir).toString();
-    QFileDialog fileDialog(0,tr("Open XML Input File"));
+    QFileDialog fileDialog(nullptr,tr("Open XML Input File"));
     if (!importdir.isEmpty()) fileDialog.setDirectory(importdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setFileMode(QFileDialog::ExistingFile);

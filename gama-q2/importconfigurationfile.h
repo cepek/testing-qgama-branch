@@ -35,7 +35,7 @@ class ImportConfigurationFile : public QWidget
     Q_OBJECT
 
 public:
-    explicit ImportConfigurationFile(QWidget *parent = 0);
+    explicit ImportConfigurationFile(QWidget *parent = nullptr);
     ~ImportConfigurationFile();
 
     void exec();

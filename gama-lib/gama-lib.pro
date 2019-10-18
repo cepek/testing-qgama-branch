@@ -12,6 +12,7 @@ CONFIG += staticlib
 
 include(../common.pri)
 INCLUDEPATH += $$PWD/../gama-lib/gama/lib/
+INCLUDEPATH += $$PWD/../gama-lib/gama/lib/expat/xmltok
 
 LIBGAMASRC = $$PWD/gama
 include(gama.pri)

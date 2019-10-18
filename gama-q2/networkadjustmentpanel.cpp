@@ -85,7 +85,7 @@ namespace
 
 NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *parent) :
     QMainWindow(parent),
-    par(0), ped(0), obs(0), svg(0), res(0), connection_name(connectionName)
+    par(nullptr), ped(nullptr), obs(nullptr), svg(nullptr), res(nullptr), connection_name(connectionName)
 {
     qDebug() << "***  NetworkAdjustmentPanel" << __FILE__ << __LINE__;
     allNetworkAdjustmentPanelsList.push_back(this);
@@ -428,7 +428,7 @@ void NetworkAdjustmentPanel::action_Export_XML_adjustment_results()
 {
     QSettings settings;
     QString adjdir = settings.value(export_adjdir).toString();
-    QFileDialog fileDialog(0,tr("Open XML Output File"));
+    QFileDialog fileDialog(nullptr,tr("Open XML Output File"));
     if (!adjdir.isEmpty()) fileDialog.setDirectory(adjdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
@@ -450,7 +450,7 @@ void NetworkAdjustmentPanel::action_Export_adjustment_results_as_plain_text()
 {
     QSettings settings;
     QString adjdir = settings.value(export_adjdir).toString();
-    QFileDialog fileDialog(0,tr("Open Adjustment Output File"));
+    QFileDialog fileDialog(nullptr,tr("Open Adjustment Output File"));
     if (!adjdir.isEmpty()) fileDialog.setDirectory(adjdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
@@ -491,7 +491,7 @@ void NetworkAdjustmentPanel::action_Export_adjustment_results_as_octave_file()
 {
     QSettings settings;
     QString adjdir = settings.value(export_adjdir).toString();
-    QFileDialog fileDialog(0,tr("Open Octave file"));
+    QFileDialog fileDialog(nullptr,tr("Open Octave file"));
     if (!adjdir.isEmpty()) fileDialog.setDirectory(adjdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
@@ -512,7 +512,7 @@ void NetworkAdjustmentPanel::action_Save_as_SQL_file()
 {
     QSettings settings;
     QString sqldir = settings.value(export_sqldir).toString();
-    QFileDialog fileDialog(0,tr("Export current configuration as a SQL file"));
+    QFileDialog fileDialog(nullptr,tr("Export current configuration as a SQL file"));
     if (!sqldir.isEmpty()) fileDialog.setDirectory(sqldir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);   // a single file only
@@ -580,7 +580,7 @@ void NetworkAdjustmentPanel::action_Save_network_configuration_outline()
 
     QSettings settings;
     QString imgdir = settings.value(export_imgdir).toString();
-    QFileDialog fileDialog(0,tr("Save network outline"));
+    QFileDialog fileDialog(nullptr,tr("Save network outline"));
     if (!imgdir.isEmpty()) fileDialog.setDirectory(imgdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);
@@ -761,7 +761,7 @@ void NetworkAdjustmentPanel::action_Export_adjustment_results_as_HTML()
 {
     QSettings settings;
     QString adjdir = settings.value(export_adjdir).toString();
-    QFileDialog fileDialog(0,tr("Save adjustment results as HTML file"));
+    QFileDialog fileDialog(nullptr,tr("Save adjustment results as HTML file"));
     if (!adjdir.isEmpty()) fileDialog.setDirectory(adjdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setFileMode(QFileDialog::AnyFile);   // a single file only

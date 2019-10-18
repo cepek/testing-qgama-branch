@@ -43,7 +43,7 @@ class ObservationTableModel : public QAbstractTableModel
     Q_OBJECT
 public:
     explicit ObservationTableModel(GNU_gama::local::LocalNetwork* lnt,
-                          QObject *parent=0);
+                          QObject *parent=nullptr);
 
     // abstract methods from QAbstractTableModel
     int        rowCount   (const QModelIndex &parent) const;

@@ -36,7 +36,7 @@ class NetworkAdjustmentPanel : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit NetworkAdjustmentPanel(QString connectionName, QWidget *parent = 0);
+    explicit NetworkAdjustmentPanel(QString connectionName, QWidget *parent = nullptr);
     ~NetworkAdjustmentPanel();
 
     void exec();

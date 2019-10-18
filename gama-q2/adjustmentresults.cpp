@@ -51,7 +51,7 @@ void AdjustmentResults::set_local_network(GNU_gama::local::LocalNetwork *local_n
 
 void AdjustmentResults::update_adjustment_results()
 {
-    if (html == 0) return;
+    if (html == nullptr) return;
 
     html->exec();
     const std::string& utf8 = html->str();

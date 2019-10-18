@@ -29,7 +29,7 @@ class InsertClusterDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit InsertClusterDialog(QWidget *parent = 0);
+    explicit InsertClusterDialog(QWidget *parent = nullptr);
     ~InsertClusterDialog();
 
     QString clusterName() const;

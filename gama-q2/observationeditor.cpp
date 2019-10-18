@@ -98,7 +98,7 @@ bool ObservationEditor::SelectGroup::isValid() const
 ObservationEditor::ObservationEditor(QWidget *parent) :
     QWidget(parent),
     tableView(new QTableView),
-    model(0), readonly(true)
+    model(nullptr), readonly(true)
 {
     LineEditDelegate* item = new LineEditDelegate(tableView);
     tableView->setItemDelegate(item);

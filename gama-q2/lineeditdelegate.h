@@ -14,7 +14,7 @@ class LineEditDelegate : public QStyledItemDelegate
     Q_OBJECT
 
 public:
-    LineEditDelegate(QWidget *parent = 0);
+    LineEditDelegate(QWidget *parent = nullptr);
 
     // void paint(QPainter *painter, const QStyleOptionViewItem &option,
     //            const QModelIndex &index) const;

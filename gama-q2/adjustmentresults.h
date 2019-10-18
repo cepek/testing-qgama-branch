@@ -35,11 +35,11 @@ class AdjustmentResults : public QWidget
     Q_OBJECT
     
 public:
-    explicit AdjustmentResults(QWidget *parent = 0);
+    explicit AdjustmentResults(QWidget *parent = nullptr);
     ~AdjustmentResults();
     
     void set_local_network(GNU_gama::local::LocalNetwork* local_network);
-    bool has_local_network() const { return html != 0; }
+    bool has_local_network() const { return html != nullptr; }
 
     QString getHtmlUtf8() const;
 

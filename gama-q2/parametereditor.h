@@ -35,7 +35,7 @@ class ParameterEditor : public QWidget
     Q_OBJECT
     
 public:
-    explicit ParameterEditor(QWidget *parent = 0);
+    explicit ParameterEditor(QWidget *parent = nullptr);
     ~ParameterEditor();
 
     void connectParameters(GNU_gama::local::LocalNetwork *ln);

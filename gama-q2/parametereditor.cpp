@@ -30,7 +30,7 @@
 
 ParameterEditor::ParameterEditor(QWidget *parent) :
     QWidget(parent),
-    lnet(0)
+    lnet(nullptr)
 {
     checkBox_update_cc   = new QCheckBox;
     comboBox_sigma_act   = new QComboBox;
@@ -315,14 +315,14 @@ void ParameterEditor::on_comboBox_axes_xy_currenTextChanged(const QString &arg1)
     LocalCoordinateSystem::CS& lcs = lnet->PD.local_coordinate_system;
     lnet->return_inconsistency();
 
-    if      (arg1 == "ne") lcs = LocalCoordinateSystem::NE;
-    else if (arg1 == "sw") lcs = LocalCoordinateSystem::SW;
-    else if (arg1 == "es") lcs = LocalCoordinateSystem::ES;
-    else if (arg1 == "wn") lcs = LocalCoordinateSystem::WN;
-    else if (arg1 == "en") lcs = LocalCoordinateSystem::EN;
-    else if (arg1 == "nw") lcs = LocalCoordinateSystem::NW;
-    else if (arg1 == "se") lcs = LocalCoordinateSystem::SE;
-    else if (arg1 == "ws") lcs = LocalCoordinateSystem::WS;
+    if      (arg1 == "ne") lcs = LocalCoordinateSystem::CS::NE;
+    else if (arg1 == "sw") lcs = LocalCoordinateSystem::CS::SW;
+    else if (arg1 == "es") lcs = LocalCoordinateSystem::CS::ES;
+    else if (arg1 == "wn") lcs = LocalCoordinateSystem::CS::WN;
+    else if (arg1 == "en") lcs = LocalCoordinateSystem::CS::EN;
+    else if (arg1 == "nw") lcs = LocalCoordinateSystem::CS::NW;
+    else if (arg1 == "se") lcs = LocalCoordinateSystem::CS::SE;
+    else if (arg1 == "ws") lcs = LocalCoordinateSystem::CS::WS;
     else
       {
       }

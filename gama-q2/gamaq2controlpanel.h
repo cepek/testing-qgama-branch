@@ -32,7 +32,7 @@ class GamaQ2ControlPanel : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit GamaQ2ControlPanel(QWidget *parent = 0);
+    explicit GamaQ2ControlPanel(QWidget *parent = nullptr);
     ~GamaQ2ControlPanel();
 
     void set_adjustment_results_language(QString language = QString());

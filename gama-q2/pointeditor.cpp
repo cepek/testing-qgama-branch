@@ -34,7 +34,7 @@
 PointEditor::PointEditor(QWidget *parent) :
     QWidget(parent),
     tableView(new QTableView),
-    model(0), readonly(true)
+    model(nullptr), readonly(true)
 {
     qDebug() << "***  PointEditor" << __FILE__ << __LINE__;
 

@@ -37,7 +37,7 @@ class ObservationEditor : public QWidget
     Q_OBJECT
     
 public:
-    explicit ObservationEditor(QWidget *parent = 0);
+    explicit ObservationEditor(QWidget *parent = nullptr);
     ~ObservationEditor();
 
     void connectObservationData(GNU_gama::local::LocalNetwork* lnet);

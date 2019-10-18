@@ -30,7 +30,7 @@ public:
      static GamaQ2help* get();
 
 private:
-     explicit GamaQ2help(QWidget *parent = 0);
+     explicit GamaQ2help(QWidget *parent = nullptr);
 };
 
 #endif // GAMAQ2HELP_H

@@ -37,7 +37,7 @@ class SelectConfiguration : public QDialog
 
 public:
     explicit SelectConfiguration(QString connectionName, bool tabsDocks,
-                                 bool newConfName, QWidget *parent = 0);
+                                 bool newConfName, QWidget *parent = nullptr);
     ~SelectConfiguration();
 
     void select();

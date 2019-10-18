@@ -63,7 +63,7 @@ using namespace GamaQ2;
 QStringList ObservationTableModel::ObsInfo::obsNames;
 
 ObservationTableModel::ObsInfo::ObsInfo()
-    : cluster(0), clusterIndex(0), observation(0), observationNameIndex(-1), angle(0), angular(false),
+    : cluster(nullptr), clusterIndex(0), observation(nullptr), observationNameIndex(-1), angle(nullptr), angular(false),
       positiveDefinite(true), group(0)
 {
     if (obsNames.size() == 0)

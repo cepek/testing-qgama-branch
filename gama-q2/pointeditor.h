@@ -36,7 +36,7 @@ class PointEditor : public QWidget
     Q_OBJECT
     
 public:
-    explicit PointEditor(QWidget *parent = 0);
+    explicit PointEditor(QWidget *parent = nullptr);
     ~PointEditor();
 
     void connectPointData(GNU_gama::local::PointData* pd);

@@ -60,7 +60,7 @@ void SelectAdjResultsLanguage::on_buttonBox_accepted()
     if (code != GamaQ2::currentLanguage)
     {
        GamaQ2ControlPanel* panel = dynamic_cast<GamaQ2ControlPanel*>(parent());
-       if (panel == 0) return;
+       if (panel == nullptr) return;
 
        panel->set_adjustment_results_language(code);
     }

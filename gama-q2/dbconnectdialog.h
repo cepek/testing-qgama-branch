@@ -39,7 +39,7 @@ class DBConnectDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit DBConnectDialog(QString connectionName, QWidget *parent = 0);
+    explicit DBConnectDialog(QString connectionName, QWidget *parent = nullptr);
     ~DBConnectDialog();
     
 private:

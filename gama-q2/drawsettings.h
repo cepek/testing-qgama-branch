@@ -39,7 +39,7 @@ class DrawSettings : public QWidget
     Q_OBJECT
     
 public:
-    explicit DrawSettings(GNU_gama::local::GamaLocalSVG *lsvg, QWidget *parent = 0);
+    explicit DrawSettings(GNU_gama::local::GamaLocalSVG *lsvg, QWidget *parent = nullptr);
     ~DrawSettings();
     
 signals:
