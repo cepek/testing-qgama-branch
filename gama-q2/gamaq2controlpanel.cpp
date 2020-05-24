@@ -74,8 +74,8 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
     init_schema_lists();
 
     GamaQ2::name      = "gama-q2";
-    GamaQ2::version   = "1.01";
-    GamaQ2::copyright = "2019";
+    GamaQ2::version   = "1.02";
+    GamaQ2::copyright = "2020";
 
     // setting implicit adjustment results language
     set_adjustment_results_language();

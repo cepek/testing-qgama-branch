@@ -46,7 +46,6 @@ SOURCES += \
     $$LIBGAMASRC/lib/gnu_gama/local/svg.cpp \
     $$LIBGAMASRC/lib/gnu_gama/local/acord/approx_heights.cpp \
     $$LIBGAMASRC/lib/gnu_gama/local/acord/approx_vectors.cpp \
-    $$LIBGAMASRC/lib/gnu_gama/local/acord/acord.cpp \
     $$LIBGAMASRC/lib/gnu_gama/local/acord/acord2.cpp \
     $$LIBGAMASRC/lib/gnu_gama/local/acord/acordalgorithm.cpp \
     $$LIBGAMASRC/lib/gnu_gama/local/acord/acordazimuth.cpp \
@@ -143,7 +142,6 @@ HEADERS = \
     $$LIBGAMASRC/lib/gnu_gama/local/svg.h \
     $$LIBGAMASRC/lib/gnu_gama/local/acord/approx_heights.h \
     $$LIBGAMASRC/lib/gnu_gama/local/acord/approx_vectors.h \
-    $$LIBGAMASRC/lib/gnu_gama/local/acord/acord.h \
     $$LIBGAMASRC/lib/gnu_gama/local/acord/acord2.h \
     $$LIBGAMASRC/lib/gnu_gama/local/acord/acordalgorithm.h \
     $$LIBGAMASRC/lib/gnu_gama/local/acord/acordazimuth.h \
