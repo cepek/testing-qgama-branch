@@ -24,12 +24,10 @@ database, which does not need any special knowledge from the user.
 Download and build
 ------------------
 
-Download source codes from the git server following the give commands
+Download source codes from git server and run the following commands
 
-   $ git clone git://git.sv.gnu.org/gama/qt.git
-   $ cd  qt/gama-lib/
-   $ git clone git://git.sv.gnu.org/gama.git
-   $ cd  ../..
+   $ git clone --recursive git://git.sv.gnu.org/gama/qt.git
+   $ cd  qt
    $ qmake
    $ make
    $ gama-q2/gama-q2 &
@@ -43,14 +41,6 @@ database you will also need some programs from GNU Gama project.
 
    $ mkdir _your-working-directory_
    $ cd _your-working-directory_
-
-Download and build GNU Gama
-
-   $ git clone git://git.sv.gnu.org/gama.git
-   $ cd gama
-   $ ./autogen.sh
-   $ .configure
-   $ make
 
 Now return to _your-working-directory_, download examples and build
 the examples.db database (_Sqlite3_).
