@@ -30,6 +30,6 @@ dox
 
 build-gama-*
 
-# GNU Gama source codes located at the subdirectory lib/gama
-############################################################
-lib/gama
+# GNU Gama source codes located at the subdirectory gama
+########################################################
+gama
