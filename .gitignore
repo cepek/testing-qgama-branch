@@ -23,6 +23,7 @@ ui_*.h
 *.pro.user
 *.pro.user.*
 *-build-*
+build
 Makefile
 dox
 
