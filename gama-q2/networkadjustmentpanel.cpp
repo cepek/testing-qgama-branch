@@ -720,7 +720,7 @@ void NetworkAdjustmentPanel::save_configuration(QString confname)
     std::ostringstream sqlbatch;
     ln2sql.write(sqlbatch, confname.toUtf8().data());
     QStringList sql = QString::fromUtf8(sqlbatch.str().c_str())
-            .split(QRegExp(";[\r\n]"),QString::SkipEmptyParts);
+            .split(QRegExp(";[\r\n]"),Qt::SkipEmptyParts);
 
     QSqlDatabase db = QSqlDatabase::database(GamaQ2::connection_implicit_db);
     db.transaction();

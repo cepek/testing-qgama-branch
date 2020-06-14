@@ -22,6 +22,8 @@ qrc_gama*
 ui_*.h
 *.pro.user
 *.pro.user.*
+*.txt.user
+*.txt.user.*
 *-build-*
 build
 Makefile
