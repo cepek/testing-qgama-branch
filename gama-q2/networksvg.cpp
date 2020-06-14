@@ -52,7 +52,9 @@ void NetworkSVG::paintEvent(QPaintEvent *event)
 
 void NetworkSVG::wheelEvent(QWheelEvent *event)
 {
-    double factor = std::pow(1.2, event->delta() / 240.0);
+    // double factor = std::pow(1.2, event->delta() / 240.0);
+    QPoint d = event->angleDelta();
+    double factor = std::pow(1.2, (d.x()+d.y()) / 240.0);
     scale(factor, factor);
     event->accept();
 }
