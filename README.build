@@ -1,0 +1,9 @@
+For Qt6 CMake is going to be the standard 3rd party build system.
+
+CMake build was added in gama-q2 version 1.02. In the top
+CMakeLists.txt you must set variable CMAKE_PREFIX_PATH (which is empty
+by default), see two examples in the top CMakeLists.txt.
+
+Old qmake project is still available for backward compatibility, but
+it is not mantained and will be removed in future versions of gama-q2
+project.
