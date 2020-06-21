@@ -23,12 +23,9 @@
 #include <QDialogButtonBox>
 #include <QFormLayout>
 
-#include <QDebug>
-
 InsertClusterDialog::InsertClusterDialog(QWidget *parent) :
     QDialog(parent)
 {
-    qDebug() << "***  InsertClusterDialog" << __FILE__ << __LINE__;
     comboBoxClusterName = new QComboBox(this);
     comboBoxPosition = new QComboBox(this);
 

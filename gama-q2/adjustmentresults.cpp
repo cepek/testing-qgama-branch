@@ -23,13 +23,9 @@
 #include <gnu_gama/local/html.h>
 #include <gnu_gama/local/network.h>
 
-#include <QDebug>
-
 AdjustmentResults::AdjustmentResults(QWidget *parent) :
     QWidget(parent), html(nullptr)
 {
-    qDebug() << "***  AdjustmentResults" << __FILE__ << __LINE__;
-
     textEdit = new QTextEdit;
     textEdit->setReadOnly(true);
 

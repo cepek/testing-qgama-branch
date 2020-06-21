@@ -28,32 +28,7 @@
 #include <QBrush>
 #include <QFont>
 #include <QMessageBox>
-#include <QDebug>
 #include <typeinfo>
-
-#if 1
-void qDebugMatrix(const Observation::CovarianceMatrix& cov)
-{
-    for (int r=1; r<=cov.rows(); r++)
-    {
-        QList<double> row;
-        for (int c = 1; c<=cov.cols(); c++) row << cov(r,c);
-        qDebug() << row;
-    }
-}
-
-template<class ObsMap> void qDebugObsMap(const ObsMap& obsMap)
-{
-    qDebug() << "i rowType cluster clusterName clusterIndex observation ObservationNameIndex angle angular group";
-    for (int i=0; i<obsMap.size(); i++) {
-        qDebug() << i
-                 << obsMap[i].rowType << obsMap[i].cluster << obsMap[i].clusterName
-                 << obsMap[i].clusterIndex << obsMap[i].observation
-                 << obsMap[i].observationNameIndex
-                 << obsMap[i].angle << obsMap[i].angular << obsMap[i].group;
-    }
-}
-#endif
 
 typedef GNU_gama::local::LocalNetwork    LocalNetwork;
 using namespace GamaQ2;

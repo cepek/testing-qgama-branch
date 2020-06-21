@@ -26,7 +26,6 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QDebug>
 
 DropDeleteBase::DropDeleteBase(QWidget *parent)
     : QWidget(parent), needsConfName(false), success(false)
@@ -35,7 +34,6 @@ DropDeleteBase::DropDeleteBase(QWidget *parent)
 
 DropDeleteBase::~DropDeleteBase()
 {
-    qDebug() << "     DropDeleteBase::~DropDeleteBase()" << __FILE__ << __LINE__;
 }
 
 DB_DropTables::DB_DropTables(QWidget *parent) : DropDeleteBase(parent) {}

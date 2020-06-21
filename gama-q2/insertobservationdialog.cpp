@@ -27,7 +27,6 @@
 #include <QFormLayout>
 #include <QTextEdit>
 #include <QDialogButtonBox>
-#include <QDebug>
 
 InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *parent) :
     QDialog(parent),
@@ -297,9 +296,6 @@ void InsertObservationDialog::accept()
         }
         else if (clusterName == GamaQ2::vecClusterName) {
 
-            qDebug() << "else if (clusterName == GamaQ2::vecClusterName)" << __FILE__ << __LINE__;
-            qDebug() << lineEditFrom << lineEditTo << lineEditXdiff << lineEditYdiff << lineEditZdiff;
-
             double vecXdiff, vecYdiff, vecZdiff;
             getPointID(tr("From"),   lineEditFrom);
             getPointID(tr("To"),     lineEditTo, true);
@@ -360,7 +356,6 @@ void InsertObservationDialog::accept()
 
 void InsertObservationDialog::getPointID(QString tag, QLineEdit *edit, bool isTarget)
 {
-    qDebug() << "InsertObservationDialog::getPointID" << __FILE__ << __LINE__;
     if (edit->text().isEmpty())
         setWarning(tag,   tr("Point ID is empty"));
     if (!isTarget && edit->text().contains(";"))

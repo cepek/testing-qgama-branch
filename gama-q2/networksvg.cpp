@@ -24,7 +24,6 @@
 #include <QGraphicsSvgItem>
 #include <QWheelEvent>
 #include <QSvgRenderer>
-#include <QDebug>
 
 #include <cmath>
 #include <iostream>
@@ -32,7 +31,6 @@
 NetworkSVG::NetworkSVG(QWidget* parent)
     : QGraphicsView(parent)
 {
-    qDebug() << "***  NetworkSVG" << __FILE__ << __LINE__;
     setScene(new QGraphicsScene(this));
     setTransformationAnchor(AnchorUnderMouse);
     setDragMode(ScrollHandDrag);

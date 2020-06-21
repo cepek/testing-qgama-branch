@@ -32,8 +32,6 @@
 #include <QDoubleSpinBox>
 #include <QLabel>
 
-#include <QDebug>
-
 DrawSettings::DrawSettings(GNU_gama::local::GamaLocalSVG *lsvg, QWidget *parent) :
     QWidget(parent),
     svg(lsvg)
@@ -266,7 +264,6 @@ void DrawSettings::on_buttonBox_clicked(QAbstractButton *button)
     }
     else
     {
-        qDebug() << __FILE__ << __LINE__ << "unknown button" << button->text();
     }
 
     emit redraw();

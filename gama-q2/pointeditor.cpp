@@ -29,15 +29,12 @@
 #include <QTableView>
 #include <QHeaderView>
 #include <QGridLayout>
-#include <QDebug>
 
 PointEditor::PointEditor(QWidget *parent) :
     QWidget(parent),
     tableView(new QTableView),
     model(nullptr), readonly(true)
 {
-    qDebug() << "***  PointEditor" << __FILE__ << __LINE__;
-
     LineEditDelegate* item = new LineEditDelegate(tableView);
     tableView->setItemDelegate(item);
     PointTypeComboBox* combobox = new PointTypeComboBox(tableView);

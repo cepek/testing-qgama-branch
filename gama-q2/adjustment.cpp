@@ -19,7 +19,6 @@
 
 #include "adjustment.h"
 #include "constants.h"
-#include <QDebug>
 
 #include <gnu_gama/local/observation.h>
 #include <gnu_gama/local/network.h>
@@ -45,7 +44,6 @@ namespace {
 
 Adjustment::Adjustment() : lsvg(nullptr), lnet(nullptr), solved(false)
 {
-  qDebug() << "***  Adjustment" << __FILE__ << __LINE__;
 }
 
 Adjustment::~Adjustment()

@@ -53,8 +53,6 @@
 #include <gnu_gama/local/localnetwork2sql.h>
 #include <gnu_gama/xml/localnetworkoctave.h>
 
-#include <QDebug>
-
 // QSettings export adjustment directory
 const QString export_adjdir {"export/adjdir"};
 const QString export_sqldir {"export/sqldir"};
@@ -87,7 +85,6 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     QMainWindow(parent),
     par(nullptr), ped(nullptr), obs(nullptr), svg(nullptr), res(nullptr), connection_name(connectionName)
 {
-    qDebug() << "***  NetworkAdjustmentPanel" << __FILE__ << __LINE__;
     allNetworkAdjustmentPanelsList.push_back(this);
 
     QAction* action {nullptr};
@@ -293,8 +290,6 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
             db.transaction();
             query.exec(" insert into gnu_gama_local_configurations (conf_id, conf_name) "
                        " select new_id, '" + conf + "' from (select coalesce(max(conf_id), 0)+1 as new_id from gnu_gama_local_configurations)x");
-            qDebug() << query.lastQuery();
-            qDebug() << query.lastError();
             db.commit();
         }
 

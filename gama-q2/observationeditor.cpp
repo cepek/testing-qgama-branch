@@ -29,7 +29,6 @@
 #include <QTableView>
 #include <QHeaderView>
 #include <QGridLayout>
-#include <QDebug>
 #include <typeinfo>
 
 #include <gnu_gama/local/network.h>
@@ -38,7 +37,6 @@ ObservationEditor::SelectCluster::SelectCluster(ObservationTableModel *model,
                                                 QTableView* tableview, int logicalIndex)
     : tableView(tableview), isValid_(true)
 {
-    qDebug() << "***  ObservationEditor" << __FILE__ << __LINE__;
     int minIndex, maxIndex;
     if (!model->clusterIndexes(logicalIndex, minIndex, maxIndex))
     {
@@ -229,8 +227,6 @@ void ObservationEditor::deleteObservation()
 
 void ObservationEditor::insertObservation()
 {
-    qDebug() << "ObservationEditor::insertObservation()" << __FILE__ << __LINE__;
-
     QModelIndex index = model->index(observationLogicalIndex, 0);
     if (!index.isValid()) return;
 
