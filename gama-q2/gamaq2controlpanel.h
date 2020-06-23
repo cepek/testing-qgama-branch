@@ -1,6 +1,6 @@
 /*
   GNU Gama Qt based GUI
-  Copyright (C) 2013 Ales Cepek <cepek@gnu.org>
+  Copyright (C) 2013, 2020 Ales Cepek <cepek@gnu.org>
 
   This file is part of GNU Gama.
 
@@ -21,6 +21,7 @@
 #ifndef GAMAG2CONTROLPANEL_H
 #define GAMAG2CONTROLPANEL_H
 
+#include <QApplication>
 #include <QMainWindow>
 #include <QMap>
 #include "showmessage.h"
@@ -48,6 +49,7 @@ private slots:
     void on_action_About_gama_q2_triggered();
     void on_action_About_qt_triggered();
     void on_action_Adjustment_results_language();
+    void on_action_Application_Font();
     void disable_input_data(bool);
     void dbSlot();
     void adjustmentPanel(bool newPanel);
@@ -58,7 +60,7 @@ private:
             *actionImportExamples,
             *actionDbExit;
     QAction *actionAdjAdjustment;
-    QAction *actionAdjResultsLanguage;
+    QAction *actionAdjResultsLanguage, *actionApplicationFont;
     QAction *actionGamaQ2help,*actionAboutGamaQ2, *actionAboutQt;
 
     QMap<QString, DbInterface*> mapDbPlugins;

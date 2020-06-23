@@ -1,5 +1,5 @@
 /*  Qt based GUI for GNU Gama -- adjustment of geodetic networks
-    Copyright (C) 2014, 2015  Ales Cepek <cepek@gnu.org>
+    Copyright (C) 2014, 2015, 2020  Ales Cepek <cepek@gnu.org>
 
     This file is a part of GNU Gama.
 
@@ -26,6 +26,7 @@
 #include <QTextStream>
 #include <QMenuBar>
 #include <QStatusBar>
+#include <QFontDialog>
 #include <QDebug>
 
 #include "constants.h"
@@ -74,7 +75,7 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
     init_schema_lists();
 
     GamaQ2::name      = "gama-q2";
-    GamaQ2::version   = "1.01";
+    GamaQ2::version   = "1.02";
     GamaQ2::copyright = "2020";
 
     // setting implicit adjustment results language
@@ -203,6 +204,8 @@ void GamaQ2ControlPanel::build_menus()
     QMenu* menuTools = new QMenu(tr("&Tools"), this);
     actionAdjResultsLanguage = menuTools->addAction(tr("Adjustment results &language"));
     connect(actionAdjResultsLanguage, SIGNAL(triggered()), SLOT(on_action_Adjustment_results_language()));
+    actionApplicationFont = menuTools->addAction(tr("Application Font"));
+    connect(actionApplicationFont, SIGNAL(triggered()), SLOT(on_action_Application_Font()));
 
     QMenu* menuHelp = new QMenu(tr("&Help"), this);
     actionGamaQ2help = menuHelp->addAction(tr("Gama-q2 &help"));
@@ -425,6 +428,18 @@ void GamaQ2ControlPanel::set_adjustment_results_language(QString language)
         set_adjustment_results_language(tr("en"));
     }
     init_language_list = false;
+}
+
+void GamaQ2ControlPanel::on_action_Application_Font()
+{
+  bool ok {false};
+  QFont font = QFontDialog::getFont(&ok, this);
+  if (ok)
+    {
+       QApplication::setFont(font);
+       QSettings settings;
+       settings.setValue("gama-q2-font", QApplication::font().toString());
+    }
 }
 
 bool GamaQ2ControlPanel::cmp(QString s, QString c)

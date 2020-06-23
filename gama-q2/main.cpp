@@ -33,6 +33,15 @@ int main(int argc, char *argv[])
     QIcon icon(":/img/g-logo.svg");
     QApplication::setWindowIcon(icon);
 
+    QSettings settings;
+    QVariant sf = settings.value("gama-q2-font");
+    if (sf.isValid())
+      {
+        QFont font;
+        bool ok = font.fromString(sf.toString());
+        if (ok) QApplication::setFont(font);
+      }
+
     // https://en.cppreference.com/w/cpp/locale/locale/classic
     std::locale::global( std::locale::classic() );
 
