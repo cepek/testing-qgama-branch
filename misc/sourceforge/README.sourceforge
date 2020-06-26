@@ -1,0 +1,13 @@
+Copy to "new-release"
+=====================
+
+1) gama-q2.exe and run "windeployqt gama-q2.exe"
+   # https://doc.qt.io/qt-5/windows-deployment.html
+
+2) gama-local.exe and gama-g3.exe
+
+3) README.GNU_gama *if not exists*
+
+4) copy to 0-MISSING_vcrintime140_1.dll
+   a) README *if not exists*
+   b) vcruntime140_1.dll
