@@ -25,7 +25,7 @@ ui_*.h
 *.txt.user
 *.txt.user.*
 *-build-*
-build
+build*
 Makefile
 dox
 
