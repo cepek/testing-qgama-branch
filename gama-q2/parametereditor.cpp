@@ -1,6 +1,6 @@
 /* 
   GNU Gama Qt based GUI
-  Copyright (C) 2013 Ales Cepek <cepek@gnu.org>
+  Copyright (C) 2013, 2020 Ales Cepek <cepek@gnu.org>
 
   This file is part of GNU Gama.
 
@@ -57,8 +57,6 @@ ParameterEditor::ParameterEditor(QWidget *parent) :
     comboBox_ang_units->addItems({"400","360"});
     // comboBox_ellipsoid;
 
-    connect(checkBox_update_cc,  &QCheckBox::stateChanged,
-            [this](int state){on_checkBox_update_cc_stateChanged(state);});
     connect(comboBox_sigma_act,  &QComboBox::currentTextChanged,
             [this](const QString& text){on_comboBox_sigma_act_currentTextChanged(text);});
     connect(comboBox_axes_xy,    &QComboBox::currentTextChanged,
@@ -93,7 +91,6 @@ ParameterEditor::ParameterEditor(QWidget *parent) :
     formLayout->addRow(tr("confidence probability"),    lineEdit_conf_pr);
     formLayout->addRow(tr("tolerance for abs. terms"),  lineEdit_tol_abs);
     formLayout->addRow(tr("actual type of stdev used"), comboBox_sigma_act);
-    formLayout->addRow(tr("update constrained coord."), checkBox_update_cc);
     formLayout->addRow(tr("axes x and y are oriented"), comboBox_axes_xy);
     formLayout->addRow(tr("angles are observed"),       comboBox_angles);
     formLayout->addRow(tr("algorithm"),                 comboBox_algorithm);
@@ -200,9 +197,6 @@ void ParameterEditor::connectParameters(GNU_gama::local::LocalNetwork *ln)
         comboBox_ang_units->setCurrentIndex(0);
     else
         comboBox_ang_units->setCurrentIndex(1);
-
-    bool bcc = lnet->update_constrained_coordinates();
-    checkBox_update_cc->setChecked(bcc);
 
     lineEdit_adj_covband->setText(QString::number(lnet->adj_covband()));
 }
@@ -359,15 +353,9 @@ void ParameterEditor::on_comboBox_ang_units_currentTextChanged(const QString &ar
     emit angular_units_changed();
 }
 
-void ParameterEditor::on_comboBox_ellipsoid_currentTextChanged(const QString &arg1)
+void ParameterEditor::on_comboBox_ellipsoid_currentTextChanged(const QString &/*arg1*/)
 {
     QMessageBox::warning(this, "Ellipsoid", "Ellipsoid selection not implemented");
-}
-
-void ParameterEditor::on_checkBox_update_cc_stateChanged(int arg1)
-{
-    lnet->update_constrained_coordinates(arg1 != 0);
-    lnet->update_points();
 }
 
 void ParameterEditor::on_lineEdit_adj_covband_editingFinished()

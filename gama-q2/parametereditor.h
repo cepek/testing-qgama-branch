@@ -1,6 +1,6 @@
 /*
   GNU Gama Qt based GUI
-  Copyright (C) 2013 Ales Cepek <cepek@gnu.org>
+  Copyright (C) 2013, 2020 Ales Cepek <cepek@gnu.org>
 
   This file is part of GNU Gama.
 
@@ -53,7 +53,6 @@ private slots:
     void on_comboBox_angles_currentTextChanged(const QString &arg1);
     void on_comboBox_algorithm_currentTextChanged(const QString &arg1);
     void on_comboBox_ellipsoid_currentTextChanged(const QString &arg1);
-    void on_checkBox_update_cc_stateChanged(int arg1);
     void on_comboBox_ang_units_currentTextChanged(const QString &arg1);
     void on_lineEdit_adj_covband_editingFinished();
 

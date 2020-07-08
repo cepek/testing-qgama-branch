@@ -1,6 +1,6 @@
 /*
   GNU Gama Qt based GUI
-  Copyright (C) 2013, 2016 Ales Cepek <cepek@gnu.org>
+  Copyright (C) 2013, 2016, 2020 Ales Cepek <cepek@gnu.org>
 
   This file is part of GNU Gama.
 
@@ -139,7 +139,6 @@ public:
   double  get_conf_pr    () const;
   double  get_tol_abs    () const;
   QString get_sigma_act  () const;
-  QString get_update_cc  () const;
   QString get_axes_xy    () const;
   QString get_angles     () const;
   double  get_epoch      () const;

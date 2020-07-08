@@ -1,5 +1,5 @@
 /*  Qt based GUI for GNU Gama -- adjustment of geodetic networks
-    Copyright (C) 2014, 2016  Ales Cepek <cepek@gnu.org>
+    Copyright (C) 2014, 2016, 2020  Ales Cepek <cepek@gnu.org>
 
     This file is a part of GNU Gama.
 
@@ -54,8 +54,16 @@ Adjustment::~Adjustment()
 
 void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
 {
+
+  struct Index {
+    enum {
+      conf_id, algorithm, sigma_apr, conf_pr, tol_abs, sigma_act,
+      axes_xy, angles, epoch, ang_units, latitude, ellipsoid, cov_band
+    };
+  };
+
   q.exec("select conf_id, algorithm, "
-         "       sigma_apr, conf_pr, tol_abs, sigma_act, update_cc,"
+         "       sigma_apr, conf_pr, tol_abs, sigma_act,"
          "       axes_xy, angles, epoch, ang_units, "
          "       latitude, ellipsoid, cov_band "
          "  from gnu_gama_local_configurations "
@@ -65,7 +73,7 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
   conf_id.clear();
   if (q.next())
     {
-      conf_id = q.value(0).toString();
+      conf_id = q.value(Index::conf_id).toString();
       conf_name = configuration;
     }
   else
@@ -78,7 +86,7 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
   delete lnet;
   lnet = new GNU_gama::local::LocalNetwork;
 
-  const std::string alg = q.value(1).toString().toStdString();
+  const std::string alg = q.value(Index::algorithm).toString().toStdString();
   if (alg == "svd")
     lnet->set_algorithm("svd");
   else if (alg == "gso")
@@ -90,23 +98,20 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
   else
     lnet->set_algorithm();
 
-  lnet->apriori_m_0(q.value(2).toDouble());
-  lnet->conf_pr    (q.value(3).toDouble());
-  lnet->tol_abs    (q.value(4).toDouble());
+  lnet->apriori_m_0(q.value(Index::sigma_apr).toDouble());
+  lnet->conf_pr    (q.value(Index::conf_pr).toDouble());
+  lnet->tol_abs    (q.value(Index::tol_abs).toDouble());
 
-  if (q.value(5).toString() == "aposteriori")
+  if (q.value(Index::sigma_act).toString() == "aposteriori")
     lnet->set_m_0_aposteriori();
   else
     lnet->set_m_0_apriori();
-
-  bool update_cc = (q.value(6).toString() == "yes" );
-  lnet->update_constrained_coordinates(update_cc);
 
   {
     using namespace GNU_gama::local;
 
     LocalCoordinateSystem::CS lcs { LocalCoordinateSystem::CS::EN };
-    QString s = q.value(7).toString();
+    QString s = q.value(Index::axes_xy).toString();
     if      (s == "en") lcs = LocalCoordinateSystem::CS::EN;
     else if (s == "nw") lcs = LocalCoordinateSystem::CS::NW;
     else if (s == "se") lcs = LocalCoordinateSystem::CS::SE;
@@ -118,28 +123,28 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
 
     lnet->PD.local_coordinate_system = lcs;
 
-    bool rang = (q.value(8).toString() == "right-handed");
+    bool rang = (q.value(Index::angles).toString() == "right-handed");
     if (rang) lnet->PD.setAngularObservations_Righthanded();
     else      lnet->PD.setAngularObservations_Lefthanded();
   }
 
-  lnet->set_epoch(q.value(9).toDouble());
+  lnet->set_epoch(q.value(Index::epoch).toDouble());
 
-  if (q.value(10).toInt() == 400)
+  if (q.value(Index::ang_units).toInt() == 400)
     lnet->set_gons();
   else
     lnet->set_degrees();
 
   // the following two attributes are not used in gama-q2 ------------
-  latitude = q.value(11).toDouble()*M_PI/(lnet->gons() ? 200 : 180);
+  latitude = q.value(Index::latitude).toDouble()*M_PI/(lnet->gons() ? 200 : 180);
   ellipsoid.clear();
-  if (!q.value(12).isNull())  ellipsoid = q.value(12).toString();
+  if (!q.value(Index::ellipsoid).isNull())  ellipsoid = q.value(Index::ellipsoid).toString();
   // -----------------------------------------------------------------
 
-  if (q.value(13).isNull())
+  if (q.value(Index::cov_band).isNull())
     lnet->set_adj_covband();
   else
-    lnet->set_adj_covband(q.value(13).toInt());
+    lnet->set_adj_covband(q.value(Index::cov_band).toInt());
 
   description.clear();
   q.exec("select text from gnu_gama_local_descriptions "
@@ -567,11 +572,6 @@ double  Adjustment::get_tol_abs() const
 QString Adjustment::get_sigma_act () const
 {
   return lnet->m_0_apriori() ? "apriori" : "aposteriori";
-}
-
-QString Adjustment::get_update_cc () const
-{
-  return lnet->update_constrained_coordinates() ? "yes" : "no";
 }
 
 QString Adjustment::get_axes_xy() const

@@ -75,7 +75,7 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
     init_schema_lists();
 
     GamaQ2::name      = "gama-q2";
-    GamaQ2::version   = "1.02";
+    GamaQ2::version   = "1.02.1";
     GamaQ2::copyright = "2020";
 
     // setting implicit adjustment results language
@@ -526,6 +526,12 @@ void GamaQ2ControlPanel::import_examples()
         db.commit();
     }
 
-    QMessageBox::information(this, tr("Import Examples"),
-                             tr("All %1 examples imported into the database").arg(count));
+    QMessageBox msgBox;
+    msgBox.setText(tr("All %1 examples imported into the database").arg(count));
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.setWindowTitle(tr("Import Examples"));
+    msgBox.button(QMessageBox::Ok);
+
+    QTimer::singleShot(2000, &msgBox, SLOT(close()));
+    msgBox.exec();
 }
