@@ -102,6 +102,9 @@ QVariant PointTableModel::data(const QModelIndex &index, int role) const
         case indPointY:
         case indPointZ:
             return (Qt::AlignVCenter + Qt::AlignRight);
+        case indPointTxy:
+        case indPointTz:
+            return (Qt::AlignVCenter + Qt::AlignCenter);
         }
     }
 

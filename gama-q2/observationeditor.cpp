@@ -128,7 +128,9 @@ ObservationEditor::ObservationEditor(QWidget *parent) :
 
     enableEdit(false);
 
-    tableView->horizontalHeader()->setVisible(false);
+    tableView->setStyleSheet("QTableCornerButton::section{border-width:1px;"
+                             //"background-color:transparent;"
+                             "border-color: lightgrey; border-style:solid;}");
 
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(tableView);
