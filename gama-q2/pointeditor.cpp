@@ -23,6 +23,7 @@
 #include "lineeditdelegate.h"
 #include "pointtypecombobox.h"
 #include "constants.h"
+#include "tableviewstyle.h"
 
 #include <QMenu>
 #include <QMessageBox>
@@ -44,9 +45,7 @@ PointEditor::PointEditor(QWidget *parent) :
 
     enableEdit(false);
 
-    tableView->setStyleSheet("QTableCornerButton::section{border-width:1px;"
-                             //"background-color:transparent;"
-                             "border-color: lightgrey; border-style:solid;}");
+    tableView->setStyleSheet(tableViewStyle());
 
     tableView->verticalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
     pointMenu = new QMenu(this);

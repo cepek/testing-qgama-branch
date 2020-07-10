@@ -23,6 +23,7 @@
 #include "insertobservationdialog.h"
 #include "lineeditdelegate.h"
 #include "constants.h"
+#include "tableviewstyle.h"
 #include <gnu_gama/local/gamadata.h>
 #include <QMenu>
 #include <QMessageBox>
@@ -128,9 +129,7 @@ ObservationEditor::ObservationEditor(QWidget *parent) :
 
     enableEdit(false);
 
-    tableView->setStyleSheet("QTableCornerButton::section{border-width:1px;"
-                             //"background-color:transparent;"
-                             "border-color: lightgrey; border-style:solid;}");
+    tableView->setStyleSheet(tableViewStyle());
 
     QGridLayout* layout = new QGridLayout;
     layout->addWidget(tableView);

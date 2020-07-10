@@ -84,6 +84,8 @@ set(Q2SRC
     gama-q2/showmessage.h
     gama-q2/shrinkbandwidth.cpp
     gama-q2/shrinkbandwidth.h
+    gama-q2/tableviewstyle.cpp
+    gama-q2/tableviewstyle.h
     gama-q2/xml2txt.cpp
     gama-q2/xml2txt.h
     gama-q2/gama-q2.qrc
