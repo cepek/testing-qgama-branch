@@ -11,15 +11,24 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# CMAKE_PREFIX_PATH By default this is empty. It is intended to be set by the project.
-#
-#set(CMAKE_PREFIX_PATH "/home/cepek/Qt/5.15.0/gcc_64/lib/cmake/Qt5/") # example linux
-#set(CMAKE_PREFIX_PATH "C:/Qt/5.15.0/msvc2019_64/lib/cmake/Qt5/")     # example windows
 
-# QtCreator supports the following variables for Android, which are identical to qmake Android variables.
+# Examples:
+#
+#set(CMAKE_PREFIX_PATH "/home/cepek/Qt/5.15.2/gcc_64/lib/cmake/Qt5/") # linux
+#set(CMAKE_PREFIX_PATH "C:/Qt/5.15.0/msvc2019_64/lib/cmake/Qt5/")     # windows
+#
+string(COMPARE EQUAL "${CMAKE_PREFIX_PATH}" "" result)
+if (result)
+   message(WARNING "CMAKE_PREFIX_PATH By default this is empty. "
+                   "It is intended to be set by the project.")
+endif()
+
+
+# QtCreator supports the following variables for Android,
+#    which are identical to qmake Android variables.
 # Check http://doc.qt.io/qt-5/deployment-android.html for more information.
 # They need to be set before the find_package(Qt5 ...) call.
-
+#
 #if(ANDROID)
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
 #    if (ANDROID_ABI STREQUAL "armeabi-v7a")
@@ -28,6 +37,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
 #    endif()
 #endif()
+
 
 add_definitions(-DGNU_gama_expat_1_1)  # if we use local copy of expat sources
 include_directories(gama/lib gama-q2)
