@@ -103,7 +103,7 @@ GamaQ2ControlPanel::~GamaQ2ControlPanel()
 
 void GamaQ2ControlPanel::on_action_Exit_triggered()
 {
-    emit adjustmentPanel(false);
+    /* emit */ adjustmentPanel(false);
     close();
 }
 
@@ -254,7 +254,7 @@ void GamaQ2ControlPanel::closeEvent(QCloseEvent * event)
     {
         event->accept();
         GamaQ2help::get()->close();
-        for (auto p : localPluginsList) p->close();
+        for (const auto& p : qAsConst(localPluginsList)) p->close();
     }
     else if (dialogCode == QMessageBox::YesAll)
     {
@@ -266,7 +266,7 @@ void GamaQ2ControlPanel::closeEvent(QCloseEvent * event)
 
         event->accept();
         GamaQ2help::get()->close();
-        for (auto p : localPluginsList) p->close();
+        for (const auto& p : qAsConst(localPluginsList)) p->close();
     }
     else
     {
@@ -353,7 +353,8 @@ void GamaQ2ControlPanel::load_plugins()
 {
     QDir gamaq2plugins(qApp->applicationDirPath());
     gamaq2plugins.cd("plugins");
-    for (QString fileName : gamaq2plugins.entryList(QDir::Files)) {
+    auto qdirfiles = gamaq2plugins.entryList(QDir::Files);
+    for (QString& fileName : qdirfiles) {
         QPluginLoader pluginLoader(gamaq2plugins.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
@@ -473,7 +474,8 @@ void GamaQ2ControlPanel::import_examples()
     int count {0};
 
     QDir examples (exdir);
-    for (QString fileName : examples.entryList(QDir::Files)) {
+    auto qdirfiles = examples.entryList(QDir::Files);
+    for (QString& fileName : qdirfiles) {
 
         count++;
         //QString confName = fileName.left(10);
