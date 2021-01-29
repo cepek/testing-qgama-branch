@@ -9,6 +9,7 @@ Build on Ubuntu 20.04.1 LTS (qtcreator and cmake -GNinja)
 * removed warnings from Clang-tidy and Clazy analysis
   Affected files:
   * gama-q2/adjustment.h/cpp
+  * gama-q2/dbconnectdialog.h/cpp
 
 * fixed compile warnings "c++11 range-loop might detach Qt container"
   Affected files:

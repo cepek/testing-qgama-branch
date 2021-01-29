@@ -38,8 +38,6 @@
 
 #include <QDebug>
 
-// QSettings
-const QString sqlite_dbfile {"sqlite/dbfile"};
 
 DBConnectDialog::DBConnectDialog(QString connectionName, QWidget *parent) :
     QDialog(parent),
@@ -100,22 +98,25 @@ DBConnectDialog::DBConnectDialog(QString connectionName, QWidget *parent) :
     vbox->addWidget(buttonBox);
     setLayout(vbox);
 
-    connect(buttonBox, &QDialogButtonBox::clicked, [this](QAbstractButton* button){
-        switch (buttonBox->buttonRole(button)) {
-        case QDialogButtonBox::RejectRole:
-            close();
-            break;
-        case QDialogButtonBox::AcceptRole:
-            on_buttonBox_accepted();
-            break;
-        case QDialogButtonBox::HelpRole:
-            on_buttonBox_helpRequested();
-            break;
-        default:
-            break;
-        }});
-    connect(pushButton_CreateNewDbFile, &QPushButton::pressed,
-        [this](){on_pushButton_OpenFileDialog_clicked();});
+    auto bbdialog = [this](QAbstractButton* button){
+            switch (buttonBox->buttonRole(button)) {
+            case QDialogButtonBox::RejectRole:
+                close();
+                break;
+            case QDialogButtonBox::AcceptRole:
+                on_buttonBox_accepted();
+                break;
+            case QDialogButtonBox::HelpRole:
+                on_buttonBox_helpRequested();
+                break;
+            default:
+                break;
+            }};
+    connect(buttonBox, &QDialogButtonBox::clicked, bbdialog);
+
+    auto newdbfile = [this](){on_pushButton_OpenFileDialog_clicked();};
+    connect(pushButton_CreateNewDbFile, &QPushButton::pressed, newdbfile);
+
     connect(this, &DBConnectDialog::input_data_open,
         [this](bool open){ if (open) close();});
 }
@@ -139,7 +140,7 @@ void DBConnectDialog::switchStackedWidgets()
 void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
 {
     QSettings settings;
-    QString dbfile = settings.value(sqlite_dbfile).toString();
+    QString dbfile = settings.value(sqlite_dbfile_).toString();
     QFileDialog fileDialog(this,tr("Opening Sqlite Database File"));
     if (!dbfile.isEmpty()) fileDialog.selectFile(dbfile);
     fileDialog.setFileMode(QFileDialog::AnyFile);     // a single file only
@@ -158,9 +159,10 @@ void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
 
     if (!fileDialog.exec()) return;
 
-    dbfile = fileDialog.selectedFiles()[0];
+    auto selected = fileDialog.selectedFiles();
+    dbfile = selected[0];
     lineEdit_DatabaseFile->setText(dbfile);
-    settings.setValue(sqlite_dbfile, dbfile);
+    settings.setValue(sqlite_dbfile_, dbfile);
     on_buttonBox_accepted();
     hide();
 }
@@ -171,8 +173,8 @@ void DBConnectDialog::create_missing_tables(QSqlDatabase& db)
 
     db.transaction();
     for (QStringList::const_iterator
-            i = GamaQ2::gama_local_schema.begin(),
-            e = GamaQ2::gama_local_schema.end();   i!=e; ++i)
+            i = GamaQ2::gama_local_schema.cbegin(),
+            e = GamaQ2::gama_local_schema.cend();   i!=e; ++i)
     {
         query.exec(*i);
         if (query.lastError().isValid())
@@ -246,8 +248,8 @@ void DBConnectDialog::on_buttonBox_accepted()
     if (database_name != ":memory:")
     {
         QStringList tables = db.tables();
-        for (QStringList::const_iterator i=GamaQ2::gama_local_schema_table_names.begin(),
-                                         e=GamaQ2::gama_local_schema_table_names.end(); i!=e; ++i)
+        for (QStringList::const_iterator i=GamaQ2::gama_local_schema_table_names.cbegin(),
+                                         e=GamaQ2::gama_local_schema_table_names.cend(); i!=e; ++i)
             if (!tables.contains(*i, Qt::CaseInsensitive))
             {
                 missing++;

@@ -60,6 +60,9 @@ private:
     QPushButton* pushButton_CreateNewDbFile {};
     QCheckBox* checkBox_CreateNewDbFile {};
 
+    // QSettings
+    const QString sqlite_dbfile_ {"sqlite/dbfile"};
+
 private slots:
     void switchStackedWidgets();
     void on_pushButton_OpenFileDialog_clicked();
