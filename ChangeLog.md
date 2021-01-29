@@ -6,6 +6,10 @@ All notable changes to gama-q2 project are documented in this file.
 
 Build on Ubuntu 20.04.1 LTS (qtcreator and cmake -GNinja)
 
+* removed warnings from Clang-tidy and Clazy analysis
+  Affected files:
+  * gama-q2/adjustment.h/cpp
+
 * fixed compile warnings "c++11 range-loop might detach Qt container"
   Affected files:
   * gamaq2controlpanel.cpp
@@ -13,7 +17,7 @@ Build on Ubuntu 20.04.1 LTS (qtcreator and cmake -GNinja)
 * git checkout  HEAD^ CMakeLists.txt
 
 * fixed compile error: no member named 'SkipEmptyParts' in namespace 'Qt',
-  example code: split(QRegExp(";[\r\n]"),Qt::SkipEmptyParts);
+  example code: split(QRegExp(";[\\s+"),Qt::SkipEmptyParts);
 
   Qt::SkipEmptyParts renamed to QString::SkipEmptyParts which fixed
   the problem, but according to the documentation the code was correct.

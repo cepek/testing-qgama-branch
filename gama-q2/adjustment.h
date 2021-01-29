@@ -29,7 +29,7 @@ namespace QGama {
 
   class Exception : public GNU_gama::Exception::base {
   public:
-    Exception(const QString &title, const QString &text) : title_(title), text_(text) {}
+    Exception(QString title, QString text) : title_(title), text_(text) {}
     virtual ~Exception() throw() {}
 
     QString text()  const { return text_; }
@@ -191,6 +191,8 @@ private:
   QString*   exportString;
   QString    exportConfName;
   std::string utf8_(const QString& s) const;
+
+  const QString adjustmentException_ = tr("Exception in the Adjustment occured!");
 };
 
 #endif // ADJUSTMENT_H

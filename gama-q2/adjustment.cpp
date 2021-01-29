@@ -35,12 +35,6 @@
 // in QString::arg(double a DOUBLE_PRECISION)
 #define DOUBLE_PRECISION , 0, 'g', DBL_MANT_DIG
 
-namespace {
-
-  inline QString tr(const char* s) { return QObject::tr(s); }
-  const  QString AdjustmentException = tr("Exception in the Adjustment occured!");
-
-}  // unnamed namespace
 
 Adjustment::Adjustment() : lsvg(nullptr), lnet(nullptr), solved(false)
 {
@@ -79,7 +73,7 @@ void Adjustment::read_configuration(QSqlQuery& q, const QString& configuration)
   else
     {
       QString conferr = tr("Configuration %1 not found");
-      throw QGama::Exception(AdjustmentException,
+      throw QGama::Exception(adjustmentException_,
                              conferr.arg(configuration));
     }
 
@@ -316,7 +310,7 @@ void Adjustment::fetch_obs(QSqlQuery& q, QString cluster, GNU_gama::local::Stand
             }
           if (dir_from != from)
             {
-              throw QGama::Exception(AdjustmentException,
+              throw QGama::Exception(adjustmentException_,
                                      tr("StandPoint cluster with multiple directions sets"));
             }
         }
@@ -326,6 +320,9 @@ void Adjustment::fetch_obs(QSqlQuery& q, QString cluster, GNU_gama::local::Stand
       else if (tag == "s-distance") p = new GNU_gama::local::S_Distance(from, to, val);
       else if (tag == "z-angle")    p = new GNU_gama::local::Z_Angle   (from, to, val);
       else if (tag == "dh")         p = new GNU_gama::local::H_Diff    (from, to, val);
+
+      if (p == nullptr) throw(QGama::Exception(adjustmentException_,
+                                               tr("Undefined observation type name")));
 
       if (!null_from_dh)     p->set_from_dh( q.value( 7).toDouble() );
       if (!null_to_dh)       p->set_to_dh  ( q.value( 8).toDouble() );
@@ -401,7 +398,7 @@ void Adjustment::fetch_coordinates(QSqlQuery& q, QString cluster, GNU_gama::loca
       bool        znull    = q.value(4).isNull();   if (!znull) z = q.value(4).toDouble();
       int         rejected = q.value(5).toInt();
 
-      if (xnull != ynull) throw QGama::Exception(AdjustmentException,
+      if (xnull != ynull) throw QGama::Exception(adjustmentException_,
                                                  tr("Observed coordinates x and y must be defined both or none"));
 
       if (!xnull && !ynull)
@@ -455,7 +452,7 @@ void Adjustment::fetch_height_differences(QSqlQuery& q, QString cluster, GNU_gam
       if (tag != "dh")
         {
           QString err = "Illegal tag %1 in a <height-differences> cluster";
-          throw QGama::Exception(AdjustmentException, tr(err.arg(tag).toStdString().c_str()));
+          throw QGama::Exception(adjustmentException_, tr(err.arg(tag).toStdString().c_str()));
         }
 
       GNU_gama::local::H_Diff* p = new GNU_gama::local::H_Diff(from, to, val);
@@ -499,7 +496,7 @@ void Adjustment::exec()
   }
   catch (const GNU_gama::Exception::base& e)
   {
-    throw QGama::Exception(AdjustmentException, e.what());
+    throw QGama::Exception(adjustmentException_, e.what());
   }
 }
 
