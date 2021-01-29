@@ -56,6 +56,9 @@ private:
     QDialogButtonBox* buttons;
     QString basename;
 
+    // QSettings
+    const QString import_xmldir {"import/xmldir"};
+
     void configure();
 };
 

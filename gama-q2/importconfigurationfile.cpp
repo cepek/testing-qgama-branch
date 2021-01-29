@@ -48,8 +48,6 @@
 #include <sstream>
 #include <cctype>
 
-// QSettings
-const QString import_xmldir {"import/xmldir"};
 
 ImportConfigurationFile::ImportConfigurationFile(QWidget *parent) :
     QWidget(parent)
@@ -76,7 +74,7 @@ ImportConfigurationFile::ImportConfigurationFile(QWidget *parent) :
     vBoxLayout->addWidget(buttons);
     setLayout(vBoxLayout);
 
-    connect(buttons, &QDialogButtonBox::clicked, [this](QAbstractButton* button){
+    auto clicked = [this](QAbstractButton* button){
         switch (buttons->buttonRole(button)) {
         case QDialogButtonBox::RejectRole:
             close();
@@ -89,12 +87,16 @@ ImportConfigurationFile::ImportConfigurationFile(QWidget *parent) :
             break;
         default:
             break;
-        }});
-    connect(lineEdit_ConfigurationName, &QLineEdit::textChanged,
-            [this](const QString& text){on_lineEdit_ConfigurationName_textChanged(text);});
-    connect(tableWidget_ExistingConfigurationNames, &QTableWidget::cellDoubleClicked,
-            [this](int row, int col){lineEdit_ConfigurationName->setText(
-                    tableWidget_ExistingConfigurationNames->item(row,col)->text());});
+        }};
+    connect(buttons, &QDialogButtonBox::clicked, clicked);
+
+    auto changed = [this](const QString& text){on_lineEdit_ConfigurationName_textChanged(text);};
+    connect(lineEdit_ConfigurationName, &QLineEdit::textChanged, changed);
+
+    auto doubleclicked = [this](int row, int col){
+        lineEdit_ConfigurationName->setText(tableWidget_ExistingConfigurationNames->item(row,col)->text());
+        };
+    connect(tableWidget_ExistingConfigurationNames, &QTableWidget::cellDoubleClicked, doubleclicked);
 }
 
 ImportConfigurationFile::~ImportConfigurationFile()
@@ -117,7 +119,8 @@ void ImportConfigurationFile::exec()
 
     if (!fileDialog.exec()) return;
 
-    file = fileDialog.selectedFiles()[0];
+    auto selected = fileDialog.selectedFiles();
+    file = selected[0];
     settings.setValue(import_xmldir, fileDialog.directory().absolutePath());
 
     show();

@@ -155,8 +155,8 @@ DrawSettings::DrawSettings(GNU_gama::local::GamaLocalSVG *lsvg, QWidget *parent)
     vBoxLayout->addWidget(buttonBox);
     setLayout(vBoxLayout);
 
-    connect(buttonBox, &QDialogButtonBox::clicked,
-            [this](QAbstractButton* button){on_buttonBox_clicked(button);});
+    auto clicked = [this](QAbstractButton* button){on_buttonBox_clicked(button);};
+    connect(buttonBox, &QDialogButtonBox::clicked, clicked);
 }
 
 DrawSettings::~DrawSettings()

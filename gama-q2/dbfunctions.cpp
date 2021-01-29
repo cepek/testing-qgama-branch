@@ -133,9 +133,9 @@ void DropDeleteBase::drop_or_delete_schema_tables()
     QStringList tables = GamaQ2::gama_local_schema_table_names;
     if (query_string.startsWith("DELETE")) tables.removeOne("gnu_gama_local_schema_version");
     if (needsConfName)                     tables.removeOne("gnu_gama_local_options");
-    for (QStringList::const_iterator i=tables.begin(), e=tables.end(); i!=e; ++i)
+    for (QStringList::const_iterator i=tables.cbegin(), e=tables.cend(); i!=e; ++i)
     {
-        dq.exec(QString(query_string).arg(*i).arg(confName));
+        dq.exec(QString(query_string).arg(*i, confName));
         if (dq.lastError().isValid())
         {
             QMessageBox::critical(this, tr("Database Error"),
