@@ -106,8 +106,8 @@ InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *
     vBoxLayout->addWidget(warnings);
     setLayout(vBoxLayout);
 
-    connect(buttonBox, &QDialogButtonBox::accepted, [this](){accept();});
-    connect(buttonBox, &QDialogButtonBox::rejected, [this](){rejected();});
+    connect(buttonBox, &QDialogButtonBox::accepted, this, [this](){accept();});
+    connect(buttonBox, &QDialogButtonBox::rejected, this, [this](){close ();});
 }
 
 InsertObservationDialog::~InsertObservationDialog()

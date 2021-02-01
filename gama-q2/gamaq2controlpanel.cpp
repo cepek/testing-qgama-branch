@@ -528,6 +528,7 @@ void GamaQ2ControlPanel::import_examples()
         db.commit();
     }
 
+    /*
     QMessageBox msgBox;
     msgBox.setText(tr("All %1 examples imported into the database").arg(count));
     msgBox.setIcon(QMessageBox::Information);
@@ -536,4 +537,6 @@ void GamaQ2ControlPanel::import_examples()
 
     QTimer::singleShot(2000, &msgBox, SLOT(close()));
     msgBox.exec();
+    */
+    controlPanel->statusBar()->showMessage(tr("All %1 examples imported").arg(count), 0);
 }

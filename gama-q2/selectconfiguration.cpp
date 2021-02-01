@@ -75,7 +75,7 @@ SelectConfiguration::SelectConfiguration(QString connectionName, bool tabsDocks,
     layout->addWidget(buttonBox);
     setLayout(layout);
 
-    connect(buttonBox, &QDialogButtonBox::clicked, [this](QAbstractButton* button){
+    connect(buttonBox, &QDialogButtonBox::clicked, this, [this](QAbstractButton* button){
         switch (buttonBox->buttonRole(button)) {
         case QDialogButtonBox::RejectRole:
             close();
@@ -88,14 +88,14 @@ SelectConfiguration::SelectConfiguration(QString connectionName, bool tabsDocks,
             break;
         }
     });
-    connect(lineEdit_ConfigurationName, &QLineEdit::textChanged, [this](const QString & text){
+    connect(lineEdit_ConfigurationName, &QLineEdit::textChanged, this, [this](const QString & text){
         on_lineEdit_ConfigurationName_textChanged(text);
     });
-    connect(tableWidget_ExistingConfigurationNames, &QTableWidget::cellClicked, [this](int row, int col){
+    connect(tableWidget_ExistingConfigurationNames, &QTableWidget::cellClicked, this, [this](int row, int col){
         QString txt = tableWidget_ExistingConfigurationNames->item(row,col)->text();
         lineEdit_ConfigurationName->setText(txt);
     });
-    connect(radioButton_tabs, &QRadioButton::toggled, [this](bool){
+    connect(radioButton_tabs, &QRadioButton::toggled, this, [this](bool){
         tabbedWidgets = radioButton_tabs->isChecked();
     });
 }

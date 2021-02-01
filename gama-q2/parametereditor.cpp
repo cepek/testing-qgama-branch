@@ -57,33 +57,33 @@ ParameterEditor::ParameterEditor(QWidget *parent) :
     comboBox_ang_units->addItems({"400","360"});
     // comboBox_ellipsoid;
 
-    connect(comboBox_sigma_act,  &QComboBox::currentTextChanged,
+    connect(comboBox_sigma_act,  &QComboBox::currentTextChanged, this,
             [this](const QString& text){on_comboBox_sigma_act_currentTextChanged(text);});
-    connect(comboBox_axes_xy,    &QComboBox::currentTextChanged,
+    connect(comboBox_axes_xy,    &QComboBox::currentTextChanged, this,
             [this](const QString& text){on_comboBox_axes_xy_currenTextChanged(text);});
-    connect(comboBox_angles,     &QComboBox::currentTextChanged,
+    connect(comboBox_angles,     &QComboBox::currentTextChanged, this,
             [this](const QString& text){on_comboBox_angles_currentTextChanged(text);});
-    connect(comboBox_algorithm,  &QComboBox::currentTextChanged,
+    connect(comboBox_algorithm,  &QComboBox::currentTextChanged, this,
             [this](const QString& text){on_comboBox_algorithm_currentTextChanged(text);});
-    connect(comboBox_ang_units,  &QComboBox::currentTextChanged,
+    connect(comboBox_ang_units,  &QComboBox::currentTextChanged, this,
             [this](const QString& text){on_comboBox_ang_units_currentTextChanged(text);});
-    connect(comboBox_ellipsoid,  &QComboBox::currentTextChanged,
+    connect(comboBox_ellipsoid,  &QComboBox::currentTextChanged, this,
             [this](const QString& text){on_comboBox_ellipsoid_currentTextChanged(text);});
 
-    connect(lineEdit_sigma_apr,  &QLineEdit::editingFinished,
+    connect(lineEdit_sigma_apr,  &QLineEdit::editingFinished, this,
             [this](){on_lineEdit_sigma_apr_editingFinished();});
-    connect(lineEdit_conf_pr,    &QLineEdit::editingFinished,
+    connect(lineEdit_conf_pr,    &QLineEdit::editingFinished, this,
             [this](){on_lineEdit_conf_pr_editingFinished();});
-    connect(lineEdit_tol_abs,    &QLineEdit::editingFinished,
+    connect(lineEdit_tol_abs,    &QLineEdit::editingFinished, this,
             [this](){on_lineEdit_tol_abs_editingFinished();});
-    connect(lineEdit_epoch,      &QLineEdit::editingFinished,
+    connect(lineEdit_epoch,      &QLineEdit::editingFinished, this,
             [this](){on_lineEdit_epoch_editingFinished();});
-    connect(lineEdit_adj_covband,&QLineEdit::editingFinished,
+    connect(lineEdit_adj_covband,&QLineEdit::editingFinished, this,
             [this](){on_lineEdit_adj_covband_editingFinished();});
-    connect(lineEdit_latitude,   &QLineEdit::editingFinished,
+    connect(lineEdit_latitude,   &QLineEdit::editingFinished, this,
             [this](){on_lineEdit_latitude_editingFinished();});
 
-    connect(plainTextEdit,       &QPlainTextEdit::textChanged,
+    connect(plainTextEdit,       &QPlainTextEdit::textChanged, this,
             [this](){on_plainTextEdit_textChanged();});
 
     QFormLayout* formLayout = new QFormLayout;

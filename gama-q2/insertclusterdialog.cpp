@@ -50,8 +50,8 @@ InsertClusterDialog::InsertClusterDialog(QWidget *parent) :
     vbox->addWidget(buttons);
     setLayout(vbox);
 
-    connect(buttons, &QDialogButtonBox::accepted, [this](){accept();});
-    connect(buttons, &QDialogButtonBox::rejected, [this](){reject();});
+    connect(buttons, &QDialogButtonBox::accepted, this, [this](){accept();});
+    connect(buttons, &QDialogButtonBox::rejected, this, [this](){reject();});
 }
 
 InsertClusterDialog::~InsertClusterDialog()

@@ -46,8 +46,8 @@ SelectAdjResultsLanguage::SelectAdjResultsLanguage(QWidget *parent) :
     vboxLayout->addWidget(buttonBox);
     setLayout(vboxLayout);
 
-    connect(buttonBox, &QDialogButtonBox::accepted, [this](){on_buttonBox_accepted();});
-    connect(buttonBox, &QDialogButtonBox::rejected, [this](){reject();});
+    connect(buttonBox, &QDialogButtonBox::accepted, this, [this](){on_buttonBox_accepted();});
+    connect(buttonBox, &QDialogButtonBox::rejected, this, [this](){reject();});
 }
 
 SelectAdjResultsLanguage::~SelectAdjResultsLanguage()
