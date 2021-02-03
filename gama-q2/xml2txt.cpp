@@ -456,25 +456,26 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
         std::ostringstream ostr;
         ostr.width(MAXWID);
         ostr << T_GaMa_point;
-        int table=0;
+        //- value stored to 'table' is never read
+        //- int table=0;
         if (pocpevb)
           {
             ostr.width(13);
             ostr << "x   ";
             ostr.width(13+2);
             ostr << "y   ";
-            table += 2*13 + 2;
+            //- table += 2*13 + 2;
           }
         if (pocpevv)
           {
             if (pocpevb)
               {
                 ostr << "  ";
-                table += 2;
+                //- table += 2;
               }
             ostr.width(13);
             ostr << "z   ";
-            table += 13;
+            //- table += 13;
           }
         cout << ostr.str() << '\n';
         auto oss = ostr.str().size();

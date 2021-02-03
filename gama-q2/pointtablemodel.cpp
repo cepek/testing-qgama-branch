@@ -156,7 +156,7 @@ bool PointTableModel::setData (const QModelIndex &index,
 
             if (idFound)
             {
-                warning(row,col,tr("Id already exists"), simple);
+                pt_warning(row,col,tr("Id already exists"), simple);
             }
             else if (idIsGood)
             {
@@ -278,7 +278,7 @@ bool PointTableModel::setData (const QModelIndex &index,
         }
     }
 
-    warning(row, col, warning_text, simple, ok);
+    pt_warning(row, col, warning_text, simple, ok);
 
     if (ok) emit dataChanged(index, index);
     return ok;
@@ -304,7 +304,8 @@ bool PointTableModel::insertRows(int row, int count,
 {
     beginInsertRows(parent, row, row + count - 1);
 
-    if (count > 0) pointData.get_allocator().allocate(count);
+    // no need to call pointData (std::map) allocator here
+    // if (count > 0) pointData.get_allocator().allocate(count);
 
     endInsertRows();
     return true;
@@ -352,12 +353,12 @@ void PointTableModel::insertPoint(GNU_gama::local::PointID id,
     pointData[id] = point;
 }
 
-void PointTableModel::warning(int row, int col, QString text, QString value, bool ok)
+void PointTableModel::pt_warning(int row, int col, QString text, QString value, bool ok)
 {
     if (ok) return;
 
     QString txt = QString("%1 (row %2 col %3 val %4)")
-        .arg(text).arg(headerData(row, Qt::Vertical).toString())
-        .arg(headerData(col, Qt::Horizontal).toString()).arg(value);
+        .arg(text, headerData(row, Qt::Vertical).toString(),
+        headerData(col, Qt::Horizontal).toString(), value);
     emit warning(txt);
 }

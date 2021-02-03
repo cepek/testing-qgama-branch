@@ -528,7 +528,7 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
             if (info.angular) ok = GNU_gama::deg2gon(value.toString().toStdString(), val);
             if (!ok)
             {
-                warning(tr("Non-numeric format of value %1").arg(value.toString()));
+                emit warning(tr("Non-numeric format of value %1").arg(value.toString()));
                 return false;
             }
         }
@@ -545,7 +545,7 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
         double stdv = value.toDouble(&ok);
         if (!ok)
         {
-            warning(tr("Non-numeric format of StdDev %1").arg(value.toString()));
+            emit warning(tr("Non-numeric format of StdDev %1").arg(value.toString()));
             return false;
         }
 
@@ -729,13 +729,13 @@ void ObservationTableModel::deleteCluster(int logicalIndex)
 
 void ObservationTableModel::insertCluster(int logicalIndex, int position, QString clusterName)
 {
-    Cluster* cluster = 0;
+    Cluster* cluster = nullptr;
     if      (clusterName == GamaQ2::obsClusterName) cluster = new GNU_gama::local::StandPoint(&obsData);
     else if (clusterName == GamaQ2::xyzClusterName) cluster = new GNU_gama::local::Coordinates(&obsData);
     else if (clusterName == GamaQ2::hdfClusterName) cluster = new GNU_gama::local::HeightDifferences(&obsData);
     else if (clusterName == GamaQ2::vecClusterName) cluster = new GNU_gama::local::Vectors(&obsData);
 
-    if (cluster == 0) return;
+    if (cluster == nullptr) return;
 
     ObsInfo infoHeader;
     infoHeader.rowType     = clusterHeader;
@@ -768,7 +768,7 @@ void ObservationTableModel::insertCluster(int logicalIndex, int position, QStrin
         selectedCluster = obsMap[0].cluster;
     }
 
-    int N, index = 0;
+    int N = -1, index = 0;
     ClusterList cl;
     for (ClusterList::iterator
          i=lnet->OD.clusters.begin(), e=lnet->OD.clusters.end(); i!=e; ++i)
@@ -794,6 +794,8 @@ void ObservationTableModel::insertCluster(int logicalIndex, int position, QStrin
     {
         lnet->OD.clusters.push_back(*i);
     }
+
+    if (N < 0) return;  /* this should never happen */
 
     obsMap.insert(N, 1, infoTail);
     obsMap.insert(N, 1, infoHeader);
