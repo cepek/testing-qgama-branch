@@ -76,7 +76,7 @@ GamaQ2ControlPanel::GamaQ2ControlPanel(QWidget *parent) :
 
     GamaQ2::name      = "gama-q2";
     GamaQ2::version   = "1.02.2";
-    GamaQ2::copyright = "2020";
+    GamaQ2::copyright = "2021";
 
     // setting implicit adjustment results language
     set_adjustment_results_language();
@@ -376,7 +376,7 @@ void GamaQ2ControlPanel::on_action_About_gama_q2_triggered()
     about.setText(tr("<p>Adjustment of geodetic networks with database support</p>") +
 
                   "<p><b>" + GamaQ2::name + "&nbsp;" + GamaQ2::version + "</b>"
-                  " Copyright (C) " + GamaQ2::copyright + " Aleš Čepek</p>"
+                  " Copyright (C) " + GamaQ2::copyright + " Aleš Čepek <i>et al.</i></p>"
                   "<p>" +
                   QString(tr("Based on <a href='http://www.gnu.org/software/gama'>"
                              "GNU gama</a> version %1")
