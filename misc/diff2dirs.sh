@@ -45,5 +45,6 @@ compare "*.sql"
 compare "*.sh"
 compare "README*"
 compare "Doxy*"
+compare "*.qrc"
 compare "ChangeLog*"
 echo
