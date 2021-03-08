@@ -26,9 +26,10 @@ done
 compare() {
     echo "  " "$1" " "
 
-    for i in `find -name  "$1" | grep -v ./build | grep -v ./gama/`;
+    for i in `find -name  "$1" | grep -v ./build | grep -v ./gama/ | \
+                   grep -v ./dox/`;
     do
-	diff ${OPTS} $REP1/$i $REP2/$i;
+        diff ${OPTS} $REP1/$i $REP2/$i;
     done
 }
 
