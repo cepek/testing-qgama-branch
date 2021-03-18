@@ -9,6 +9,16 @@ set(QGAMA_CONFIGURE_COPYRIGHT "2021")
 configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/configure.h.in"
                 "${CMAKE_CURRENT_SOURCE_DIR}/qgama/configure.h")
 
+if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/gama)
+    message("Qgama cannot be build without GNU Gama project")
+    message("You can get the source codes from GIT or FTP server")
+    message("   * git clone git://git.savannah.gnu.org/gama.git")
+    message("   * ftp://ftp.gnu.org/gnu/gama")
+
+    message(FATAL_ERROR
+            "Directory ${CMAKE_CURRENT_SOURCE_DIR}/gama is missing")
+endif()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
