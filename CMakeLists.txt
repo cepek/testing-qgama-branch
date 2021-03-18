@@ -1,6 +1,13 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.16)
 
-project(qgama LANGUAGES CXX)
+project(qgama LANGUAGES CXX VERSION "2.01")
+
+set(QGAMA_CONFIGURE_NAME      ${PROJECT_NAME})
+set(QGAMA_CONFIGURE_VERSION   ${PROJECT_VERSION})
+set(QGAMA_CONFIGURE_COPYRIGHT "2011")
+
+configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/configure.h.in"
+                "${CMAKE_CURRENT_SOURCE_DIR}/qgama/configure.h")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -45,7 +52,7 @@ include_directories(gama/lib qgama)
 find_package(Qt6 COMPONENTS
   Core Gui Sql Widgets PrintSupport SvgWidgets REQUIRED)
 
-set(Q2SRC
+set(QGSRC
     qgama/main.cpp
     qgama/adjustment.cpp
     qgama/adjustment.h
@@ -59,11 +66,6 @@ set(Q2SRC
     qgama/dbfunctions.h
     qgama/drawsettings.cpp
     qgama/drawsettings.h
-    qgama/qgamacontrolpanel.cpp
-    qgama/qgamacontrolpanel.h
-    qgama/qgamahelp.cpp
-    qgama/qgamahelp.h
-    qgama/qgamainterfaces.h
     qgama/importconfigurationfile.cpp
     qgama/importconfigurationfile.h
     qgama/insertclusterdialog.cpp
@@ -88,6 +90,11 @@ set(Q2SRC
     qgama/pointtablemodel.h
     qgama/pointtypecombobox.cpp
     qgama/pointtypecombobox.h
+    qgama/qgamacontrolpanel.cpp
+    qgama/qgamacontrolpanel.h
+    qgama/qgamahelp.cpp
+    qgama/qgamahelp.h
+    qgama/qgamainterfaces.h
     qgama/selectadjresultslanguage.cpp
     qgama/selectadjresultslanguage.h
     qgama/selectconfiguration.cpp
@@ -104,17 +111,29 @@ set(Q2SRC
 
 if(ANDROID)
   add_library(qgama SHARED
-    ${Q2SRC}
+    ${QGSRC}
     $<TARGET_OBJECTS:libgama>
   )
 else()
   add_executable(qgama
-    ${Q2SRC}
+    ${QGSRC}
     $<TARGET_OBJECTS:libgama>
   )
 endif()
 
 target_link_libraries(qgama PRIVATE
   Qt6::Widgets Qt6::Sql Qt6::PrintSupport Qt6::SvgWidgets)
+
+# Building with plugins by default. If you don't want to build plugins,
+# use the following option to disable them
+
+OPTION(BUILD_PLUGINS "Build with plugins." OFF)
+if(BUILD_PLUGINS)
+    add_subdirectory(qgama-plugins/adjustmentdemoplugin)
+    add_subdirectory(qgama-plugins/dbdemoplugin)
+    target_link_libraries(adjustmentdemoplugin)
+    target_link_libraries(dbdemoplugin)
+endif(BUILD_PLUGINS)
+
 
 add_subdirectory(gama)  # git clone https://git.savannah.gnu.org/git/gama.git

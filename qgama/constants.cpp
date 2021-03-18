@@ -19,9 +19,10 @@
 
 #include "constants.h"
 
-QString QGama::name;
-QString QGama::version;
-QString QGama::copyright;
+#include "configure.h"      // defines name, version and copyright
+// QString QGama::name;
+// QString QGama::version;
+// QString QGama::copyright;
 
 QStringList QGama::gama_local_schema;
 QStringList QGama::gama_local_schema_table_names;

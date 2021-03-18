@@ -109,7 +109,7 @@ private slots:
     void action_Save_As_into_db();
     void action_Print();
 
-    void action_Gama_q2_help();
+    void action_QGama_help();
 
     void AdjustmentPluginSlot();
 signals:

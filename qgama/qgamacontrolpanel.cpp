@@ -74,10 +74,6 @@ QGamaControlPanel::QGamaControlPanel(QWidget *parent) :
 
     init_schema_lists();
 
-    QGama::name      = "qgama";
-    QGama::version   = "2.00.1";
-    QGama::copyright = "2021";
-
     // setting implicit adjustment results language
     set_adjustment_results_language();
 
@@ -208,13 +204,13 @@ void QGamaControlPanel::build_menus()
     connect(actionApplicationFont, SIGNAL(triggered()), SLOT(on_action_Application_Font()));
 
     QMenu* menuHelp = new QMenu(tr("&Help"), this);
-    actionGamaQ2help = menuHelp->addAction(tr("Qgama &help"));
+    actionQGamaHelp = menuHelp->addAction(tr("Qgama &help"));
     // the very first c++11 lambda function in qgama (2015-07-29)
     // https://wiki.qt.io/New_Signal_Slot_Syntax
-    connect(actionGamaQ2help, &QAction::triggered, [](){QGamaHelp::get()->show();});
+    connect(actionQGamaHelp, &QAction::triggered, [](){QGamaHelp::get()->show();});
     menuHelp->addSeparator();
-    actionAboutGamaQ2 = menuHelp->addAction(tr("&About Qgama"));
-    connect(actionAboutGamaQ2, SIGNAL(triggered()), SLOT(on_action_About_gama_q2_triggered()));
+    actionAboutQGama = menuHelp->addAction(tr("&About Qgama"));
+    connect(actionAboutQGama, SIGNAL(triggered()), SLOT(on_action_About_qgama_triggered()));
     actionAboutQt = menuHelp->addAction(tr("About &Qt"));
     connect(actionAboutQt, SIGNAL(triggered()), SLOT(on_action_About_qt_triggered()));
 
@@ -351,11 +347,11 @@ void QGamaControlPanel::on_action_Delete_Network_Configuration_triggered()
 
 void QGamaControlPanel::load_plugins()
 {
-    QDir gamaq2plugins(qApp->applicationDirPath());
-    gamaq2plugins.cd("plugins");
-    auto qdirfiles = gamaq2plugins.entryList(QDir::Files);
+    QDir qgamaplugins(qApp->applicationDirPath());
+    qgamaplugins.cd("plugins");
+    auto qdirfiles = qgamaplugins.entryList(QDir::Files);
     for (QString& fileName : qdirfiles) {
-        QPluginLoader pluginLoader(gamaq2plugins.absoluteFilePath(fileName));
+        QPluginLoader pluginLoader(qgamaplugins.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
             if (DbInterface* dbinterface = qobject_cast<DbInterface*>(plugin))
@@ -366,7 +362,7 @@ void QGamaControlPanel::load_plugins()
     }
 }
 
-void QGamaControlPanel::on_action_About_gama_q2_triggered()
+void QGamaControlPanel::on_action_About_qgama_triggered()
 {
     QMessageBox about(this);
     about.setIconPixmap(windowIcon().pixmap(iconSize().width()*2));

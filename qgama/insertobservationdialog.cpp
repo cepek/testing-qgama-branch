@@ -191,7 +191,7 @@ void InsertObservationDialog::accept()
                     info.observationNameIndex = ObservationTableModel::indZangle;
                 } else
                     throw Exception(tr("unnown observation type in "
-                                       "GamaQ2::obsClusterName").toUtf8().data());
+                                       "QGama::obsClusterName").toUtf8().data());
 
                 obsinfo.push_back(info);
             }

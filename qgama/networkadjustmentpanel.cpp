@@ -153,10 +153,10 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     {
         QMap<QString, AdjustmentInterface*> map;
 
-        QDir gamaq2plugins(qApp->applicationDirPath());
-        gamaq2plugins.cd("plugins");
-        for (QString& fileName : gamaq2plugins.entryList(QDir::Files)) {
-            QPluginLoader pluginLoader(gamaq2plugins.absoluteFilePath(fileName));
+        QDir qgamaplugins(qApp->applicationDirPath());
+        qgamaplugins.cd("plugins");
+        for (QString& fileName : qgamaplugins.entryList(QDir::Files)) {
+            QPluginLoader pluginLoader(qgamaplugins.absoluteFilePath(fileName));
             QObject *plugin = pluginLoader.instance();
             if (plugin) {
                 if (AdjustmentInterface* adjinterface = qobject_cast<AdjustmentInterface*>(plugin))
@@ -182,7 +182,7 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
 
     menuHelp  = new QMenu(tr("&Help"), this);
     action = menuHelp->addAction(tr("Qgama &Help"));
-    connect(action, &QAction::triggered, this, [this](){action_Gama_q2_help();});
+    connect(action, &QAction::triggered, this, [this](){action_QGama_help();});
     /*
     menuBar()->addMenu(menuFile);
     menuBar()->addMenu(menuAdjustment);
@@ -803,7 +803,7 @@ void NetworkAdjustmentPanel::set_gui_adjustment_functions_status(bool isvalid)
     */
 }
 
-void NetworkAdjustmentPanel::action_Gama_q2_help()
+void NetworkAdjustmentPanel::action_QGama_help()
 {
     QGamaHelp::get()->show();
 }

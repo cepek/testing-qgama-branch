@@ -46,7 +46,7 @@ private slots:
     void on_action_Drop_schema_Tables_triggered();
     void on_action_Delete_all_Data_from_the_Schema_triggered();
     void on_action_Delete_Network_Configuration_triggered();
-    void on_action_About_gama_q2_triggered();
+    void on_action_About_qgama_triggered();
     void on_action_About_qt_triggered();
     void on_action_Adjustment_results_language();
     void on_action_Application_Font();
@@ -61,7 +61,7 @@ private:
             *actionDbExit;
     QAction *actionAdjAdjustment;
     QAction *actionAdjResultsLanguage, *actionApplicationFont;
-    QAction *actionGamaQ2help,*actionAboutGamaQ2, *actionAboutQt;
+    QAction *actionQGamaHelp,*actionAboutQGama, *actionAboutQt;
 
     QMap<QString, DbInterface*> mapDbPlugins;
 
