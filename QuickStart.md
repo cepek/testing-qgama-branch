@@ -19,8 +19,8 @@ Download and build
 
 Download source codes from git server and run the following commands
 
-    $ git clone git://git.sv.gnu.org/gama/qt.git
-    $ cd qt
+    $ git clone git://git.sv.gnu.org/gama/qt.git  qgama    # explicit name
+    $ cd  qgama
     $ git clone https://git.savannah.gnu.org/git/gama.git  # checkout a version if needed
     $ export CMAKE_PREFIX_PATH=~/Qt/6.0.1/gcc_64/          # adjust as needed
     $ mkdir build
