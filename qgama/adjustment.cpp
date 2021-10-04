@@ -207,7 +207,13 @@ void Adjustment::fetch_clusters(QSqlQuery& q)
          "  from gnu_gama_local_clusters where conf_id = '" + conf_id + "'");
   dberr(q, "DB read local_clusters");
 
-  QSqlQuery r = q;
+  /*
+   * Qt6 QSqlQuery is not meant to be copied
+   * QSqlQuery r = q;
+   */
+  QSqlDatabase db = QSqlDatabase::database(QGama::connection_implicit_db);
+  QSqlQuery r(db);
+
   while (q.next())
     {
       GNU_gama::Cluster<GNU_gama::local::Observation>* c = nullptr;
@@ -242,7 +248,13 @@ void Adjustment::fetch_clusters(QSqlQuery& q)
         }
       lnet->OD.clusters.push_back(c);
 
-      QSqlQuery p = q;
+      /*
+       * Qt6 QSqlQuery is not meant to be copied
+       * QSqlQuery p = q;
+       */
+      QSqlDatabase db = QSqlDatabase::database(QGama::connection_implicit_db);
+      QSqlQuery p(db);
+
       c->covariance_matrix.reset(dim, band);
       c->covariance_matrix.set_zero();
       p.exec("select rind, cind, val "
