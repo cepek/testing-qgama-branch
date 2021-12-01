@@ -32,7 +32,6 @@
 #include <gnu_gama/statan.h>
 #include <gnu_gama/gon2deg.h>
 #include <gnu_gama/outstream.h>
-//#include <gnu_gama/std::static_cast.h>
 
 using namespace GNU_gama::local;
 typedef GNU_gama::LocalNetworkAdjustmentResults Adjustment;
