@@ -499,7 +499,7 @@ void Adjustment::exec()
            TestLinearization(lnet))
       {
         lnet->increment_linearization_iterations();
-        lnet->refine_approx();
+        lnet->refine_approx_coordinates();
         lnet->solve();
       }
 

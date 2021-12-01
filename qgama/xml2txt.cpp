@@ -32,7 +32,7 @@
 #include <gnu_gama/statan.h>
 #include <gnu_gama/gon2deg.h>
 #include <gnu_gama/outstream.h>
-#include <gnu_gama/size_to.h>
+//#include <gnu_gama/std::static_cast.h>
 
 using namespace GNU_gama::local;
 typedef GNU_gama::LocalNetworkAdjustmentResults Adjustment;
@@ -67,11 +67,11 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
   int w0 = 0, w_ = 8;
   {
     int n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_coordinates));              if (n > w0) w0 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_adjusted_coordinates));     if (n > w0) w0 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_constrained_coordinates));  if (n > w0) w0 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_fixed_coordinates));        if (n > w0) w0 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_total));                    if (n > w0) w0 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_coordinates));              if (n > w0) w0 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_adjusted_coordinates));     if (n > w0) w0 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_constrained_coordinates));  if (n > w0) w0 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_fixed_coordinates));        if (n > w0) w0 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_total));                    if (n > w0) w0 = n;
   }
 
   cout.setf(ios_base::left,  ios_base::adjustfield);
@@ -132,25 +132,25 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
     // n = strlen(T_GaMa_gpar1_computed_heights); if (n > w1) w1 = n;
     // n = strlen(T_GaMa_gpar1_fixed_heights);    if (n > w1) w1 = n;
     // n = strlen(T_GaMa_gpar1_points_total);     if (n > w1) w1 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_directions));       if (n > w1) w1 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_angles));           if (n > w1) w1 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_distances));        if (n > w1) w1 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_observed_coords));  if (n > w1) w1 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_leveling_diffs));   if (n > w1) w1 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_z_angles));         if (n > w1) w1 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_s_dists));          if (n > w1) w1 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_obs_total));        if (n > w1) w1 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_equations));        if (n > w1) w1 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar1_redundancy));       if (n > w1) w1 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_directions));       if (n > w1) w1 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_angles));           if (n > w1) w1 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_distances));        if (n > w1) w1 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_observed_coords));  if (n > w1) w1 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_leveling_diffs));   if (n > w1) w1 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_z_angles));         if (n > w1) w1 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_s_dists));          if (n > w1) w1 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_obs_total));        if (n > w1) w1 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_equations));        if (n > w1) w1 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar1_redundancy));       if (n > w1) w1 = n;
   }
   int w2 = 0;
   {
     int n;
     // n = strlen(T_GaMa_gpar2_constrained_points);  if (n > w2) w2 = n;
     // n = strlen(T_GaMa_gpar2_constrained_heights); if (n > w2) w2 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar2_bearings));            if (n > w2) w2 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar2_number_of_unknowns));  if (n > w2) w2 = n;
-    n = size_to<int>(strlen(T_GaMa_gpar2_network_defect));      if (n > w2) w2 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar2_bearings));            if (n > w2) w2 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar2_number_of_unknowns));  if (n > w2) w2 = n;
+    n = static_cast<int>(strlen(T_GaMa_gpar2_network_defect));      if (n > w2) w2 = n;
   }
   const char* tab_sep = "            ";
 
@@ -167,7 +167,7 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
   const int observations = pocdel + pocsmer + pocuhl + pocsour
     + pocnivp + poczeni + pocsikm + pocvekt;
 
-  const int pocosn  = size_to<int>(adj.orientations.size());
+  const int pocosn  = static_cast<int>(adj.orientations.size());
 
   if (pocosn)
     {
@@ -1222,7 +1222,7 @@ void GNU_gama::xml2txt_adjusted_observations(std::ostream& cout,const Adjustment
     int imax = -1;         // index of maximal studentized residual
   {
     double maxno = 0;
-    for (int i=1; i<size_to<int>(adj.obslist.size()); i++)
+    for (int i=1; i<static_cast<int>(adj.obslist.size()); i++)
       {
         const Adjustment::Observation& obs = adj.obslist[i];
 
