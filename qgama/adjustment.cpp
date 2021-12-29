@@ -485,23 +485,19 @@ void Adjustment::exec()
 
     GNU_gama::local::Acord2 acord(lnet->PD, lnet->OD);
     auto points = acord.execute();
+    refine_obsdh_reductions(lnet);
 
     if (points.first > 0 || points.second > 0)  // solved xy or z
       {
         emit acord_signal();
       }
 
+    // if lnet->correction_ellipsoid() ...
+    // if (lnet->huge_abs_terms()) ...
+
     lnet->update_points();
     lnet->solve();
-
-    lnet->clear_linearization_iterations();
-    while (lnet->next_linearization_iterations() &&
-           TestLinearization(lnet))
-      {
-        lnet->increment_linearization_iterations();
-        lnet->refine_approx_coordinates();
-        lnet->solve();
-      }
+    /* bool refined = */ lnet->refine_adjustment();
 
     solved = true;
     emit adjustment_signal(solved);

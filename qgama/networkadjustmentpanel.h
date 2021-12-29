@@ -92,6 +92,7 @@ private slots:
     void status_bar(QString text);
     void save_configuration(QString confname);
 
+    void action_Export_As_XML();
     void action_Export_XML_adjustment_results();
     void action_Export_adjustment_results_as_plain_text();
     void action_Export_adjustment_results_as_octave_file();

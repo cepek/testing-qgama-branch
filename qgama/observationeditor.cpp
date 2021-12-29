@@ -127,7 +127,7 @@ ObservationEditor::ObservationEditor(QWidget *parent) :
     connect(tableView->verticalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             this, SLOT(observationContextMenu(QPoint)));
 
-    enableEdit(false);
+    //enableEdit(false);
 
     tableView->setStyleSheet(tableViewStyle());
 

@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(qgama LANGUAGES CXX VERSION "2.01.1")
+project(qgama LANGUAGES CXX VERSION "2.01.2")
 
 set(QGAMA_CONFIGURE_NAME      ${PROJECT_NAME})
 set(QGAMA_CONFIGURE_VERSION   ${PROJECT_VERSION})
-set(QGAMA_CONFIGURE_COPYRIGHT "2021")
+set(QGAMA_CONFIGURE_COPYRIGHT "2022")
 
 configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/configure.h.in"
                 "${CMAKE_CURRENT_SOURCE_DIR}/qgama/configure.h")

@@ -71,7 +71,7 @@ QString  ObservationTableModel::ObsInfo::name()
 }
 QVariant ObservationTableModel::ObsInfo::value(LocalNetwork* lnet)
 {
-    double val = observation->value();
+    double val = observation->raw_value();
     if (!angular)        return QString::number(val,'f',5);
     val *= R2G;
     if (lnet->degrees()) return GNU_gama::gon2deg(val, 0, 2).c_str();
@@ -577,6 +577,34 @@ bool ObservationTableModel::setData(const QModelIndex &index, const QVariant &va
         return true;
     }
 
+    if (col == indFromDh)
+      {
+        bool ok;
+        double val = value.toDouble(&ok);
+        if (!ok)
+        {
+            emit warning(tr("Non-numeric format of From dh %1").arg(value.toString()));
+            return false;
+        }
+
+        info.observation->set_from_dh(val);
+        return true;
+      }
+
+    if (col == indToDh)
+      {
+        bool ok;
+        double val = value.toDouble(&ok);
+        if (!ok)
+        {
+            emit warning(tr("Non-numeric format of To dh %1").arg(value.toString()));
+            return false;
+        }
+
+        info.observation->set_to_dh(val);
+        return true;
+      }
+
     if (col >= indColumnCount)
     {
         int b = col - indColumnCount;
@@ -645,6 +673,8 @@ Qt::ItemFlags ObservationTableModel::flags(const QModelIndex &index) const
         case indVal:
         case indStdev:
         case indActive:
+        case indFromDh:
+        case indToDh:
             return itemIsEditable;
         }
 

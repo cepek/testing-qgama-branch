@@ -96,6 +96,10 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     connect(action, &QAction::triggered, this, [this](){action_Save_into_db();});
     action = menuFile->addAction(tr("Save &As"));
     connect(action, &QAction::triggered, this, [this](){action_Save_As_into_db();});
+    menuFile->addSeparator();
+
+    action = menuFile->addAction(tr("Export as &XML input file"));
+    connect(action, &QAction::triggered, this, [this](){action_Export_As_XML();});
     action = menuFile->addAction(tr("&Export as SQL file"));
     connect(action, &QAction::triggered, this, [this](){action_Save_as_SQL_file();});
     action = menuFile->addAction(tr("&Print"));
@@ -416,6 +420,36 @@ void NetworkAdjustmentPanel::closeEvent(QCloseEvent* event)
     else
     {
         event->ignore();
+    }
+}
+
+void NetworkAdjustmentPanel::action_Export_As_XML()
+{
+  QSettings settings;
+  QString adjdir = settings.value(export_adjdir).toString();
+  QFileDialog fileDialog(nullptr,tr("Export XML Input File"));
+  if (!adjdir.isEmpty()) fileDialog.setDirectory(adjdir);
+  fileDialog.setAcceptMode(QFileDialog::AcceptSave);
+  fileDialog.setFileMode(QFileDialog::AnyFile);
+  fileDialog.setDefaultSuffix("gkf");
+  fileDialog.setNameFilter(tr("Gama XML exported input file (*.gkf)"));
+  fileDialog.setViewMode(QFileDialog::Detail);
+
+  if (!fileDialog.exec()) return;
+
+  settings.setValue(export_adjdir, fileDialog.directory().absolutePath());
+  const QStringList& flist = fileDialog.selectedFiles();
+  if (!flist.empty())
+    {
+      QFile file(flist[0]);
+      file.open(QIODevice::WriteOnly);
+      QTextStream stream(&file);
+
+      GNU_gama::local::LocalNetwork* lnet = adj.get_local_network();
+      std::string qgamaver =
+          "<!-- created by qgama " + QGama::version.toStdString() + " -->\n";
+      std::string xml = lnet->export_xml(qgamaver);
+      stream << xml.c_str();
     }
 }
 
