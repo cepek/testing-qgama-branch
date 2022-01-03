@@ -6,6 +6,9 @@
 <style type='text/css'>
   table { border:0; margin:0.2em 0; }
   th    { white-space:nowrap; }
+  p.qgama-note {
+  margin-left: 2em;
+}
 </style>
 <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 
@@ -38,11 +41,11 @@ simultaneously.</p>
 <p>Start the program and select from the <i>Main Control Panel</i> menu</p>
 
 <dl>
-<dt>Database -&gt; Connect to Database -&gt; OK</dt>
-<dt>Database -&gt; Import Examples -&gt; OK</dt>
-<dt>Adjustment -&gt; Network Adjustment -&gt; <i>select an example</i>
--&gt; OK </dt>
-<dt>Adjustment -&gt; Run</dt>
+<dt>Database &rarr; Connect to Database &rarr; OK</dt>
+<dt>Database &rarr; Import Examples &rarr; OK</dt>
+<dt>Adjustment &rarr; Network Adjustment &rarr; <i>select an example</i>
+&rarr; OK </dt>
+<dt>Adjustment &rarr; Run</dt>
 </dl>
 
 <p>and start experimenting with the adjustment. Enjoy!</p>
@@ -50,9 +53,37 @@ simultaneously.</p>
 <h2>Main Control Panel</h2>
 
 <p><i>Main Control Menu</i> has four menus and a bottom status bar
-temporarily displaying program's messages. This panel is displayed at
+temporarily displaying program messages. This panel is displayed at
 program startup and the user typically starts with connection to a
 database.</p>
+
+<p>
+<table>
+<tr><th colspan="2">Qgama Main Control Panel</th></tr>
+<tr><td colspan="2" class="divider"><hr />  </td></tr>
+<tr><td>Database</td></td><td>Connect to database             </td></tr>
+<tr><td>             </td><td>Import Configuration File <sup>*</sup></tr></tr>
+<tr><td>             </td><td>New Empty Configuration   <sup>*</sup></td></tr>
+<tr><td>             </td><td>Import Examples           <sup>*</sup></td></tr>
+<tr><td>             </td><td>Drop Schema tables              </td></tr>
+<tr><td>             </td><td>Delete all Data from the Schema </td></tr>
+<tr><td>             </td><td>Delete Network Configuration    </td></tr>
+<tr><td>             </td><td>Exit                            </td></tr>
+<tr><td>Adjustment   </td><td>Network Adjustment              </td></tr>
+<tr><td>Tools        </td><td>Adjustment results language     </td></tr>
+<tr><td>             </td><td>Application font                </td></tr>
+<tr><td>Help         </td><td>Qgama help                      </td></tr>
+<tr><td>             </td><td>About Qgama                     </td></tr>
+<tr><td>             </td><td>About Qt                        </td></tr>
+</table>
+</p>
+
+<p class="qgama-note">
+Functions marked <sup>*</sup> can be run without connecting to a database first,
+in such a case implicit <i>in memory database</i> is used and the user is
+responsible for exporting data if they are needed (for example export
+configuration XML input file after editing the network configuration).
+</p>
 
 
 <h3>Database menu</h3>
@@ -253,7 +284,6 @@ version and the GPL licence.
 <dd><p>Start adjustment of the network.
 </p>
 </dd>
-</dl>
 
 
 <h3>Edit Menu</h3>
@@ -262,8 +292,8 @@ version and the GPL licence.
 <dt>Parameters</dt>
 <dt>Points</dt>
 <dt>Observations</dt>
-<dd><p>Implicitly editing of network adjustment parameters, points'
-data and observations are disabled. In the <i>Edit menu</i> users can
+<dd><p>Implicitly editing of network adjustment parameters, points
+and observations are disabled. In the <i>Edit menu</i> users can
 enable/disable one or all three editors.
 </p>
 </dd>

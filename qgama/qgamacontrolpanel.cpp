@@ -165,7 +165,11 @@ void QGamaControlPanel::build_menus()
     connect(actionDbConnect, SIGNAL(triggered()), SLOT(on_action_Connect_to_database_triggered()));
     actionDbImport = menuDb->addAction(tr("&Import Configuration File"));
     connect(actionDbImport, SIGNAL(triggered()), SLOT(on_action_Import_configuration_file_triggered()));
+    actionImportExamples = menuDb->addAction(tr("Import Examples"));
+    connect(actionImportExamples, &QAction::triggered, this, &QGamaControlPanel::import_examples);
+
     menuDb->addSeparator();
+
     actionDbDropSchema = menuDb->addAction(tr("Drop Schema &Tables"));
     connect(actionDbDropSchema, SIGNAL(triggered()), SLOT(on_action_Drop_schema_Tables_triggered()));
     actionDbDeleteData = menuDb->addAction(tr("&Delete all Data from the Schema"));
@@ -174,8 +178,6 @@ void QGamaControlPanel::build_menus()
     connect(actionDbDeleteConfiguration, SIGNAL(triggered()), SLOT(on_action_Delete_Network_Configuration_triggered()));
 
     menuDb->addSeparator();
-    actionImportExamples = menuDb->addAction(tr("Import Examples"));
-    connect(actionImportExamples, &QAction::triggered, this, &QGamaControlPanel::import_examples);
 
     if (!mapDbPlugins.empty())
     {
@@ -188,14 +190,22 @@ void QGamaControlPanel::build_menus()
             connect(action, SIGNAL(triggered()), SLOT(dbSlot()));
         }
     }
+
     menuDb->addSeparator();
+
     actionDbExit = menuDb->addAction(tr("&Exit"));
     connect(actionDbExit, SIGNAL(triggered()), SLOT(on_action_Exit_triggered()));
+
+    // ****** end of database menu
+
 
     QMenu* menuAdj = new QMenu(tr("&Adjustment"), this);
     actionAdjAdjustment = menuAdj->addAction(tr("&Network Adjustment"));
     actionAdjAdjustment->setDisabled(true);
     connect (actionAdjAdjustment, SIGNAL(triggered()), SLOT(on_action_Network_adjustment_triggered()));
+
+    // ****** end of adjutment menu
+
 
     QMenu* menuTools = new QMenu(tr("&Tools"), this);
     actionAdjResultsLanguage = menuTools->addAction(tr("Adjustment results &language"));
@@ -203,16 +213,20 @@ void QGamaControlPanel::build_menus()
     actionApplicationFont = menuTools->addAction(tr("Application Font"));
     connect(actionApplicationFont, SIGNAL(triggered()), SLOT(on_action_Application_Font()));
 
+    // ****** end of tools menu
+
+
     QMenu* menuHelp = new QMenu(tr("&Help"), this);
     actionQGamaHelp = menuHelp->addAction(tr("Qgama &help"));
-    // the very first c++11 lambda function in qgama (2015-07-29)
-    // https://wiki.qt.io/New_Signal_Slot_Syntax
     connect(actionQGamaHelp, &QAction::triggered, [](){QGamaHelp::get()->show();});
     menuHelp->addSeparator();
     actionAboutQGama = menuHelp->addAction(tr("&About Qgama"));
     connect(actionAboutQGama, SIGNAL(triggered()), SLOT(on_action_About_qgama_triggered()));
     actionAboutQt = menuHelp->addAction(tr("About &Qt"));
     connect(actionAboutQt, SIGNAL(triggered()), SLOT(on_action_About_qt_triggered()));
+
+    // ****** end of help menu
+
 
     disable_input_data(false);
 
