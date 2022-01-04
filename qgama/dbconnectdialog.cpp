@@ -304,3 +304,30 @@ void DBConnectDialog::on_buttonBox_helpRequested()
           "No information is implicitly stored at the disk "
           "after exiting the program."));
 }
+
+bool DBConnectDialog::check_sqlite_memmory()
+{
+  { // if DB is open, do nothing
+    QSqlDatabase tmp = QSqlDatabase::database(connection_name);
+    if (tmp.isOpen()) return false;
+  }
+
+  QSqlDatabase::removeDatabase(connection_name);
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", connection_name);
+  db.setDatabaseName(":memory:");
+  db.setHostName("");
+  db.setUserName("");
+  db.setPassword("");
+  if (!db.open())
+  {
+      QMessageBox::critical(this, tr("Database Error"),
+                            db.lastError().databaseText() );
+      emit input_data_open(false);
+      return false;
+  }
+
+  create_missing_tables(db);
+  emit input_data_open(true);
+
+  return true;
+}

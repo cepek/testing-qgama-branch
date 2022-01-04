@@ -18,6 +18,7 @@
 */
 
 #include "importconfigurationfile.h"
+#include "dbconnectdialog.h"
 #include "constants.h"
 
 #include <QFile>
@@ -105,6 +106,9 @@ ImportConfigurationFile::~ImportConfigurationFile()
 
 void ImportConfigurationFile::exec()
 {
+    DBConnectDialog dbc(QGama::connection_implicit_db);
+    dbc.check_sqlite_memmory();
+
     QSettings settings;
     QString importdir = settings.value(import_xmldir).toString();
     QFileDialog fileDialog(nullptr,tr("Open XML Input File"));

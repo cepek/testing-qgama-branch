@@ -229,6 +229,8 @@ void QGamaControlPanel::build_menus()
 
 
     disable_input_data(false);
+    actionImportExamples->setEnabled(true);
+    actionDbImport->setEnabled(true);
 
     menuBar()->addMenu(menuDb);
     menuBar()->addMenu(menuAdj);
@@ -324,6 +326,10 @@ void QGamaControlPanel::disable_input_data(bool yes)
 
 void QGamaControlPanel::on_action_Import_configuration_file_triggered()
 {
+    // if DB is not available, use sqlite memory database
+    DBConnectDialog db(QGama::connection_implicit_db);
+    if (db.check_sqlite_memmory()) disable_input_data(true);
+
     ImportConfigurationFile* icf = new ImportConfigurationFile(0);
     icf->exec();
 }
@@ -480,6 +486,10 @@ void QGamaControlPanel::adjustmentPanel(bool newPanel)
 
 void QGamaControlPanel::import_examples()
 {
+    // if DB is not available, use sqlite memory database
+    DBConnectDialog db(QGama::connection_implicit_db);
+    if (db.check_sqlite_memmory()) disable_input_data(true);
+
     QString exdir { ":/examples/" };
     int count {0};
 

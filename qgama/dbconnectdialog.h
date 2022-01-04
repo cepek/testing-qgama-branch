@@ -41,7 +41,9 @@ class DBConnectDialog : public QDialog
 public:
     explicit DBConnectDialog(QString connectionName, QWidget *parent = nullptr);
     ~DBConnectDialog();
-    
+
+    bool check_sqlite_memmory();
+
 private:
     QString connection_name;
 
