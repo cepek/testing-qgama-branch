@@ -18,7 +18,7 @@
 */
 
 #include "importconfigurationfile.h"
-#include "dbconnectdialog.h"
+#include "dbconnection.h"
 #include "constants.h"
 
 #include <QFile>
@@ -106,7 +106,7 @@ ImportConfigurationFile::~ImportConfigurationFile()
 
 void ImportConfigurationFile::exec()
 {
-    DBConnectDialog dbc(QGama::connection_implicit_db);
+    DBConnection dbc(QGama::connection_implicit_db);
     dbc.check_sqlite_memmory();
 
     QSettings settings;

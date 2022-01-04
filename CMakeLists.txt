@@ -70,8 +70,8 @@ set(QGSRC
     qgama/adjustmentresults.h
     qgama/constants.cpp
     qgama/constants.h
-    qgama/dbconnectdialog.cpp
-    qgama/dbconnectdialog.h
+    qgama/dbconnection.cpp
+    qgama/dbconnection.h
     qgama/dbfunctions.cpp
     qgama/dbfunctions.h
     qgama/drawsettings.cpp

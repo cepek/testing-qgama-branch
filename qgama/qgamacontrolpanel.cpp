@@ -30,7 +30,7 @@
 #include <QDebug>
 
 #include "constants.h"
-#include "dbconnectdialog.h"
+#include "dbconnection.h"
 #include "dbfunctions.h"
 #include "importconfigurationfile.h"
 #include "networkadjustmentpanel.h"
@@ -288,7 +288,7 @@ void QGamaControlPanel::closeEvent(QCloseEvent * event)
 
 void QGamaControlPanel::on_action_Connect_to_database_triggered()
 {
-    DBConnectDialog* d = new DBConnectDialog(QGama::connection_implicit_db, this);
+    DBConnection* d = new DBConnection(QGama::connection_implicit_db, this);
     connect(d, SIGNAL(input_data_open(bool)), this, SLOT(disable_input_data(bool)));
     d->exec();
     delete d;
@@ -327,7 +327,7 @@ void QGamaControlPanel::disable_input_data(bool yes)
 void QGamaControlPanel::on_action_Import_configuration_file_triggered()
 {
     // if DB is not available, use sqlite memory database
-    DBConnectDialog db(QGama::connection_implicit_db);
+    DBConnection db(QGama::connection_implicit_db);
     if (db.check_sqlite_memmory()) disable_input_data(true);
 
     ImportConfigurationFile* icf = new ImportConfigurationFile(0);
@@ -487,7 +487,7 @@ void QGamaControlPanel::adjustmentPanel(bool newPanel)
 void QGamaControlPanel::import_examples()
 {
     // if DB is not available, use sqlite memory database
-    DBConnectDialog db(QGama::connection_implicit_db);
+    DBConnection db(QGama::connection_implicit_db);
     if (db.check_sqlite_memmory()) disable_input_data(true);
 
     QString exdir { ":/examples/" };

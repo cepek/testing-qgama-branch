@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "dbconnectdialog.h"
+#include "dbconnection.h"
 #include "constants.h"
 
 #include <QFileDialog>
@@ -39,7 +39,7 @@
 #include <QDebug>
 
 
-DBConnectDialog::DBConnectDialog(QString connectionName, QWidget *parent) :
+DBConnection::DBConnection(QString connectionName, QWidget *parent) :
     QDialog(parent),
     connection_name(connectionName)
 {
@@ -104,28 +104,28 @@ DBConnectDialog::DBConnectDialog(QString connectionName, QWidget *parent) :
                 close();
                 break;
             case QDialogButtonBox::AcceptRole:
-                on_buttonBox_accepted();
+                on_buttonBoxAccepted();
                 break;
             case QDialogButtonBox::HelpRole:
-                on_buttonBox_helpRequested();
+                on_buttonBoxHelpRequested();
                 break;
             default:
                 break;
             }};
     connect(buttonBox, &QDialogButtonBox::clicked, bbdialog);
 
-    auto newdbfile = [this](){on_pushButton_OpenFileDialog_clicked();};
+    auto newdbfile = [this](){on_pushButtonOpenFileDialogClicked();};
     connect(pushButton_CreateNewDbFile, &QPushButton::pressed, newdbfile);
 
-    connect(this, &DBConnectDialog::input_data_open,
+    connect(this, &DBConnection::input_data_open,
         [this](bool open){ if (open) close();});
 }
 
-DBConnectDialog::~DBConnectDialog()
+DBConnection::~DBConnection()
 {
 }
 
-void DBConnectDialog::switchStackedWidgets()
+void DBConnection::switchStackedWidgets()
 {
     if (comboBox_Driver->currentText() == "QSQLITE") {
         stackedWidget->setCurrentIndex(1);
@@ -137,7 +137,7 @@ void DBConnectDialog::switchStackedWidgets()
     }
 }
 
-void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
+void DBConnection::on_pushButtonOpenFileDialogClicked()
 {
     QSettings settings;
     QString dbfile = settings.value(sqlite_dbfile_).toString();
@@ -163,11 +163,11 @@ void DBConnectDialog::on_pushButton_OpenFileDialog_clicked()
     dbfile = selected[0];
     lineEdit_DatabaseFile->setText(dbfile);
     settings.setValue(sqlite_dbfile_, dbfile);
-    on_buttonBox_accepted();
+    on_buttonBoxAccepted();
     hide();
 }
 
-void DBConnectDialog::create_missing_tables(QSqlDatabase& db)
+void DBConnection::create_missing_tables(QSqlDatabase& db)
 {
     QSqlQuery query(db);
 
@@ -194,12 +194,12 @@ void DBConnectDialog::create_missing_tables(QSqlDatabase& db)
     db.commit();
 }
 
-void DBConnectDialog::on_buttonBox_rejected()
+void DBConnection::on_buttonBoxRejected()
 {
     emit input_data_open(false);
 }
 
-void DBConnectDialog::on_buttonBox_accepted()
+void DBConnection::on_buttonBoxAccepted()
 {
     QString driver = comboBox_Driver->currentText();
     QString database_name = lineEdit_DatabaseName->text();
@@ -271,7 +271,7 @@ void DBConnectDialog::on_buttonBox_accepted()
         db.close();
 
         emit input_data_open(false);
-        on_buttonBox_rejected();
+        on_buttonBoxRejected();
         return;
     }
     else if (missing == QGama::gama_local_schema_table_names.size())
@@ -286,7 +286,7 @@ void DBConnectDialog::on_buttonBox_accepted()
             db.close();
 
             emit input_data_open(false);
-            on_buttonBox_rejected();
+            on_buttonBoxRejected();
             return;
         }
 
@@ -296,7 +296,7 @@ void DBConnectDialog::on_buttonBox_accepted()
     emit input_data_open(true);
 }
 
-void DBConnectDialog::on_buttonBox_helpRequested()
+void DBConnection::on_buttonBoxHelpRequested()
 {
     QMessageBox::information(this, tr("SQLite In-Memory Database"),
        tr("You can use SQLite database with special filename :memory: "
@@ -305,7 +305,7 @@ void DBConnectDialog::on_buttonBox_helpRequested()
           "after exiting the program."));
 }
 
-bool DBConnectDialog::check_sqlite_memmory()
+bool DBConnection::check_sqlite_memmory()
 {
   { // if DB is open, do nothing
     QSqlDatabase tmp = QSqlDatabase::database(connection_name);

@@ -20,7 +20,7 @@
 #include "dbfunctions.h"
 #include "constants.h"
 #include "selectconfiguration.h"
-#include "dbconnectdialog.h"
+#include "dbconnection.h"
 
 #include <QMessageBox>
 #include <QSqlDatabase>

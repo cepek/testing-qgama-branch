@@ -34,13 +34,13 @@ class QPushButton;
 
 class QSqlDatabase;
 
-class DBConnectDialog : public QDialog
+class DBConnection : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit DBConnectDialog(QString connectionName, QWidget *parent = nullptr);
-    ~DBConnectDialog();
+    explicit DBConnection(QString connectionName, QWidget *parent = nullptr);
+    ~DBConnection();
 
     bool check_sqlite_memmory();
 
@@ -67,10 +67,10 @@ private:
 
 private slots:
     void switchStackedWidgets();
-    void on_pushButton_OpenFileDialog_clicked();
-    void on_buttonBox_rejected();
-    void on_buttonBox_accepted();
-    void on_buttonBox_helpRequested();
+    void on_pushButtonOpenFileDialogClicked();
+    void on_buttonBoxRejected();
+    void on_buttonBoxAccepted();
+    void on_buttonBoxHelpRequested();
 
 signals:
     void input_data_open(bool);
