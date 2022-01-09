@@ -35,7 +35,7 @@ class ImportConfigurationFile : public QWidget
     Q_OBJECT
 
 public:
-    explicit ImportConfigurationFile(QWidget *parent = nullptr);
+    explicit ImportConfigurationFile(bool import, QWidget *parent = nullptr);
     ~ImportConfigurationFile();
 
     void exec();
@@ -46,6 +46,7 @@ private slots:
     void setXmlLine();
 
 private:
+    bool    import_conf_{true};
     QString file;
     QLabel* line {};
     QLabel* label_File {};

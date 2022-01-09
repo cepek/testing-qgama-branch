@@ -50,10 +50,11 @@
 #include <cctype>
 
 
-ImportConfigurationFile::ImportConfigurationFile(QWidget *parent) :
-    QWidget(parent)
+ImportConfigurationFile::ImportConfigurationFile(bool import, QWidget *parent) :
+    import_conf_(import), QWidget(parent)
 {
-    setWindowTitle(tr("Import XML input data"));
+    if (import_conf_) setWindowTitle(tr("Import XML input data"));
+    else              setWindowTitle(tr("New Empty Configuration"));
     setWindowModality(Qt::ApplicationModal);
 
     label_File = new QLabel;
@@ -62,7 +63,7 @@ ImportConfigurationFile::ImportConfigurationFile(QWidget *parent) :
     pushButton_Import = new QPushButton;
 
     QFormLayout* formLayout = new QFormLayout;
-    formLayout->addRow(tr("XML input file"), label_File);
+    if (import_conf_) formLayout->addRow(tr("XML input file"), label_File);
     formLayout->addRow(tr("Existing configuration names"), tableWidget_ExistingConfigurationNames);
     formLayout->addRow(tr("New configuration name"), lineEdit_ConfigurationName);
 
@@ -121,12 +122,15 @@ void ImportConfigurationFile::exec()
     fileDialog.setNameFilters(filters);
     fileDialog.setViewMode(QFileDialog::Detail);
 
-    if (!fileDialog.exec()) return;
+    if (import_conf_)
+      {
+        if (!fileDialog.exec()) return;
 
-    auto selected = fileDialog.selectedFiles();
-    file = selected[0];
-    settings.setValue(import_xmldir, fileDialog.directory().absolutePath());
-
+        auto selected = fileDialog.selectedFiles();
+        file = selected[0];
+        settings.setValue(import_xmldir,
+                          fileDialog.directory().absolutePath());
+      }
     show();
 
     configure();
@@ -161,10 +165,13 @@ void ImportConfigurationFile::configure()
         }
     }
 
-    QFileInfo info(file);
-    basename = info.baseName();
-    label_File->setText(info.fileName());
-    lineEdit_ConfigurationName->setText(basename);
+    if (import_conf_)
+      {
+        QFileInfo info(file);
+        basename = info.baseName();
+        label_File->setText(info.fileName());
+        lineEdit_ConfigurationName->setText(basename);
+      }
 }
 
 void ImportConfigurationFile::on_lineEdit_ConfigurationName_textChanged(const QString &arg1)
@@ -192,6 +199,42 @@ void ImportConfigurationFile::on_lineEdit_ConfigurationName_textChanged(const QS
 
 void ImportConfigurationFile::import_configuration()
 {
+    if (!import_conf_)
+      {
+        auto conf = lineEdit_ConfigurationName->text();
+        if (conf.isEmpty()) return;
+
+        QSqlDatabase db = QSqlDatabase::database(QGama::connection_implicit_db);
+        QSqlQuery query(db);
+
+        /* copyied from networkadjustmentpanel.cpp, a single record with
+         * conf_id and conf_name in gnu_gama_local_configurations table
+         * defines the new empty configuration
+         */
+        try
+        {
+            db.transaction();
+            query.exec("select conf_name FROM gnu_gama_local_configurations "
+                       " where conf_name = '" + conf + "'");
+
+            if (!query.next()) {
+                // db.transaction();
+                query.exec(" insert into gnu_gama_local_configurations (conf_id, conf_name) "
+                           " select new_id, '" + conf + "' from (select coalesce(max(conf_id), 0)+1 as new_id from gnu_gama_local_configurations)x");
+                // db.commit();
+            }
+
+            // adj.read_configuration(query, configuration_name);
+        }
+        catch (...)
+        {
+        }
+        db.commit();
+
+        close();
+        return;
+      }
+
     std::stringstream sql;
     QString qnm = label_File->text();
 

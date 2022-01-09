@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.18)
 
-project(qgama LANGUAGES CXX VERSION "2.01.3")
+project(qgama LANGUAGES CXX VERSION "2.02")
 
 set(QGAMA_CONFIGURE_NAME      ${PROJECT_NAME})
 set(QGAMA_CONFIGURE_VERSION   ${PROJECT_VERSION})
@@ -28,19 +28,42 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 # CMAKE_PREFIX_PATH  By default this is empty. It is intended to be set by
 # the project. If you use Qt Creator to build the project, you can use
 # CMakeLists.txt as it is.
 #
-#set(CMAKE_PREFIX_PATH "~/Qt/6.0.1/gcc_64/")           # example linux
+# Linux
+#
+#set(CMAKE_PREFIX_PATH "~/Qt/6.2.0/gcc_64/")
 #
 # or set up the environment variable CMAKE_PREFIX_PATH, for example
 #
-#   $ export CMAKE_PREFIX_PATH=~/Qt/6.0.1/gcc_64/
+#   $ export CMAKE_PREFIX_PATH=~/Qt/6.2.0/gcc_64/
 #   $ cmake .. -G Ninja
 #   $ cmake --build .
 #
-#set(CMAKE_PREFIX_PATH "C:/Qt/6.0.1/msvc2019_64/")     # example windows
+# Windows
+#
+#set(CMAKE_PREFIX_PATH "C:/Qt/6.2.2/msvc2019_64/")
+#
+# On Windows you can build qgama either with QtCreator, Visual Studio
+# or simply using cmake (On Windows cmake uses Visual Studio as the
+# implicit generator). Anyway you would have to set the
+# CMAKE_PREFIX_PATH properly. Also you would probably need to specify
+# if you want Release build or Debug build (implicit).
+#
+# From the PowerShell prompt run
+#
+#   > cmake ..
+#   > cmake --build . --config Release
+#
+# The resulting executable is found in the folder ./Release/qgama.exe.
+#
+# Run windeployqt.exe to copy all dll libraries needed by your executable
+#
+# C:\Qt\6.2.2\msvc2019_64\bin\windeployqt.exe .\Release\qgama.exe
+
 
 # QtCreator supports the following variables for Android, which are
 # identical to qmake Android variables.
@@ -55,6 +78,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
 #    endif()
 #endif()
+
 
 add_definitions(-DGNU_gama_expat_1_1)  # if we use local copy of expat sources
 include_directories(gama/lib qgama)

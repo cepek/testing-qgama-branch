@@ -325,7 +325,7 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
         tab->addTab(par, tr("Parameters"));
         tab->addTab(ped, tr("Points"));
         tab->addTab(obs, tr("Observations"));
-        tab->addTab(svg, tr("Configuration"));
+        tab->addTab(svg, tr("View"));
         tab->addTab(res, tr("Results"));
 
         setCentralWidget(tab);
@@ -351,7 +351,7 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
         tabifyDockWidget(dockpar, dockoed);
         menuView->addAction(dockoed->toggleViewAction());
 
-        QDockWidget* docksvg = new QDockWidget(tr("Configuration"), this);
+        QDockWidget* docksvg = new QDockWidget(tr("view"), this);
         docksvg->setWidget(svg);
         tabifyDockWidget(dockpar, docksvg);
         menuView->addAction(docksvg->toggleViewAction());

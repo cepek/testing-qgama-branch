@@ -42,6 +42,7 @@ private slots:
     void on_action_Exit_triggered();
     void on_action_Connect_to_database_triggered();
     void on_action_Import_configuration_file_triggered();
+    void on_action_New_empty_configuration_triggered();
     void on_action_Network_adjustment_triggered();
     void on_action_Drop_schema_Tables_triggered();
     void on_action_Delete_all_Data_from_the_Schema_triggered();
@@ -55,7 +56,8 @@ private slots:
     void adjustmentPanel(bool newPanel);
 
 private:
-    QAction *actionDbConnect, *actionDbImport, *actionDbDropSchema,
+    QAction *actionDbConnect,
+            *actionImportConf, *actionEmptyConf, *actionDbDropSchema,
             *actionDbDeleteData, *actionDbDeleteConfiguration,
             *actionImportExamples,
             *actionDbExit;

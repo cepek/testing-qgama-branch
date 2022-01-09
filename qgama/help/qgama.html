@@ -29,14 +29,14 @@ library</p>
 <p>Qgama Graphical User Interface (GUI) has two main panels. One
 <b>Main Control Panel</b> that is open on the application startup
 and <b>Network Adjustment Panel</b> open for a selected network
-configuration. More than one <i>network adjustment panels</i> can be opened
+configuration. More than one network adjustment panels can be opened
 simultaneously.</p>
 
 
 
 <h2>Quick Start</h2>
 
-<p>Start the program and select from the <i>Main Control Panel</i> menu</p>
+<p>Start qgama and select from the <i>Main Control Panel</i> menu</p>
 
 <dl>
 <dt>Database &rarr; Connect to Database &rarr; OK</dt>
@@ -50,42 +50,40 @@ simultaneously.</p>
 
 <h2>Main Control Panel</h2>
 
-<p><i>Main Control Menu</i> has four menus and a bottom status bar
+<p>Main Control Menu has four menus and a bottom status bar
 temporarily displaying program messages. This panel is displayed at
 program startup and the user typically starts with connection to a
 database.</p>
-
-<p class="qgama-note">
-  <img src=":/help/main_control_panel.png"
-    alt="image: main control panel" />
-</p>
 
 <p>
 <table>
 <tr><th colspan="2">Qgama Main Control Panel</th></tr>
 <tr><td colspan="2" class="divider"><hr />  </td></tr>
-<tr><td>Database</td></td><td>Connect to database             </td></tr>
-<tr><td>             </td><td>Import Configuration File <sup>*</sup></tr></tr>
+<tr><td>Database</td></td><td>Connect to database                   </td></tr>
+<tr><td>             </td><td>Import Configuration File <sup>*</sup></td></tr>
 <tr><td>             </td><td>New Empty Configuration   <sup>*</sup></td></tr>
 <tr><td>             </td><td>Import Examples           <sup>*</sup></td></tr>
-<tr><td>             </td><td>Drop Schema tables              </td></tr>
-<tr><td>             </td><td>Delete all Data from the Schema </td></tr>
-<tr><td>             </td><td>Delete Network Configuration    </td></tr>
-<tr><td>             </td><td>Exit                            </td></tr>
-<tr><td>Adjustment   </td><td>Network Adjustment              </td></tr>
-<tr><td>Tools        </td><td>Adjustment results language     </td></tr>
-<tr><td>             </td><td>Application font                </td></tr>
-<tr><td>Help         </td><td>Qgama help                      </td></tr>
-<tr><td>             </td><td>About Qgama                     </td></tr>
-<tr><td>             </td><td>About Qt                        </td></tr>
+<tr><td>             </td><td colspan="1" class="divider"><hr />    </td></tr>
+<tr><td>             </td><td>Drop Schema tables                    </td></tr>
+<tr><td>             </td><td>Delete all Data from the Schema       </td></tr>
+<tr><td>             </td><td>Delete Network Configuration          </td></tr>
+<tr><td>             </td><td colspan="1" class="divider"><hr />    </td></tr>
+<tr><td>             </td><td>Exit                                  </td></tr>
+<tr><td>Adjustment   </td><td>Network Adjustment                    </td></tr>
+<tr><td>Tools        </td><td>Adjustment results language           </td></tr>
+<tr><td>             </td><td>Application font                      </td></tr>
+<tr><td>Help         </td><td>Qgama help                            </td></tr>
+<tr><td>             </td><td>About Qgama                           </td></tr>
+<tr><td>             </td><td>About Qt                              </td></tr>
 </table>
 </p>
 
 <p class="qgama-note">
-Functions marked <sup>*</sup> can be run without connecting to a database first,
-in such a case implicit <i>in memory database</i> is used and the user is
-responsible for exporting data if they are needed (for example export
-configuration XML input file after editing the network configuration).
+Functions marked <sup>*</sup> can be run without connecting to a database
+first; in such a case implicit <i>in memory database</i> is used and
+the user is responsible for exporting data, if they are needed, before exit
+(for example export configuration XML input file after editing the network
+configuration).
 </p>
 
 
@@ -127,14 +125,13 @@ configuration name</i>. The configuration name can be arbitrary, but
 </p>
 </dd>
 
-<dt>Drop Schema Tables</dt>
-<dt>Delete All Data from the Schema</dt>
-<dt>Delete Network Configuration</dt>
+<dt>New Empty Configuration</dt>
 
 <dd>
-<p>are corresponding administrative database operations.</p>
+<p>Creates new network configuration without points and observation
+(implicit values are used for network adjustment parameters).
+The menu dialog is similar to <i>Import Configuration File</i>.</p>
 </dd>
-
 
 <dt>Import Examples</dt>
 
@@ -143,6 +140,13 @@ configuration name</i>. The configuration name can be arbitrary, but
 opened database.</p>
 </dd>
 
+<dt>Drop Schema Tables</dt>
+<dt>Delete All Data from the Schema</dt>
+<dt>Delete Network Configuration</dt>
+
+<dd>
+<p>are corresponding administrative database operations.</p>
+</dd>
 
 <dt>Plugins ...</dt>
 <dd>
@@ -219,11 +223,6 @@ version and the GPL licence.
 
 <h2>Network Adjustment Panel</h2>
 
-<p class="qgama-note">
-  <img src=":/help/network_adjustment_panel.png"
-    alt="image: network adjustment panel" />
-</p>
-
 <h3>File menu</h3>
 
 <dl>
@@ -237,12 +236,12 @@ version and the GPL licence.
 </p>
 </dd>
 
-<dt>Export as XML in input file</dt>
+<dt>Export as XML input file</dt>
 <dd>
   <p>Export information from Parameters, Points and Observations
-    editors to an XML configuration file (gkf). This file contains all
-    information needed for the adjustment and can be used by qgama or
-    gama-local.
+    editors to a XML configuration file (gkf). This file contains all
+    information needed for the adjustment and can be used as input
+    by qgama or gama-local.
   </p>
 </dd>
 
@@ -339,22 +338,33 @@ user on opening a new adjustment configuration).
 <p>Adjustment parameters editor is strightforward, the meaning of
 individual parameters is described in GNU gama
 <a href="http://www.gnu.org/software/gama/manual/index.html">documentation</a>.
-Points' editor is also simple, attributes <i>Txx</i> and <i>Tz</i>
+</p>
+
+<p>Points editor is also simple, attributes <i>Txx</i> and <i>Tz</i>
 define how the role of the point coordinates in the adjustment:</p>
 
 <dl>
 <dt>fixed</dt>
-<dd><p>given coordinates</p></dd>
+<dd><p>Given coordinates.</p></dd>
 <dt>free</dt>
-<dd><p>adjusted coordinates (ie. unknown adjustment parameter)</p></dd>
+<dd><p>Adjusted coordinates (ie. unknown adjustment parameter).</p></dd>
 <dt>constrained</dt>
-<dd><p>adjusted coordinates that are subject to a second adjustment
-constraint (the sum of squares of constrained coordinates is
-minimal)</p></dd>
+<dd><p>Adjusted coordinates that are subject to a second adjustment
+constraint (the sum of squares of constrained coordinates corrections is
+minimal).</p>
+<p>Constrained coordinates are also special in that their given approximate
+values are not updated in possible linearization updates.</p></dd>
 </dl>
 
 <p>All other points/coordinates (not explicitly specified) are unused in the
 adjustment.</p>
+
+<p>Observations editor is more tricky. You must remember that in qgama
+observations are organized by clusters. Cluster is a set of somehow
+related observations, for example observations measured from one
+point, or more generally, observations with the common covariance
+matrix. If you want to add observations to an empty configuration, you
+must first create a new cluster.</p>
 
 </body>
 </html>

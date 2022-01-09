@@ -7,8 +7,6 @@
         <file>examples/example_04a.gkf</file>
         <file>examples/example_04b.gkf</file>
         <file>lib/gama-local-schema.sql</file>
-        <file>help/main_control_panel.png</file>
-        <file>help/network_adjustment_panel.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>g-logo.svg</file>

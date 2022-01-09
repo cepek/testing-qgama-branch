@@ -161,21 +161,32 @@ void QGamaControlPanel::init_schema_lists()
 void QGamaControlPanel::build_menus()
 {
     QMenu* menuDb = new QMenu(tr("&Database"), this);
+
     actionDbConnect = menuDb->addAction(tr("&Connect to Database"));
-    connect(actionDbConnect, SIGNAL(triggered()), SLOT(on_action_Connect_to_database_triggered()));
-    actionDbImport = menuDb->addAction(tr("&Import Configuration File"));
-    connect(actionDbImport, SIGNAL(triggered()), SLOT(on_action_Import_configuration_file_triggered()));
+    connect(actionDbConnect, SIGNAL(triggered()),
+            SLOT(on_action_Connect_to_database_triggered()));
+    actionImportConf = menuDb->addAction(tr("&Import Configuration File"));
+    connect(actionImportConf, SIGNAL(triggered()),
+            SLOT(on_action_Import_configuration_file_triggered()));
+    actionEmptyConf = menuDb->addAction(tr("&New Empty Configuration"));
+    connect(actionEmptyConf, SIGNAL(triggered()),
+            SLOT(on_action_New_empty_configuration_triggered()));
     actionImportExamples = menuDb->addAction(tr("Import Examples"));
-    connect(actionImportExamples, &QAction::triggered, this, &QGamaControlPanel::import_examples);
+    connect(actionImportExamples, &QAction::triggered,
+            this, &QGamaControlPanel::import_examples);
 
     menuDb->addSeparator();
 
     actionDbDropSchema = menuDb->addAction(tr("Drop Schema &Tables"));
-    connect(actionDbDropSchema, SIGNAL(triggered()), SLOT(on_action_Drop_schema_Tables_triggered()));
+
+    connect(actionDbDropSchema, SIGNAL(triggered()),
+            SLOT(on_action_Drop_schema_Tables_triggered()));
     actionDbDeleteData = menuDb->addAction(tr("&Delete all Data from the Schema"));
-    connect(actionDbDeleteData, SIGNAL(triggered()), SLOT(on_action_Delete_all_Data_from_the_Schema_triggered()));
+    connect(actionDbDeleteData, SIGNAL(triggered()),
+            SLOT(on_action_Delete_all_Data_from_the_Schema_triggered()));
     actionDbDeleteConfiguration = menuDb->addAction(tr("Delete &Network Configuration"));
-    connect(actionDbDeleteConfiguration, SIGNAL(triggered()), SLOT(on_action_Delete_Network_Configuration_triggered()));
+    connect(actionDbDeleteConfiguration, SIGNAL(triggered()),
+            SLOT(on_action_Delete_Network_Configuration_triggered()));
 
     menuDb->addSeparator();
 
@@ -194,7 +205,8 @@ void QGamaControlPanel::build_menus()
     menuDb->addSeparator();
 
     actionDbExit = menuDb->addAction(tr("&Exit"));
-    connect(actionDbExit, SIGNAL(triggered()), SLOT(on_action_Exit_triggered()));
+    connect(actionDbExit, SIGNAL(triggered()),
+            SLOT(on_action_Exit_triggered()));
 
     // ****** end of database menu
 
@@ -202,35 +214,42 @@ void QGamaControlPanel::build_menus()
     QMenu* menuAdj = new QMenu(tr("&Adjustment"), this);
     actionAdjAdjustment = menuAdj->addAction(tr("&Network Adjustment"));
     actionAdjAdjustment->setDisabled(true);
-    connect (actionAdjAdjustment, SIGNAL(triggered()), SLOT(on_action_Network_adjustment_triggered()));
+    connect (actionAdjAdjustment, SIGNAL(triggered()),
+             SLOT(on_action_Network_adjustment_triggered()));
 
     // ****** end of adjutment menu
 
 
     QMenu* menuTools = new QMenu(tr("&Tools"), this);
     actionAdjResultsLanguage = menuTools->addAction(tr("Adjustment results &language"));
-    connect(actionAdjResultsLanguage, SIGNAL(triggered()), SLOT(on_action_Adjustment_results_language()));
+    connect(actionAdjResultsLanguage, SIGNAL(triggered()),
+            SLOT(on_action_Adjustment_results_language()));
     actionApplicationFont = menuTools->addAction(tr("Application Font"));
-    connect(actionApplicationFont, SIGNAL(triggered()), SLOT(on_action_Application_Font()));
+    connect(actionApplicationFont, SIGNAL(triggered()),
+            SLOT(on_action_Application_Font()));
 
     // ****** end of tools menu
 
 
     QMenu* menuHelp = new QMenu(tr("&Help"), this);
     actionQGamaHelp = menuHelp->addAction(tr("Qgama &help"));
-    connect(actionQGamaHelp, &QAction::triggered, [](){QGamaHelp::get()->show();});
+    connect(actionQGamaHelp, &QAction::triggered,
+            [](){QGamaHelp::get()->show();});
     menuHelp->addSeparator();
     actionAboutQGama = menuHelp->addAction(tr("&About Qgama"));
-    connect(actionAboutQGama, SIGNAL(triggered()), SLOT(on_action_About_qgama_triggered()));
+    connect(actionAboutQGama, SIGNAL(triggered()),
+            SLOT(on_action_About_qgama_triggered()));
     actionAboutQt = menuHelp->addAction(tr("About &Qt"));
-    connect(actionAboutQt, SIGNAL(triggered()), SLOT(on_action_About_qt_triggered()));
+    connect(actionAboutQt, SIGNAL(triggered()),
+            SLOT(on_action_About_qt_triggered()));
 
     // ****** end of help menu
 
 
     disable_input_data(false);
     actionImportExamples->setEnabled(true);
-    actionDbImport->setEnabled(true);
+    actionImportConf->setEnabled(true);
+    actionEmptyConf->setEnabled(true);
 
     menuBar()->addMenu(menuDb);
     menuBar()->addMenu(menuAdj);
@@ -240,7 +259,8 @@ void QGamaControlPanel::build_menus()
 
 void QGamaControlPanel::dbSlot()
 {
-    if (PluginAction<DbInterface>* plugin_action = dynamic_cast<PluginAction<DbInterface>*>(sender()))
+    if (PluginAction<DbInterface>* plugin_action =
+        dynamic_cast<PluginAction<DbInterface>*>(sender()))
     {
         if (QWidget* widget = plugin_action->interface_->create())
         {
@@ -289,7 +309,8 @@ void QGamaControlPanel::closeEvent(QCloseEvent * event)
 void QGamaControlPanel::on_action_Connect_to_database_triggered()
 {
     DBConnection* d = new DBConnection(QGama::connection_implicit_db, this);
-    connect(d, SIGNAL(input_data_open(bool)), this, SLOT(disable_input_data(bool)));
+    connect(d, SIGNAL(input_data_open(bool)), this,
+            SLOT(disable_input_data(bool)));
     d->exec();
     delete d;
 
@@ -316,7 +337,8 @@ void QGamaControlPanel::disable_input_data(bool yes)
     actionDbDeleteData->setEnabled(yes);
     actionDbDeleteConfiguration->setEnabled(yes);
 
-    actionDbImport->setEnabled(yes);
+    actionImportConf->setEnabled(yes);
+    actionEmptyConf->setEnabled(yes);
     actionImportExamples->setEnabled(yes);
     actionAdjAdjustment->setEnabled(yes);
     actionAdjResultsLanguage->setEnabled(yes);
@@ -330,15 +352,29 @@ void QGamaControlPanel::on_action_Import_configuration_file_triggered()
     DBConnection db(QGama::connection_implicit_db);
     if (db.check_sqlite_memmory()) disable_input_data(true);
 
-    ImportConfigurationFile* icf = new ImportConfigurationFile(0);
+    ImportConfigurationFile* icf = new ImportConfigurationFile(true, 0);
+    icf->exec();
+}
+
+void QGamaControlPanel::on_action_New_empty_configuration_triggered()
+{
+    // if DB is not available, use sqlite memory database
+    DBConnection db(QGama::connection_implicit_db);
+    if (db.check_sqlite_memmory()) disable_input_data(true);
+
+    ImportConfigurationFile* icf = new ImportConfigurationFile(false, 0);
     icf->exec();
 }
 
 void QGamaControlPanel::on_action_Network_adjustment_triggered()
 {
-    NetworkAdjustmentPanel* nap = new NetworkAdjustmentPanel(QGama::connection_implicit_db);
-    connect(nap,  SIGNAL(networkAdjustmentPanel(bool)), this, SLOT(adjustmentPanel(bool)));
-    connect(this, SIGNAL(gamaCloseSignal()), nap, SLOT(close()));
+    NetworkAdjustmentPanel* nap
+        = new NetworkAdjustmentPanel(QGama::connection_implicit_db);
+
+    connect(nap,  SIGNAL(networkAdjustmentPanel(bool)), this,
+            SLOT(adjustmentPanel(bool)));
+    connect(this, SIGNAL(gamaCloseSignal()), nap,
+            SLOT(close()));
     nap->setAttribute(Qt::WA_DeleteOnClose);
     nap->exec();
 }

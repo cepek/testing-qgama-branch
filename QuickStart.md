@@ -51,16 +51,8 @@ the examples.db database (_Sqlite3_).
     $ ls
     examples.db  Makefile
 
-Known bugs
-----------
-
-* Observation editor does not implement tags `from_dh` and `to_dh`
-
 TODO
 ----
 
-* More interfaces
 * import yaml format
-* export of gkf (input xml data)
-* processing of tags `from_dh` and `to_dh`
-* online help
+* update online help
