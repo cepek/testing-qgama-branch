@@ -42,6 +42,7 @@ private slots:
     void on_action_Exit_triggered();
     void on_action_Connect_to_database_triggered();
     void on_action_Import_configuration_file_triggered();
+    void on_action_Import_krumm_network_file_triggered();
     void on_action_New_empty_configuration_triggered();
     void on_action_Network_adjustment_triggered();
     void on_action_Drop_schema_Tables_triggered();

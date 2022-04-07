@@ -33,6 +33,7 @@
 #include "dbconnection.h"
 #include "dbfunctions.h"
 #include "importconfigurationfile.h"
+#include "importkrummnetworkfile.h"
 #include "networkadjustmentpanel.h"
 #include "qgamainterfaces.h"
 #include "selectadjresultslanguage.h"
@@ -168,6 +169,9 @@ void QGamaControlPanel::build_menus()
     actionImportConf = menuDb->addAction(tr("&Import Configuration File"));
     connect(actionImportConf, SIGNAL(triggered()),
             SLOT(on_action_Import_configuration_file_triggered()));
+    actionImportConf = menuDb->addAction(tr("Import &Krumm Network File"));
+    connect(actionImportConf, SIGNAL(triggered()),
+            SLOT(on_action_Import_krumm_network_file_triggered()));
     actionEmptyConf = menuDb->addAction(tr("&New Empty Configuration"));
     connect(actionEmptyConf, SIGNAL(triggered()),
             SLOT(on_action_New_empty_configuration_triggered()));
@@ -181,10 +185,10 @@ void QGamaControlPanel::build_menus()
 
     connect(actionDbDropSchema, SIGNAL(triggered()),
             SLOT(on_action_Drop_schema_Tables_triggered()));
-    actionDbDeleteData = menuDb->addAction(tr("&Delete all Data from the Schema"));
+    actionDbDeleteData = menuDb->addAction(tr("Delete all Data from the Schema"));
     connect(actionDbDeleteData, SIGNAL(triggered()),
             SLOT(on_action_Delete_all_Data_from_the_Schema_triggered()));
-    actionDbDeleteConfiguration = menuDb->addAction(tr("Delete &Network Configuration"));
+    actionDbDeleteConfiguration = menuDb->addAction(tr("Delete Network Configuration"));
     connect(actionDbDeleteConfiguration, SIGNAL(triggered()),
             SLOT(on_action_Delete_Network_Configuration_triggered()));
 
@@ -353,6 +357,16 @@ void QGamaControlPanel::on_action_Import_configuration_file_triggered()
     if (db.check_sqlite_memmory()) disable_input_data(true);
 
     ImportConfigurationFile* icf = new ImportConfigurationFile(true, 0);
+    icf->exec();
+}
+
+void QGamaControlPanel::on_action_Import_krumm_network_file_triggered()
+{
+    // if DB is not available, use sqlite memory database
+    DBConnection db(QGama::connection_implicit_db);
+    if (db.check_sqlite_memmory()) disable_input_data(true);
+
+    auto* icf = new ImportKrummNetworkFile(true, 0);
     icf->exec();
 }
 

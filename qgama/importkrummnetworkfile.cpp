@@ -1,5 +1,5 @@
 /*  Qt based GUI for GNU Gama -- adjustment of geodetic networks
-    Copyright (C) 2014, 2016  Ales Cepek <cepek@gnu.org>
+    Copyright (C) 2022  Ales Cepek <cepek@gnu.org>
 
     This file is a part of GNU Gama.
 
@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "importconfigurationfile.h"
+#include "importkrummnetworkfile.h"
 #include "dbconnection.h"
 #include "constants.h"
 
@@ -49,8 +49,14 @@
 #include <sstream>
 #include <cctype>
 
+// headers from krum2gama-local.cpp
+#include <krumm/k2gkf.h>
+#include <krumm/input.h>
+#include <krumm/output.h>
 
-ImportConfigurationFile::ImportConfigurationFile(bool import, QWidget *parent) :
+
+
+ImportKrummNetworkFile::ImportKrummNetworkFile(bool import, QWidget *parent) :
     import_conf_(import), QWidget(parent)
 {
     if (import_conf_) setWindowTitle(tr("Import XML input data"));
@@ -101,23 +107,23 @@ ImportConfigurationFile::ImportConfigurationFile(bool import, QWidget *parent) :
     connect(tableWidget_ExistingConfigurationNames, &QTableWidget::cellDoubleClicked, doubleclicked);
 }
 
-ImportConfigurationFile::~ImportConfigurationFile()
+ImportKrummNetworkFile::~ImportKrummNetworkFile()
 {
 }
 
-void ImportConfigurationFile::exec()
+void ImportKrummNetworkFile::exec()
 {
     DBConnection dbc(QGama::connection_implicit_db);
     dbc.check_sqlite_memmory();
 
     QSettings settings;
     QString importdir = settings.value(import_xmldir).toString();
-    QFileDialog fileDialog(nullptr,tr("Open XML Input File"));
+    QFileDialog fileDialog(nullptr,tr("Open Krumm Network File"));
     if (!importdir.isEmpty()) fileDialog.setDirectory(importdir);
     fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
     fileDialog.setFileMode(QFileDialog::ExistingFile);
     QStringList filters;
-    filters << tr("Gama XML input files (*.xml *.gkf)")
+    filters << tr("Krumm network files (*.dat)")
             << tr("Any files (*)");
     fileDialog.setNameFilters(filters);
     fileDialog.setViewMode(QFileDialog::Detail);
@@ -136,7 +142,7 @@ void ImportConfigurationFile::exec()
     configure();
 }
 
-void ImportConfigurationFile::configure()
+void ImportKrummNetworkFile::configure()
 {
     QSqlDatabase db = QSqlDatabase::database(QGama::connection_implicit_db);
     QSqlQuery query(db);
@@ -174,7 +180,7 @@ void ImportConfigurationFile::configure()
       }
 }
 
-void ImportConfigurationFile::on_lineEdit_ConfigurationName_textChanged(const QString &arg1)
+void ImportKrummNetworkFile::on_lineEdit_ConfigurationName_textChanged(const QString &arg1)
 {
     const QRegularExpression whitespaces("\\s");
     lineEdit_ConfigurationName->setText(QString(arg1).remove(whitespaces));
@@ -197,7 +203,7 @@ void ImportConfigurationFile::on_lineEdit_ConfigurationName_textChanged(const QS
     pushButton_Import->setEnabled(!found);
 }
 
-void ImportConfigurationFile::import_configuration()
+void ImportKrummNetworkFile::import_configuration()
 {
     if (!import_conf_)
       {
@@ -238,12 +244,12 @@ void ImportConfigurationFile::import_configuration()
     std::stringstream sql;
     QString qnm = label_File->text();
 
-    QString xmlString;
+    QString krummString;
     QFile inputFile(file);
     if (inputFile.open(QIODevice::ReadOnly))
     {
         QTextStream in(&inputFile);
-        xmlString = in.readAll();
+        krummString = in.readAll();
         inputFile.close();
     }
     else
@@ -256,7 +262,20 @@ void ImportConfigurationFile::import_configuration()
     bool repeat {false};
     do try {             // do try ... while (repeat)
         repeat = false;
-        std::istringstream xml(xmlString.toUtf8().data());
+
+        std::istringstream istr(krummString.toStdString());
+        std::ostringstream ostr;
+
+        GNU_gama::local::K2gkf k2gkf(istr, ostr);
+        k2gkf.run();
+        if (k2gkf.dimension() == 0 || k2gkf.error())
+          {
+            std::string err {"Bad input data, probably not Krumm network input format"};
+            throw GNU_gama::local::ParserException(err, 0, 0);
+          }
+
+
+        std::istringstream xml(ostr.str());
 
         const QString qconfname = lineEdit_ConfigurationName->text();
         GNU_gama::local::LocalNetwork lnet;
@@ -277,7 +296,7 @@ void ImportConfigurationFile::import_configuration()
         line = new QLabel(this);
         layout->addWidget(line);
 
-        edit = new QPlainTextEdit(xmlString, this);
+        edit = new QPlainTextEdit(krummString, this);
         QTextCursor cursor = edit->textCursor();
         cursor.movePosition(QTextCursor::Start);
         cursor.movePosition(QTextCursor::Down,QTextCursor::MoveAnchor,v.line-1);
@@ -299,7 +318,7 @@ void ImportConfigurationFile::import_configuration()
         int result = dialog.exec();
         if (result == QDialog::Accepted)
         {
-            xmlString = edit->toPlainText();
+            krummString = edit->toPlainText();
             repeat = true;
         }
         else
@@ -367,7 +386,7 @@ void ImportConfigurationFile::import_configuration()
     close();
 }
 
-void ImportConfigurationFile::setXmlLine()
+void ImportKrummNetworkFile::setXmlLine()
 {
     QString str(tr("XML Line: %1"));
     line->setText(str.arg(edit->textCursor().blockNumber() + 1));

@@ -86,6 +86,19 @@ include_directories(gama/lib qgama)
 find_package(Qt6 COMPONENTS
   Core Gui Sql Widgets PrintSupport SvgWidgets REQUIRED)
 
+set(KRUMM   # support for Krumm input network files
+    gama/lib/krumm/common.cpp
+    gama/lib/krumm/common.h
+    gama/lib/krumm/input.cpp
+    gama/lib/krumm/input.h
+    gama/lib/krumm/k2gkf.cpp
+    gama/lib/krumm/k2gkf.h
+    gama/lib/krumm/output.cpp
+    gama/lib/krumm/output.h
+    gama/lib/krumm/string_matrix.cpp
+    gama/lib/krumm/string_matrix.h
+)
+
 set(QGSRC
     qgama/main.cpp
     qgama/adjustment.cpp
@@ -102,6 +115,8 @@ set(QGSRC
     qgama/drawsettings.h
     qgama/importconfigurationfile.cpp
     qgama/importconfigurationfile.h
+    qgama/importkrummnetworkfile.cpp
+    qgama/importkrummnetworkfile.h
     qgama/insertclusterdialog.cpp
     qgama/insertclusterdialog.h
     qgama/insertobservationdialog.cpp
@@ -141,6 +156,7 @@ set(QGSRC
     qgama/xml2txt.cpp
     qgama/xml2txt.h
     qgama/qgama.qrc
+    ${KRUMM}
     )
 
 if(ANDROID)
