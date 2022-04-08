@@ -185,5 +185,10 @@ if(BUILD_PLUGINS)
     target_link_libraries(dbdemoplugin)
 endif(BUILD_PLUGINS)
 
-
+set (GAMA_INSTDIR bin)
 add_subdirectory(gama)  # git clone https://git.savannah.gnu.org/git/gama.git
+
+install(TARGETS qgama DESTINATION .)
+install(FILES README.md DESTINATION .)
+
+include(CPack)
