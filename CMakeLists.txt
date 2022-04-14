@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(qgama LANGUAGES CXX VERSION "2.02.90")
+project(qgama LANGUAGES CXX VERSION "2.03")
 
 set(QGAMA_CONFIGURE_NAME      ${PROJECT_NAME})
 set(QGAMA_CONFIGURE_VERSION   ${PROJECT_VERSION})
