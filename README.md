@@ -15,12 +15,15 @@ stored in the subdirectory ```bin```. QGama is not dependent on these programs,
 which on the other hand must be run from a terminal (for example Gnome terminal
 in GNU/Linux or PowerShell in Windows).
 
+Selected input data example files are available from sudbirectory
+```examples```.
+
 ## GNU Gama command line programs
 
 ### gama-local
 
 The main program of the GNU Gama project, solves adjustment of
-local geodetic network with input in XML. Run ```gama-local --help``` 
+local geodetic network with input in XML. Run ```gama-local --help```
 to see description of its options.
 
     Adjustment of local geodetic network        version: 2.17.2 / GNU C/C++ 11.2
