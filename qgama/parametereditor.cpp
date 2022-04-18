@@ -95,7 +95,7 @@ ParameterEditor::ParameterEditor(QWidget *parent) :
     formLayout->addRow(tr("angles are observed"),       comboBox_angles);
     formLayout->addRow(tr("algorithm"),                 comboBox_algorithm);
     formLayout->addRow(tr("angular units"),             comboBox_ang_units);
-    formLayout->addRow(tr("adjusted cxx band witdth"),  lineEdit_adj_covband);
+    formLayout->addRow(tr("adjusted cxx band width"),   lineEdit_adj_covband);
     formLayout->addRow(tr("epoch"),                     lineEdit_epoch);
     // formLayout->addRow(tr("latitude"),               lineEdit_latitude);
     // formLayout->addRow(tr("ellipsoid"),              comboBox_ellipsoid);
