@@ -356,7 +356,7 @@ void QGamaControlPanel::on_action_Import_configuration_file_triggered()
     DBConnection db(QGama::connection_implicit_db);
     if (db.check_sqlite_memmory()) disable_input_data(true);
 
-    ImportConfigurationFile* icf = new ImportConfigurationFile(true, 0);
+    ImportConfigurationFile* icf = new ImportConfigurationFile(true, nullptr);
     icf->exec();
 }
 
@@ -366,7 +366,7 @@ void QGamaControlPanel::on_action_Import_krumm_network_file_triggered()
     DBConnection db(QGama::connection_implicit_db);
     if (db.check_sqlite_memmory()) disable_input_data(true);
 
-    auto* icf = new ImportKrummNetworkFile(true, 0);
+    auto* icf = new ImportKrummNetworkFile(true, nullptr);
     icf->exec();
 }
 
@@ -376,7 +376,7 @@ void QGamaControlPanel::on_action_New_empty_configuration_triggered()
     DBConnection db(QGama::connection_implicit_db);
     if (db.check_sqlite_memmory()) disable_input_data(true);
 
-    ImportConfigurationFile* icf = new ImportConfigurationFile(false, 0);
+    ImportConfigurationFile* icf = new ImportConfigurationFile(false, nullptr);
     icf->exec();
 }
 

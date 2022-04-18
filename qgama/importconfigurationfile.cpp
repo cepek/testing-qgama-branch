@@ -207,7 +207,7 @@ void ImportConfigurationFile::import_configuration()
         QSqlDatabase db = QSqlDatabase::database(QGama::connection_implicit_db);
         QSqlQuery query(db);
 
-        /* copyied from networkadjustmentpanel.cpp, a single record with
+        /* copied from networkadjustmentpanel.cpp, a single record with
          * conf_id and conf_name in gnu_gama_local_configurations table
          * defines the new empty configuration
          */

@@ -213,7 +213,7 @@ void ImportKrummNetworkFile::import_configuration()
         QSqlDatabase db = QSqlDatabase::database(QGama::connection_implicit_db);
         QSqlQuery query(db);
 
-        /* copyied from networkadjustmentpanel.cpp, a single record with
+        /* copied from networkadjustmentpanel.cpp, a single record with
          * conf_id and conf_name in gnu_gama_local_configurations table
          * defines the new empty configuration
          */
@@ -263,7 +263,7 @@ void ImportKrummNetworkFile::import_configuration()
     do try {             // do try ... while (repeat)
         repeat = false;
 
-        std::istringstream istr(krummString.toStdString());
+        std::istringstream istr(krummString.toUtf8().toStdString());
         std::ostringstream ostr;
 
         GNU_gama::local::K2gkf k2gkf(istr, ostr);
