@@ -263,7 +263,7 @@ void ImportKrummNetworkFile::import_configuration()
     do try {             // do try ... while (repeat)
         repeat = false;
 
-        std::istringstream istr(krummString.toUtf8().toStdString());
+        std::istringstream istr(krummString.toUtf8().data());
         std::ostringstream ostr;
 
         GNU_gama::local::K2gkf k2gkf(istr, ostr);
