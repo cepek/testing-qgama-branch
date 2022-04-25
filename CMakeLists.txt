@@ -33,19 +33,24 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # the project. If you use Qt Creator to build the project, you can use
 # CMakeLists.txt as it is.
 #
-# Linux
+#   Linux
 #
-#set(CMAKE_PREFIX_PATH "~/Qt/6.2.0/gcc_64/")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(CMAKE_PREFIX_PATH "~/Qt/6.2.2/gcc_64/")
+endif()
 #
 # or set up the environment variable CMAKE_PREFIX_PATH, for example
 #
-#   $ export CMAKE_PREFIX_PATH=~/Qt/6.2.0/gcc_64/
+#   $ export CMAKE_PREFIX_PATH=~/Qt/6.2.3/gcc_64/
 #   $ cmake .. -G Ninja
 #   $ cmake --build .
 #
-# Windows
 #
-#set(CMAKE_PREFIX_PATH "C:/Qt/6.2.2/msvc2019_64/")
+#   Windows
+#
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    set(CMAKE_PREFIX_PATH "C:/Qt/6.2.2/msvc2019_64/")
+endif()
 #
 # On Windows you can build qgama either with QtCreator, Visual Studio
 # or simply using cmake (On Windows cmake uses Visual Studio as the
@@ -85,19 +90,6 @@ include_directories(gama/lib qgama)
 
 find_package(Qt6 COMPONENTS
   Core Gui Sql Widgets PrintSupport SvgWidgets REQUIRED)
-
-set(KRUMM   # support for Krumm input network files
-    gama/lib/krumm/common.cpp
-    gama/lib/krumm/common.h
-    gama/lib/krumm/input.cpp
-    gama/lib/krumm/input.h
-    gama/lib/krumm/k2gkf.cpp
-    gama/lib/krumm/k2gkf.h
-    gama/lib/krumm/output.cpp
-    gama/lib/krumm/output.h
-    gama/lib/krumm/string_matrix.cpp
-    gama/lib/krumm/string_matrix.h
-)
 
 set(QGSRC
     qgama/main.cpp
@@ -156,7 +148,6 @@ set(QGSRC
     qgama/xml2txt.cpp
     qgama/xml2txt.h
     qgama/qgama.qrc
-    ${KRUMM}
     )
 
 if(ANDROID)
