@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(qgama LANGUAGES CXX VERSION "2.03")
+project(qgama LANGUAGES CXX VERSION "2.04")
 
 set(QGAMA_CONFIGURE_NAME      ${PROJECT_NAME})
 set(QGAMA_CONFIGURE_VERSION   ${PROJECT_VERSION})
@@ -30,8 +30,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 # CMAKE_PREFIX_PATH  By default this is empty. It is intended to be set by
-# the project. If you use Qt Creator to build the project, you can use
-# CMakeLists.txt as it is.
+# the project. You can use CMakeLists.txt as it is or set up the environment
+# variable CMAKE_PREFIX_PATH.
 #
 #   Linux
 #
@@ -39,9 +39,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_PREFIX_PATH "~/Qt/6.2.2/gcc_64/")
 endif()
 #
-# or set up the environment variable CMAKE_PREFIX_PATH, for example
-#
-#   $ export CMAKE_PREFIX_PATH=~/Qt/6.2.3/gcc_64/
 #   $ cmake .. -G Ninja
 #   $ cmake --build .
 #
@@ -63,17 +60,17 @@ endif()
 #   > cmake ..
 #   > cmake --build . --config Release
 #
-# The resulting executable is found in the folder ./Release/qgama.exe.
+# and
 #
-# Run windeployqt.exe to copy all dll libraries needed by your executable
+#   > cpack -C Release -G ZIP
 #
-# C:\Qt\6.2.2\msvc2019_64\bin\windeployqt.exe .\Release\qgama.exe
-
+# to create the distribution archive qgama-${VERSION}-win64.zip
+#
 
 # QtCreator supports the following variables for Android, which are
 # identical to qmake Android variables.
 # Check http://doc.qt.io/qt-5/deployment-android.html for more information.
-# They need to be set before the find_package(Qt5 ...) call.
+# They need to be set before the find_package(Qt6 ...) call.
 
 #if(ANDROID)
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
@@ -181,5 +178,17 @@ add_subdirectory(gama)  # git clone https://git.savannah.gnu.org/git/gama.git
 
 install(TARGETS qgama DESTINATION .)
 install(FILES README.md DESTINATION .)
+
+# Run windeployqt.exe to copy dll libraries
+#
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+   find_program(TOOL_WINDEPLOYQT NAMES windeployqt
+       PATH "${CMAKE_PREFIX_PATH}")
+
+   add_custom_command(TARGET qgama POST_BUILD
+       COMMAND ${TOOL_WINDEPLOYQT} $<TARGET_FILE_DIR:qgama>)
+
+   install(FILES $<TARGET_FILE_DIR:qgama>/ DESTINATION .)
+endif()
 
 include(CPack)
