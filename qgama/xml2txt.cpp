@@ -1201,21 +1201,19 @@ void GNU_gama::xml2txt_adjusted_observations(std::ostream& cout,const Adjustment
 
   /* Residuals and analysis of observations */
 
-  // class StOpSort {
-  //
-  //   GNU_gama::local::LocalNetwork* IS;
-  //
-  // public:
-  //
-  //   StOpSort(GNU_gama::local::LocalNetwork* is) : IS(is) {}
-  //   bool operator()(int a, int b)
-  //     {
-  //       using namespace std;
-  //       GNU_gama::local::Double sa = fabs(IS->studentized_residual(a));
-  //       GNU_gama::local::Double sb = fabs(IS->studentized_residual(b));
-  //       return sa > sb;
-  //     }
-  // };
+  class SortOutliers {
+    const Adjustment& adj;
+
+  public:
+    SortOutliers(const Adjustment& is) : adj(is) {}
+    bool operator()(int a, int b)
+    {
+      using namespace std;
+      double sa = std::abs(adj.obslist[a].std_residual);
+      double sb = std::abs(adj.obslist[b].std_residual);
+      return sa > sb;
+    }
+  };
 
   std::vector<int> outliers;
     int imax = -1;         // index of maximal studentized residual
@@ -1234,13 +1232,13 @@ void GNU_gama::xml2txt_adjusted_observations(std::ostream& cout,const Adjustment
         }
         if (no > kki) outliers.push_back(i);
       }
-    // if (outliers.size() > 0)
-    //   sort(outliers.begin(), outliers.end(), StOpSort(IS));
+    if (outliers.size() > 0)
+       sort(outliers.begin(), outliers.end(), SortOutliers(adj));
   }
 
-  for (int pass=1; pass; pass--)
+  for (int pass=1; pass<=2; pass++)
     {
-      if (pass)
+      if (pass == 1)
         cout << "\n\n"
              << T_GaMa_resobs_Review_of_residuals_analysis_obs << "\n"
              << underline(T_GaMa_resobs_Review_of_residuals_analysis_obs, '*')
@@ -1265,10 +1263,10 @@ void GNU_gama::xml2txt_adjusted_observations(std::ostream& cout,const Adjustment
 
 
       std::string previous_id = "";    // previous standpoint ID
-      const int NN = pass ? adj.obslist.size() : outliers.size();
+      const int NN = pass==1 ? adj.obslist.size() : outliers.size();
       for (int ii=0; ii<NN; ii++)
         {
-          int i = pass ? ii : outliers[ii];
+          int i = pass == 1 ? ii : outliers[ii];
           const Adjustment::Observation& obs = adj.obslist[i];
 
           cout.width(MAXWOBS);

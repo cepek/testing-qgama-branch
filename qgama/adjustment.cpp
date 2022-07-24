@@ -511,7 +511,7 @@ void Adjustment::exec()
 
 QString Adjustment::xml()
 {
-  exec();
+  if (!solved) exec();
   /*
     bool gons = lnet->gons();
     if (gons)

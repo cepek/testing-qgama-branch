@@ -10,6 +10,9 @@ file database, which does not need any special knowledge from the user.
 
 http://www.gnu.org/software/gama/qgama
 
+* For basic instructions how to build QGama from sources read the file
+```QuickStart```.
+
 The distribution package QGama comes also with several command line programs
 stored in the subdirectory ```bin```. QGama is not dependent on these programs,
 which on the other hand must be run from a terminal (for example Gnome terminal
@@ -26,7 +29,7 @@ The main program of the GNU Gama project, solves adjustment of
 local geodetic network with input in XML. Run ```gama-local --help```
 to see description of its options.
 
-    Adjustment of local geodetic network        version: 2.17.2 / GNU C/C++ 11.2
+    Adjustment of local geodetic network        version: 2.21 / GNU C/C++ 11
     ************************************
     https://www.gnu.org/software/gama/
 

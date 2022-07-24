@@ -36,6 +36,10 @@ qgama/configure.h
 
 build-gama-*
 
+# Emacs markdown preview  C-c C-c v
+# ######################
+*.html
+
 # GNU Gama source codes located at the subdirectory gama
 ########################################################
 gama

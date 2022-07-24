@@ -42,26 +42,26 @@ public:
     void enableEdit(bool edit);
 
 private slots:
-    void on_plainTextEdit_textChanged();
-    void on_lineEdit_sigma_apr_editingFinished();
-    void on_lineEdit_conf_pr_editingFinished();
-    void on_lineEdit_tol_abs_editingFinished();
-    void on_lineEdit_epoch_editingFinished();
-    void on_lineEdit_latitude_editingFinished();
-    void on_comboBox_sigma_act_currentTextChanged(const QString &arg1);
-    void on_comboBox_axes_xy_currenTextChanged(const QString &arg1);
-    void on_comboBox_angles_currentTextChanged(const QString &arg1);
-    void on_comboBox_algorithm_currentTextChanged(const QString &arg1);
-    void on_comboBox_ellipsoid_currentTextChanged(const QString &arg1);
-    void on_comboBox_ang_units_currentTextChanged(const QString &arg1);
-    void on_lineEdit_adj_covband_editingFinished();
+    void par_description_editingFinished();
+    void par_sigma_apr_editingFinished();
+    void par_conf_pr_editingFinished();
+    void par_tol_abs_editingFinished();
+    void par_iterations_editingFinished();
+    void par_epoch_editingFinished();
+    void par_latitude_editingFinished();
+    void par_sigma_act_currentTextChanged(const QString &arg1);
+    void par_axes_xy_currenTextChanged(const QString &arg1);
+    void par_angles_currentTextChanged(const QString &arg1);
+    void par_algorithm_currentTextChanged(const QString &arg1);
+    void par_ellipsoid_currentTextChanged(const QString &arg1);
+    void par_ang_units_currentTextChanged(const QString &arg1);
+    void par_adj_covband_editingFinished();
 
 signals:
     void angular_units_changed();
 
 private:
 
-    QCheckBox *checkBox_update_cc;
     QComboBox *comboBox_sigma_act;
     QComboBox *comboBox_axes_xy;
     QComboBox *comboBox_angles;
@@ -74,22 +74,9 @@ private:
     QLineEdit *lineEdit_epoch;
     QLineEdit *lineEdit_adj_covband;
     QLineEdit *lineEdit_latitude;
+    QLineEdit *lineEdit_iterations;
 
-    QPlainTextEdit *plainTextEdit;
-
-    QLabel *label_update_cc;
-    QLabel *label_sigma_act;
-    QLabel *label_axes_xy;
-    QLabel *label_angles;
-    QLabel *label_algorithm;
-    QLabel *label_ang_units;
-    QLabel *label_ellipsoid;
-    QLabel *label_sigma_apr;
-    QLabel *label_conf_pr;
-    QLabel *label_tol_abs;
-    QLabel *label_epoch;
-    QLabel *label_adj_covband;
-    QLabel *label_latitude;
+    QPlainTextEdit *par_description;
 
     GNU_gama::local::LocalNetwork *lnet;
     bool readonly;

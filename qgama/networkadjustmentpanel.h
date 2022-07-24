@@ -67,18 +67,20 @@ private:
     bool    valid;
 
     QMenu*   menuFile           {nullptr};
-    QMenu*   menuAdjExport      {nullptr};
+    QMenu*   submenuAdjExport   {nullptr};  // --> gkf / html / txt / octave
     QMenu*   menuAdjustment     {nullptr};
     QMenu*   menuView           {nullptr};
     QMenu*   menuEdit           {nullptr};
     QMenu*   menuSetup          {nullptr};
     QMenu*   menuTools          {nullptr};
     QMenu*   menuHelp           {nullptr};
+    QAction* actionAdjPrint     {nullptr};
     QAction* actionParameters   {nullptr};
     QAction* actionPoints       {nullptr};
     QAction* actionObservations {nullptr};
 
     void set_gui_adjustment_functions_status(bool isvalid);
+    void setAdjustmentExportEnabled(bool);
 
 private slots:
 

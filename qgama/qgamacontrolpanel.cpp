@@ -48,7 +48,7 @@ namespace
 {
     QGamaControlPanel* controlPanel;
 
-    // Solution after software.rtcm-ntrip.org by Leos Mervart (C) 2013
+    // Solution after software.rtcm-ntrip.org by Leos Mervart (GPL) 2013
     template<typename Interface>
     struct PluginAction : public QAction {
         Interface* interface_;
@@ -78,7 +78,7 @@ QGamaControlPanel::QGamaControlPanel(QWidget *parent) :
     // setting implicit adjustment results language
     set_adjustment_results_language();
 
-    setWindowTitle(QGama::name);
+    setWindowTitle(QGama::name + " " + QGama::version);
     load_plugins();
     build_menus();
     setMinimumSize(400, 150);
@@ -175,7 +175,7 @@ void QGamaControlPanel::build_menus()
     actionEmptyConf = menuDb->addAction(tr("&New Empty Configuration"));
     connect(actionEmptyConf, SIGNAL(triggered()),
             SLOT(on_action_New_empty_configuration_triggered()));
-    actionImportExamples = menuDb->addAction(tr("Import Examples"));
+    actionImportExamples = menuDb->addAction(tr("Import &Examples"));
     connect(actionImportExamples, &QAction::triggered,
             this, &QGamaControlPanel::import_examples);
 
@@ -208,7 +208,7 @@ void QGamaControlPanel::build_menus()
 
     menuDb->addSeparator();
 
-    actionDbExit = menuDb->addAction(tr("&Exit"));
+    actionDbExit = menuDb->addAction(tr("E&xit"));
     connect(actionDbExit, SIGNAL(triggered()),
             SLOT(on_action_Exit_triggered()));
 

@@ -54,16 +54,16 @@
 #include <gnu_gama/xml/localnetworkoctave.h>
 
 // QSettings export adjustment directory
-const QString export_adjdir {"export/adjdir"};
-const QString export_sqldir {"export/sqldir"};
-const QString export_imgdir {"export/imgdir"};
+const char* export_adjdir {"export/adjdir"};
+const char* export_sqldir {"export/sqldir"};
+const char* export_imgdir {"export/imgdir"};
 
 bool        NetworkAdjustmentPanel::closeAllNetworkAdjustmentPanels = false;
 QWidgetList NetworkAdjustmentPanel::allNetworkAdjustmentPanelsList;
 
 namespace
 {
-    // Solution after software.rtcm-ntrip.org by Leos Mervart (C) 2013
+    // Solution after software.rtcm-ntrip.org by Leos Mervart (GPL) 2013
     template<typename Interface>
     class PluginAction : public QAction {
     public:
@@ -92,33 +92,34 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     // File menu
 
     menuFile  = new QMenu(tr("&File"), this);
-    action = menuFile->addAction(tr("&Save"));
+    action = menuFile->addAction(tr("&Save Configuration to Database"));
     connect(action, &QAction::triggered, this, [this](){action_Save_into_db();});
-    action = menuFile->addAction(tr("Save &As"));
+    action = menuFile->addAction(tr("Save Configuration &As ..."));
     connect(action, &QAction::triggered, this, [this](){action_Save_As_into_db();});
     menuFile->addSeparator();
 
-    action = menuFile->addAction(tr("Export as &XML input file"));
+    action = menuFile->addAction(tr("Export Configuration as input &XML"));
     connect(action, &QAction::triggered, this, [this](){action_Export_As_XML();});
-    action = menuFile->addAction(tr("&Export as SQL file"));
+    action = menuFile->addAction(tr("&Export Configuration as SQL file"));
     connect(action, &QAction::triggered, this, [this](){action_Save_as_SQL_file();});
-    action = menuFile->addAction(tr("&Print"));
-    connect(action, &QAction::triggered, this, [this](){action_Print();});
+    menuFile->addSeparator();
+
+    actionAdjPrint = menuFile->addAction(tr("&Print Adjustment Results"));
+    connect(actionAdjPrint, &QAction::triggered, this, [this](){action_Print();});
 
     // ... Export submenu
 
-    menuAdjExport = menuFile->addMenu(tr("Export Adjustment Results As"));
-    //menuAdjExport->setEnabled(false);
-    action = menuAdjExport->addAction(tr("Gama-local &XML adjustment format"));
+    submenuAdjExport = menuFile->addMenu(tr("Export Adjustment Results As"));
+    action = submenuAdjExport->addAction(tr("Gama-local &XML adjustment format"));
     connect(action, &QAction::triggered, this, [this](){action_Export_XML_adjustment_results();});
-    action = menuAdjExport->addAction(tr("&HTML file"));
+    action = submenuAdjExport->addAction(tr("&HTML file"));
     connect(action, &QAction::triggered, this, [this](){action_Export_adjustment_results_as_HTML();});
-    action = menuAdjExport->addAction(tr("Plain &text"));
+    action = submenuAdjExport->addAction(tr("Plain &text"));
     connect(action, &QAction::triggered, this, [this](){action_Export_adjustment_results_as_plain_text();});
-    action = menuAdjExport->addAction(tr("Octave &matrix file"));
+    action = submenuAdjExport->addAction(tr("Octave &matrix file"));
     connect(action, &QAction::triggered, this, [this](){action_Export_adjustment_results_as_octave_file();});
 
-    action = menuFile->addAction(tr("Save network configuration &outline"));
+    action = menuFile->addAction(tr("Save configuration &outline"));
     connect(action, &QAction::triggered, this, [this](){action_Save_network_configuration_outline();});
     menuFile->addSeparator();
     action = menuFile->addAction(tr("&Close"));
@@ -128,7 +129,11 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
 
     menuAdjustment = new QMenu(tr("&Adjustment"), this);
     action = menuAdjustment->addAction(tr("&Run"));
-    connect(action, &QAction::triggered, this, [this](){action_Run();});
+    connect(action, &QAction::triggered, this, [this](){
+        setAdjustmentExportEnabled(false);
+        action_Run();
+        setAdjustmentExportEnabled(true);
+      });
 
     // View menu
 
@@ -198,12 +203,20 @@ NetworkAdjustmentPanel::NetworkAdjustmentPanel(QString connectionName, QWidget *
     */
     status_bar("");
     set_gui_adjustment_functions_status(false);
+
+    setAdjustmentExportEnabled(false);
 }
 
 NetworkAdjustmentPanel::~NetworkAdjustmentPanel()
 {
     for (auto w : qAsConst(localPluginsList)) delete w;
     allNetworkAdjustmentPanelsList.removeOne(this);
+}
+
+void NetworkAdjustmentPanel::setAdjustmentExportEnabled(bool val)
+{
+  submenuAdjExport->setEnabled(val);
+  actionAdjPrint->setEnabled(val);
 }
 
 void NetworkAdjustmentPanel::action_Close()

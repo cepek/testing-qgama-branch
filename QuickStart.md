@@ -1,6 +1,6 @@
 # QGama (GNU Gama Qt GUI)
 
-_Petra Millarová \<millapet@gnu.org\> and  Aleš Čepek \<cepek@gnu.org\>_
+_Petra Millarová &lt;millapet@gnu.org&gt; and  Aleš Čepek &lt;cepek@gnu.org&gt;_
 
 GNU Gama is a project dedicated to adjustment of geodetic networks. It
 is intended for use with traditional geodetic surveyings which are
@@ -22,7 +22,7 @@ Download source codes from git server and run the following commands
     $ git clone git://git.sv.gnu.org/gama/qt.git  qgama    # explicit name
     $ cd  qgama
     $ git clone https://git.savannah.gnu.org/git/gama.git  # checkout a version if needed
-    $ export CMAKE_PREFIX_PATH=~/Qt/6.0.1/gcc_64/          # adjust as needed
+    $ export CMAKE_PREFIX_PATH=~/Qt/6.2.2/gcc_64/          # adjust as needed
     $ mkdir build
     $ cd build
     $ cmake .. -GNinja
