@@ -78,7 +78,7 @@ QGamaControlPanel::QGamaControlPanel(QWidget *parent) :
     // setting implicit adjustment results language
     set_adjustment_results_language();
 
-    setWindowTitle(QGama::name + " " + QGama::version);
+    setWindowTitle(QGama::name);
     load_plugins();
     build_menus();
     setMinimumSize(400, 150);
