@@ -34,12 +34,14 @@ simultaneously.</p>
 
 
 
-<h2>Quick Start</h2>
 
-<p>Start qgama and select from the <i>Main Control Panel</i> menu</p>
+<h2>Quick Start</h2>
+<!-- *********** -->
+
+<p>Start <b>qgama</b> and select from the <i>Main Control Panel</i> menu</p>
 
 <dl>
-<dt>Database &rarr; Connect to Database &rarr; OK</dt>
+<!-- dt>Database &rarr; Connect to Database &rarr; OK</dt -->
 <dt>Database &rarr; Import Examples &rarr; OK</dt>
 <dt>Adjustment &rarr; Network Adjustment &rarr; <i>select an example</i>
 &rarr; OK </dt>
@@ -48,7 +50,11 @@ simultaneously.</p>
 
 <p>and start experimenting with the adjustment. Enjoy!</p>
 
+
+
+
 <h2>Main Control Panel</h2>
+<!-- ****************** -->
 
 <p>Main Control Menu has four menus and a bottom status bar
 temporarily displaying program messages. This panel is displayed at
@@ -59,6 +65,7 @@ database.</p>
 <table>
 <tr><th colspan="2">Qgama Main Control Panel</th></tr>
 <tr><td colspan="2" class="divider"><hr />  </td></tr>
+
 <tr><td>Database</td></td><td>Connect to database                   </td></tr>
 <tr><td>             </td><td>Import Configuration File <sup>*</sup></td></tr>
 <tr><td>             </td><td>Import Krumm Network File <sup>*</sup></td></tr>
@@ -70,19 +77,29 @@ database.</p>
 <tr><td>             </td><td>Delete Network Configuration          </td></tr>
 <tr><td>             </td><td colspan="1" class="divider"><hr />    </td></tr>
 <tr><td>             </td><td>Exit                                  </td></tr>
-<tr><td>Adjustment   </td><td>Network Adjustment                    </td></tr>
+<tr><td colspan="2" class="divider"><hr />  </td></tr>
+
+<tr><td>Adjustment &nbsp;&nbsp;
+                     </td><td>Network Adjustment                    </td></tr>
+<tr><td colspan="2" class="divider"><hr />  </td></tr>
+
 <tr><td>Tools        </td><td>Adjustment results language           </td></tr>
 <tr><td>             </td><td>Application font                      </td></tr>
+<tr><td colspan="2" class="divider"><hr />  </td></tr>
+
 <tr><td>Help         </td><td>Qgama help                            </td></tr>
+<tr><td>             </td><td colspan="1" class="divider"><hr />    </td></tr>
 <tr><td>             </td><td>About Qgama                           </td></tr>
 <tr><td>             </td><td>About Qt                              </td></tr>
+<tr><td colspan="2" class="divider"><hr />  </td></tr>
+
 </table>
 </p>
 
 <p class="qgama-note">
 Functions marked <sup>*</sup> can be run without connecting to a database
 first; in such a case implicit <i>in memory database</i> is used and
-the user is responsible for exporting data, if they are needed, before exit
+the user is responsible for exporting data before exit, if they are needed
 (for example export configuration XML input file after editing the network
 configuration).
 </p>
@@ -96,9 +113,9 @@ configuration).
 <dd>
 <p>starts up a dialog for connecting to a database. Until the
 connection is established, some program functions are blocked. To open
-database connection the user must select <i>Database Drive</i> which
+database connection the user must select <i>Database Drive</i> which is
 implicitly set to <i>QSQLITE</i>. For Sqlite the database file must be
-selecte in <i>Open File dialog</i>, for new database you must check
+selected in <i>Open File dialog</i>, for new database you must check
 the <i>Create a New Sqlite Database</i> check box. Alternatively you
 can work with temporary database <i>:memory:</i> (implicit database
 name), but its content is lost when the program is closed.</p>
@@ -110,6 +127,8 @@ displayed (depending on your system only some of the attributes need
 to be entered).
 </p>
 </dd>
+
+
 
 <dt>Import Configuration File</dt>
 
@@ -126,6 +145,8 @@ configuration name</i>. The configuration name can be arbitrary, but
 </p>
 </dd>
 
+
+
 <dt>New Empty Configuration</dt>
 
 <dd>
@@ -133,6 +154,8 @@ configuration name</i>. The configuration name can be arbitrary, but
 (implicit values are used for network adjustment parameters).
 The menu dialog is similar to <i>Import Configuration File</i>.</p>
 </dd>
+
+
 
 <dt>Import Examples</dt>
 
@@ -167,6 +190,7 @@ Panel</i> (yes) or all other opened panels as well (yes to all).
 </dd>
 
 </dl>
+
 
 
 <h3>Adjustment menu</h3>
@@ -222,17 +246,23 @@ version and the GPL licence.
 
 
 
+
 <h2>Network Adjustment Panel</h2>
+<!-- ************************ -->
+
+Network adjustment panel has five menus (File, Adjustment, Edit,
+Settings and Help) and five tabbed/docked windows (Paramaters,
+Points, Observations, View and Results).
 
 <h3>File menu</h3>
 
 <dl>
-<dt>Save</dt>
+<dt>Save Configuration to Database</dt>
 <dd><p>Save network data into database.
 </p>
 </dd>
 
-<dt>Save As ...</dt>
+<dt>Save Configuration As ...</dt>
 <dd><p>Save copy of network data into database under a new name.
 </p>
 </dd>
@@ -253,13 +283,11 @@ version and the GPL licence.
   </p>
 </dd>
 
-<dt>Print</dt>
+<dt>Print Adjustment Results</dt>
 <dd>
-  <p>Print adjustment results.
-  </p>
-</dd>
+  <p>Implicitly disabled until the adjustment is ready.</p></dd>
 
-<dt>Export adjustment results as</dt>
+<dt>Export Adjustment Results As</dt>
 <dd>
   <ul>
     <li>XML adjustment results</li>
@@ -267,6 +295,8 @@ version and the GPL licence.
     <li>Plaint text file</li>
     <li>Octave matrix file</li>
   </ul>
+  <p>These submenus are also implicitly disabled until
+  the adjustment is run.</p>
 </dd>
 
 <dt>Save network configuration outline</dt>
@@ -327,10 +357,14 @@ enable/disable one or all three editors.
 </dd>
 </dl>
 
+
+
+
 <h2>Editors and adjustment results</h2>
+<!-- ****************************** -->
 
 <p><i>Network Adjustment Results</i> has three editor panels for
-adjustment paramater, points and observations and two output panels,
+adjustment parameters, points and observations and two output panels,
 the <i>outline draw</i> and the adjustment results text output. These
 five panels can be organized as tabbed or docked (as indicated by the
 user on opening a new adjustment configuration).
