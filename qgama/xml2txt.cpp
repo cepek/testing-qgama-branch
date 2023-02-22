@@ -422,6 +422,14 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
 
 void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& adj)
 {
+  /* Until version 2.05 coordinates xyz of fixed points were printed with
+   * the precision of 3 decimal digits,
+   * Since 2.06 output precision for fixed coordinates to 5 digits,
+   * to be the same as the output precision of adjusted coordinates.
+   */
+  const int fixed_prec = 5;
+  const int fixed_padd = (fixed_prec == 5) ? 2 : 0;
+
   using std::setw;
   using std::ios_base;
   using std::setprecision;
@@ -460,8 +468,9 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
           {
             ostr.width(13);
             ostr << "x   ";
-            ostr.width(13+2);
+            ostr.width(13+2+fixed_padd);
             ostr << "y   ";
+            if (fixed_padd) ostr << "  ";
             //- table += 2*13 + 2;
           }
         if (pocpevv)
@@ -473,6 +482,7 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
               }
             ostr.width(13);
             ostr << "z   ";
+            if (fixed_padd) ostr << "  ";
             //- table += 13;
           }
         cout << ostr.str() << '\n';
@@ -488,11 +498,11 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
           cout << point.id;
           if (point.hxy)
             {
-              cout.precision(3);
-              cout.width(13);
+              cout.precision(3+fixed_padd);
+              cout.width(13+fixed_padd);
               cout << point.x;
               cout << "  ";
-              cout.width(13);
+              cout.width(13+fixed_padd);
               cout << point.y;
             }
           if (point.hz)
@@ -502,9 +512,9 @@ void GNU_gama::xml2txt_adjusted_parameters(std::ostream& cout,const Adjustment& 
                   cout.width(2*13+2);
                   cout << " ";
                 }
-              cout.precision(3);
+              cout.precision(3+fixed_padd);
               if (pocpevb)  cout << "  ";
-              cout.width(13);
+              cout.width(13+fixed_padd);
               cout << point.z;
           }
 
