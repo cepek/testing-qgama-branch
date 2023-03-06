@@ -331,6 +331,10 @@ void GNU_gama::xml2txt_general_parameters(std::ostream& cout, const Adjustment& 
             }
         }
 
+      cout << "\n"
+           << T_GaMa_statan_confidence_coefficient << " "
+           << setprecision(3) << adj.standard_deviation.confidence_scale
+           << "\n";
 
       double stud_opr;
       double max_stud = 0;
