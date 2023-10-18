@@ -33,10 +33,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # the project. You can use CMakeLists.txt as it is or set up the environment
 # variable CMAKE_PREFIX_PATH.
 #
+# example:
+#
+#   cmake .. -GNinja -DCMAKE_PREFIX_PATH=C:/Qt/6.2.2/msvc2019_64/
+#
+
+if (NOT DEFINED CMAKE_PREFIX_PATH)
+#
 #   Linux
 #
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    set(CMAKE_PREFIX_PATH "~/Qt/6.2.2/gcc_64/")
+    set(CMAKE_PREFIX_PATH "~/Qt/6.5.3/gcc_64/")
 endif()
 #
 #   $ cmake .. -G Ninja
@@ -80,6 +87,10 @@ endif()
 #            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
 #    endif()
 #endif()
+
+endif()  # end of CMAKE_PREFIX_PATH setting
+#
+message("   -- Qgama cmake build CMAKE_PREFIX_PATH: " ${CMAKE_PREFIX_PATH})
 
 
 add_definitions(-DGNU_gama_expat_1_1)  # if we use local copy of expat sources
