@@ -36,34 +36,6 @@ if ($errors.Count -gt 0) {
     exit
 }
 
-<#
-param (
-    [string]$ver = "2.06.X",  # release version
-    [string]$rel = "",       # optional release directory
-    [string]$windeployqt = "C:\Qt\6.2.2\msvc2019_64\bin\windeployqt.exe"
-)
-
-# Check if mandatory tools and paths exist
-if (-Not (Test-Path -Path $windeployqt)) {
-    Write-Host "Program '$windeployqt' not found. Please check the path."
-    exit
-}
-
-# Check if release directory exists
-$releaseDir = Join-Path -Path $PWD -ChildPath "qgama-$ver"
-if (Test-Path -Path $releaseDir) {
-    Write-Host "Directory '$releaseDir' already exists."
-    exit
-}
-
-# Check if release archive exists
-$releaseZip = Join-Path -Path $PWD -ChildPath "qgama-$ver.zip"
-if (Test-Path -Path $releaseZip) {
-    Write-Host "File '$releaseZip' already exists."
-    exit
-}
-#>
-
 # Create necessary directories
 New-Item -ItemType Directory -Path $releaseDir | Out-Null
 New-Item -ItemType Directory -Path (Join-Path -Path $releaseDir -ChildPath "bin") | Out-Null
