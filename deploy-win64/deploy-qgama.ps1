@@ -1,8 +1,5 @@
-<#
-Improved script with assistance from OpenAI's ChatGPT (2023-10-28)
-
-Original script by Ales Cepek
-#>
+# Improved script with assistance from OpenAI's ChatGPT (2023-10-28)
+# Original script by Ales Cepek
 
 param (
     [string]$ver = "2.06.X",  # release version
