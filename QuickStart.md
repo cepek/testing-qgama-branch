@@ -29,7 +29,7 @@ Download source codes from git server and run the following commands
 Adjust as needed and select
 
     cmake .. -GNinja -DCMAKE_PREFIX_PATH=~/Qt/6.2.2/gcc_64/         # Linux
-    cmake .. -GNinja -DCMAKE_PREFIX_PATH=~C:/Qt/6.2.2/msvc2019_64/  # Windows
+    cmake .. -GNinja -DCMAKE_PREFIX_PATH=C:/Qt/6.2.2/msvc2019_64/   # Windows
 
 If the `CMAKE_PREFIX_PATH` is defined in the `CMakeLists.txt` then simply
 run
