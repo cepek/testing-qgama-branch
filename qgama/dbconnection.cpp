@@ -17,6 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <algorithm>
+
 #include "dbconnection.h"
 #include "constants.h"
 
@@ -60,7 +62,15 @@ DBConnection::DBConnection(QString connectionName, QWidget *parent) :
                                      QDialogButtonBox::Cancel |
                                      QDialogButtonBox::Help);
 
-    const QStringList drivers = QSqlDatabase::drivers();
+    QStringList drivers = QSqlDatabase::drivers();
+    for (QStringList::size_type i=1; i<drivers.size(); i++)
+    {
+      if (drivers[i] == "QSQLITE") {
+        std::swap(drivers[0], drivers[i]);
+        break;
+      }
+    }
+
     comboBox_DB_Driver ->addItems(drivers);
     comboBox_DB_Sqlite->addItems(drivers);
 
