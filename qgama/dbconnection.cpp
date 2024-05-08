@@ -45,8 +45,8 @@ DBConnection::DBConnection(QString connectionName, QWidget *parent) :
 {
     setWindowTitle(tr("DB Connection"));
 
-    comboBox_Driver = new QComboBox;
-    comboBox_Driver2 = new QComboBox;
+    comboBox_DB_Driver = new QComboBox;
+    comboBox_DB_Sqlite = new QComboBox;
     lineEdit_DatabaseName = new QLineEdit;
     lineEdit_DatabaseFile = new QLineEdit(":memory:");
     lineEdit_Hostname = new QLineEdit;
@@ -61,12 +61,12 @@ DBConnection::DBConnection(QString connectionName, QWidget *parent) :
                                      QDialogButtonBox::Help);
 
     const QStringList drivers = QSqlDatabase::drivers();
-    comboBox_Driver ->addItems(drivers);
-    comboBox_Driver2->addItems(drivers);
+    comboBox_DB_Driver ->addItems(drivers);
+    comboBox_DB_Sqlite->addItems(drivers);
 
-    connect(comboBox_Driver,  SIGNAL(currentIndexChanged(int)), comboBox_Driver2, SLOT(setCurrentIndex(int)));
-    connect(comboBox_Driver2, SIGNAL(currentIndexChanged(int)), comboBox_Driver,  SLOT(setCurrentIndex(int)));
-    connect(comboBox_Driver,  SIGNAL(currentIndexChanged(int)), this, SLOT(switchStackedWidgets()));
+    connect(comboBox_DB_Driver,  SIGNAL(currentIndexChanged(int)), comboBox_DB_Sqlite, SLOT(setCurrentIndex(int)));
+    connect(comboBox_DB_Sqlite, SIGNAL(currentIndexChanged(int)), comboBox_DB_Driver,  SLOT(setCurrentIndex(int)));
+    connect(comboBox_DB_Driver,  SIGNAL(currentIndexChanged(int)), this, SLOT(switchStackedWidgets()));
 
     QWidget* page_0 = new QWidget;
     QWidget* page_1 = new QWidget;
@@ -75,7 +75,7 @@ DBConnection::DBConnection(QString connectionName, QWidget *parent) :
     stackedWidget->addWidget(page_1);
 
     QFormLayout* form_0 = new QFormLayout;
-    form_0->addRow(tr("Database Driver"), comboBox_Driver);
+    form_0->addRow(tr("Database Driver"), comboBox_DB_Driver);
     form_0->addRow(tr("Database Name"), lineEdit_DatabaseName);
     form_0->addRow(tr("Username"), lineEdit_Username);
     form_0->addRow(tr("Password"), lineEdit_Password);
@@ -84,7 +84,7 @@ DBConnection::DBConnection(QString connectionName, QWidget *parent) :
     page_0->setLayout(form_0);
 
     QFormLayout* form_1 = new QFormLayout;
-    form_1->addRow(tr("Database driver"), comboBox_Driver2);
+    form_1->addRow(tr("Database driver"), comboBox_DB_Sqlite);
     form_1->addRow(tr("SQLite File"), lineEdit_DatabaseFile);
     form_1->addRow(new QLabel, new QLabel);
     form_1->addRow(new QLabel, pushButton_CreateNewDbFile);
@@ -127,7 +127,7 @@ DBConnection::~DBConnection()
 
 void DBConnection::switchStackedWidgets()
 {
-    if (comboBox_Driver->currentText() == "QSQLITE") {
+    if (comboBox_DB_Driver->currentText() == "QSQLITE") {
         stackedWidget->setCurrentIndex(1);
         buttonBox->button(QDialogButtonBox::Help)->show();
     }
@@ -201,7 +201,7 @@ void DBConnection::on_buttonBoxRejected()
 
 void DBConnection::on_buttonBoxAccepted()
 {
-    QString driver = comboBox_Driver->currentText();
+    QString driver = comboBox_DB_Driver->currentText();
     QString database_name = lineEdit_DatabaseName->text();
     if (driver == "QSQLITE") database_name = lineEdit_DatabaseFile->text();
 

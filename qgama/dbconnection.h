@@ -49,8 +49,8 @@ private:
 
     void create_missing_tables(QSqlDatabase& db);
 
-    QComboBox* comboBox_Driver {};
-    QComboBox* comboBox_Driver2 {};
+    QComboBox* comboBox_DB_Driver {};   // both combo boxes contain the same list
+    QComboBox* comboBox_DB_Sqlite {};   // special case with a different form dialog
     QLineEdit* lineEdit_DatabaseName {};
     QLineEdit* lineEdit_DatabaseFile {};
     QLineEdit* lineEdit_Hostname {};
