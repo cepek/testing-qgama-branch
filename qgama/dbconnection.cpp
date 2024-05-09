@@ -67,16 +67,17 @@ DBConnection::DBConnection(QString connectionName, QWidget *parent) :
     {
       if (drivers[i] == "QSQLITE") {
         std::swap(drivers[0], drivers[i]);
+        std::sort(drivers.begin()+1,drivers.end());
         break;
       }
     }
 
-    comboBox_DB_Driver ->addItems(drivers);
+    comboBox_DB_Driver->addItems(drivers);
     comboBox_DB_Sqlite->addItems(drivers);
 
-    connect(comboBox_DB_Driver,  SIGNAL(currentIndexChanged(int)), comboBox_DB_Sqlite, SLOT(setCurrentIndex(int)));
-    connect(comboBox_DB_Sqlite, SIGNAL(currentIndexChanged(int)), comboBox_DB_Driver,  SLOT(setCurrentIndex(int)));
-    connect(comboBox_DB_Driver,  SIGNAL(currentIndexChanged(int)), this, SLOT(switchStackedWidgets()));
+    connect(comboBox_DB_Driver, SIGNAL(currentIndexChanged(int)), comboBox_DB_Sqlite, SLOT(setCurrentIndex(int)));
+    connect(comboBox_DB_Sqlite, SIGNAL(currentIndexChanged(int)), comboBox_DB_Driver, SLOT(setCurrentIndex(int)));
+    connect(comboBox_DB_Driver, SIGNAL(currentIndexChanged(int)), this, SLOT(switchStackedWidgets()));
 
     QWidget* page_0 = new QWidget;
     QWidget* page_1 = new QWidget;
