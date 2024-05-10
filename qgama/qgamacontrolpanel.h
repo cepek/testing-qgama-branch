@@ -24,7 +24,6 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QMap>
-#include "showmessage.h"
 
 class DbInterface;
 

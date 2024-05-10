@@ -150,7 +150,6 @@ set(QGSRC
     qgama/selectadjresultslanguage.h
     qgama/selectconfiguration.cpp
     qgama/selectconfiguration.h
-    qgama/showmessage.h
     qgama/shrinkbandwidth.cpp
     qgama/shrinkbandwidth.h
     qgama/tableviewstyle.cpp
