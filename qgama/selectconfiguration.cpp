@@ -19,7 +19,6 @@
 */
 
 #include "selectconfiguration.h"
-#include "constants.h"
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
