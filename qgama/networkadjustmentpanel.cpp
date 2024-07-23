@@ -366,7 +366,7 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
         tabifyDockWidget(dockpar, dockoed);
         menuView->addAction(dockoed->toggleViewAction());
 
-        QDockWidget* docksvg = new QDockWidget(tr("view"), this);
+        QDockWidget* docksvg = new QDockWidget(tr("View"), this);
         docksvg->setWidget(svg);
         tabifyDockWidget(dockpar, docksvg);
         menuView->addAction(docksvg->toggleViewAction());
