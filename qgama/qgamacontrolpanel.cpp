@@ -223,7 +223,7 @@ void QGamaControlPanel::build_menus()
     connect (actionAdjAdjustment, SIGNAL(triggered()),
              SLOT(on_action_Network_adjustment_triggered()));
 
-    // ****** end of adjutment menu
+    // ****** end of adjustment menu
 
 
     QMenu* menuTools = new QMenu(tr("&Tools"), this);
