@@ -80,6 +80,9 @@ private slots:
     void insertObservation();
     void deleteObservation();
     void insertCluster();
-    void deleteCluster();};
+    void deleteCluster();
+    void reactivateClusterObservations();
+    void reactivateNetworkObservations();
+};
 
 #endif // OBSERVATIONEDITOR_H
