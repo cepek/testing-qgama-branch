@@ -168,6 +168,9 @@ void QGamaControlPanel::build_menus()
     actionDbConnect = menuDb->addAction(tr("&Connect to Database"));
     connect(actionDbConnect, SIGNAL(triggered()),
             SLOT(on_action_Connect_to_database_triggered()));
+
+    if (actionDbConnect->isVisible()) menuDb->addSeparator();
+
     actionImportConf = menuDb->addAction(tr("&Import Configuration File"));
     connect(actionImportConf, SIGNAL(triggered()),
             SLOT(on_action_Import_configuration_file_triggered()));
@@ -348,6 +351,8 @@ void QGamaControlPanel::disable_input_data(bool yes)
     actionImportExamples->setEnabled(yes);
     actionAdjAdjustment->setEnabled(yes);
     actionAdjResultsLanguage->setEnabled(yes);
+
+    actionDbConnect->setVisible(!yes);
 
     if (yes) ShowMessage(tr("Connected to database"));
 }
