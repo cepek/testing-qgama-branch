@@ -81,8 +81,8 @@ public:
 
     enum RowType  { clusterHeader, clusterTail, obsRow, tableTail };
     enum ColIndx  { indFrom, indTo, indName, indVal, indStdev,
-                   indActive, indFromDh, indToDh, indHdist,
-                   indColumnCount };
+                    indActive, indFromDh, indToDh, indHdist,
+                    indColumnCount };
     enum ObsNames { indDist,  indDir,   indAngle, indAzimuth, indHdiff,
                     indXdiff, indYdiff, indZdiff, indX, indY, indZ,
                     indSdist, indZangle };
