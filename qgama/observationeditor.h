@@ -44,6 +44,7 @@ public:
     void enableEdit(bool edit);
 
 private:
+    GNU_gama::local::LocalNetwork* lnet {nullptr};
     QTableView* tableView;
     ObservationTableModel* model;
     QMenu* observationMenu;

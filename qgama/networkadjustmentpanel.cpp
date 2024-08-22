@@ -235,7 +235,7 @@ void NetworkAdjustmentPanel::draw_network_configuration()
 
 void NetworkAdjustmentPanel::update_point_editor_table()
 {
-    ped->connectPointData      (&adj.get_local_network()->PD);
+    ped->connectPointData(adj.get_local_network());
 }
 
 void NetworkAdjustmentPanel::update_observation_editor_table()

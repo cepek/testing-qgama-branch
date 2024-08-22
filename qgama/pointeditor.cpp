@@ -86,14 +86,18 @@ void PointEditor::pointDelete()
     if (q != QMessageBox::Ok) return;
 
     model->removeRows(pointLogicalIndex,1, QModelIndex());
+    lnet->update_points();
 }
 
 PointEditor::~PointEditor()
 {
 }
 
-void PointEditor::connectPointData(GNU_gama::local::PointData* pd)
+void PointEditor::connectPointData(GNU_gama::local::LocalNetwork* plnet)
 {
+    lnet = plnet;
+    GNU_gama::local::PointData* pd = &lnet->PD;
+
     PointTableModel* old = model;
     model = new PointTableModel(*pd, this);
     tableView->setModel(model);

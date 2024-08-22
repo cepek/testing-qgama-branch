@@ -151,8 +151,10 @@ ObservationEditor::~ObservationEditor()
 {
 }
 
-void ObservationEditor::connectObservationData(GNU_gama::local::LocalNetwork *lnet)
+void ObservationEditor::connectObservationData(GNU_gama::local::LocalNetwork* plnet)
 {
+    lnet = plnet;
+
     ObservationTableModel* old = model;
     model = new ObservationTableModel(lnet, this);
     tableView->setModel(model);
@@ -274,6 +276,7 @@ void ObservationEditor::reactivateClusterObservations()
   {
     model->setData(model->index(obsRow, indActive), 1, Qt::EditRole);
   }
+
 
 }
 
