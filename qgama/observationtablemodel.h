@@ -79,10 +79,6 @@ public:
     QString currentClusterName(int logicalIndex) const;
     void insertObservation(int logicalIndex, const InsertObservationDialog& dialog);
 
-private:
-    GNU_gama::local::LocalNetwork*    lnet;
-    GNU_gama::local::ObservationData& obsData;
-
     enum RowType  { clusterHeader, clusterTail, obsRow, tableTail };
     enum ColIndx  { indFrom, indTo, indName, indVal, indStdev,
                     indActive, indFromDh, indToDh, indHdist,
@@ -90,6 +86,10 @@ private:
     enum ObsNames { indDist,  indDir,   indAngle, indAzimuth, indHdiff,
                     indXdiff, indYdiff, indZdiff, indX, indY, indZ,
                     indSdist, indZangle };
+
+private:
+    GNU_gama::local::LocalNetwork*    lnet;
+    GNU_gama::local::ObservationData& obsData;
 
     // InsertObservationDialog returns a list of ObsInfo objects
     friend class InsertObservationDialog;

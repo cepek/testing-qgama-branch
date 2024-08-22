@@ -30,7 +30,6 @@
 #include <QTableView>
 #include <QHeaderView>
 #include <QGridLayout>
-#include <typeinfo>
 
 #include <gnu_gama/local/network.h>
 
@@ -129,6 +128,18 @@ ObservationEditor::ObservationEditor(QWidget *parent) :
 
     //enableEdit(false);
 
+    observationMenu->addSeparator();
+
+    QAction* menuReactivateClusterObs = new QAction(tr("Reactivate cluster observations"), this);
+    observationMenu->addAction(menuReactivateClusterObs);
+    connect(menuReactivateClusterObs, SIGNAL(triggered()), this, SLOT(reactivateClusterObservations()));
+
+    QAction* menuReactivateNetworkObs = new QAction(tr("Reactivate network observations"), this);
+    observationMenu->addAction(menuReactivateNetworkObs);
+    connect(menuReactivateClusterObs, SIGNAL(triggered()), this, SLOT(reactivateNetworkObservations()));
+
+    // .................................
+
     tableView->setStyleSheet(tableViewStyle());
 
     QGridLayout* layout = new QGridLayout;
@@ -140,8 +151,10 @@ ObservationEditor::~ObservationEditor()
 {
 }
 
-void ObservationEditor::connectObservationData(GNU_gama::local::LocalNetwork *lnet)
+void ObservationEditor::connectObservationData(GNU_gama::local::LocalNetwork* plnet)
 {
+    lnet = plnet;
+
     ObservationTableModel* old = model;
     model = new ObservationTableModel(lnet, this);
     tableView->setModel(model);
@@ -246,4 +259,28 @@ void ObservationEditor::insertObservation()
 
     model->insertObservation(observationLogicalIndex, dialog);
     tableView->clearSelection();
+}
+
+void ObservationEditor::reactivateClusterObservations()
+{
+  QModelIndex index = model->index(observationLogicalIndex, 0);
+  if (!index.isValid()) return;
+
+  SelectGroup selectGroup(model, tableView, observationLogicalIndex);
+
+  int minindex, maxindex;
+  model->clusterIndexes(observationLogicalIndex, minindex, maxindex);
+
+  int indActive = ObservationTableModel::indActive;
+  for(int obsRow=minindex+1; obsRow<maxindex; obsRow++)
+  {
+    model->setData(model->index(obsRow, indActive), 1, Qt::EditRole);
+  }
+
+
+}
+
+void ObservationEditor::reactivateNetworkObservations()
+{
+
 }

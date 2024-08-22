@@ -28,7 +28,7 @@
 #include <QBrush>
 #include <QFont>
 #include <QMessageBox>
-#include <typeinfo>
+// #include <typeinfo>
 
 typedef GNU_gama::local::LocalNetwork    LocalNetwork;
 using namespace QGama;

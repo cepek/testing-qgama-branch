@@ -22,10 +22,7 @@
 #define POINTEDITOR_H
 
 #include <QWidget>
-
-namespace GNU_gama { namespace local {
-    class PointData;
-}}
+#include <gnu_gama/local/network.h>
 
 class PointTableModel;
 class QMenu;
@@ -39,10 +36,11 @@ public:
     explicit PointEditor(QWidget *parent = nullptr);
     ~PointEditor();
 
-    void connectPointData(GNU_gama::local::PointData* pd);
+    void connectPointData(GNU_gama::local::LocalNetwork* plnet);
     void enableEdit(bool edit);
     
 private:
+    GNU_gama::local::LocalNetwork* lnet {nullptr};
     QTableView* tableView;
     PointTableModel* model;
     QMenu* pointMenu;

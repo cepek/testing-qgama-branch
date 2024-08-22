@@ -44,6 +44,7 @@ public:
     void enableEdit(bool edit);
 
 private:
+    GNU_gama::local::LocalNetwork* lnet {nullptr};
     QTableView* tableView;
     ObservationTableModel* model;
     QMenu* observationMenu;
@@ -80,6 +81,9 @@ private slots:
     void insertObservation();
     void deleteObservation();
     void insertCluster();
-    void deleteCluster();};
+    void deleteCluster();
+    void reactivateClusterObservations();
+    void reactivateNetworkObservations();
+};
 
 #endif // OBSERVATIONEDITOR_H
