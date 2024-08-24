@@ -712,11 +712,11 @@ void NetworkAdjustmentPanel::action_Parameters_changed()
     QString text;
     if (edit)
     {
-        text = tr("Editing of Parameters is enabled");
+        text = tr("Editing Parameters is enabled");
     }
     else
     {
-        text = tr("Editing of Parameters is disabled");
+        text = tr("Editing Parameters is disabled");
     }
     par->enableEdit(edit);
 
@@ -729,11 +729,11 @@ void NetworkAdjustmentPanel::action_Points_changed()
     QString text;
     if (edit)
     {
-        text = tr("Editing of Points is enabled");
+        text = tr("Editing Points is enabled");
     }
     else
     {
-        text = tr("Editing of Points is disabled");
+        text = tr("Editing Points is disabled");
     }
     ped->enableEdit(edit);
 
@@ -746,11 +746,11 @@ void NetworkAdjustmentPanel::action_Observations_changed()
     QString text;
     if (edit)
     {
-        text = tr("Editing of Observations is enabled");
+        text = tr("Editing Observations is enabled");
     }
     else
     {
-        text = tr("Editing of Observations is disabled");
+        text = tr("Editing Observations is disabled");
     }
     obs->enableEdit(edit);
 
