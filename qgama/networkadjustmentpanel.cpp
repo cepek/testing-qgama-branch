@@ -382,12 +382,13 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
     connect(par,  SIGNAL(angular_units_changed()), this, SLOT(update_observation_editor_table()));
     connect(par,  SIGNAL(angular_units_changed()), res,  SLOT(update_adjustment_results()));
 
+    connect(par,  SIGNAL(warning(QString)), this,  SLOT(status_bar(QString)));
     connect(ped,  SIGNAL(warning(QString)), this,  SLOT(status_bar(QString)));
     connect(obs,  SIGNAL(warning(QString)), this,  SLOT(status_bar(QString)));
 
     connect(&adj, SIGNAL(acord_signal()),          this, SLOT(update_point_editor_table()));
     connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(draw_network_configuration()));
-    connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_adjustment_results (bool)));
+    connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_adjustment_results(bool)));
     connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_point_editor_table()));
     connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_observation_editor_table()));
 

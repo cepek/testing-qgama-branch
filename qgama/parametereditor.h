@@ -59,6 +59,7 @@ private slots:
 
 signals:
     void angular_units_changed();
+    void warning(QString);
 
 private:
 
