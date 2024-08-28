@@ -30,6 +30,7 @@
 #include <QTableView>
 #include <QHeaderView>
 #include <QGridLayout>
+#include <QVariant>
 
 #include <gnu_gama/local/network.h>
 
@@ -136,7 +137,7 @@ ObservationEditor::ObservationEditor(QWidget *parent) :
 
     QAction* menuReactivateNetworkObs = new QAction(tr("Reactivate network observations"), this);
     observationMenu->addAction(menuReactivateNetworkObs);
-    connect(menuReactivateClusterObs, SIGNAL(triggered()), this, SLOT(reactivateNetworkObservations()));
+    connect(menuReactivateNetworkObs, SIGNAL(triggered()), this, SLOT(reactivateNetworkObservations()));
 
     // .................................
 
@@ -266,6 +267,8 @@ void ObservationEditor::reactivateClusterObservations()
   QModelIndex index = model->index(observationLogicalIndex, 0);
   if (!index.isValid()) return;
 
+  bool updated = false;
+
   SelectGroup selectGroup(model, tableView, observationLogicalIndex);
 
   int minindex, maxindex;
@@ -274,13 +277,42 @@ void ObservationEditor::reactivateClusterObservations()
   int indActive = ObservationTableModel::indActive;
   for(int obsRow=minindex+1; obsRow<maxindex; obsRow++)
   {
-    model->setData(model->index(obsRow, indActive), 1, Qt::EditRole);
+    auto cell = model->data(model->index(obsRow, indActive), Qt::DisplayRole);
+    if (cell.toString() == "0") {
+      model->setData(model->index(obsRow, indActive), 1, Qt::EditRole);
+
+      updated = true;
+    }
   }
 
-
+  if (updated) {
+    emit warning(tr("Reactivated cluster observations"));
+    lnet->update_observations();
+  }
 }
 
 void ObservationEditor::reactivateNetworkObservations()
 {
+  QModelIndex index = model->index(0,ObservationTableModel::indActive);
+  if (!index.isValid()) return;
 
+  bool updated = false;
+
+  int indActive = ObservationTableModel::indActive;
+  int rowCount = static_cast<const QAbstractTableModel*>(model)->rowCount();
+  for (int row=0; row<rowCount; row++)
+  {
+    auto cell = model->data(model->index(row, indActive), Qt::DisplayRole);
+    if (cell.toString() == "0") {
+      // qDebug() << "Row:" << row << " Column:" << indActive << " Data:" << cell;
+      model->setData(model->index(row, indActive), 1, Qt::EditRole);
+
+      updated = true;
+    }
+  }
+
+  if (updated) {
+    emit warning(tr("Reactivated network observations"));
+    lnet->update_observations();
+  }
 }

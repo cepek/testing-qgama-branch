@@ -248,7 +248,6 @@ void ParameterEditor::par_conf_pr_editingFinished()
     else     QMessageBox::critical(this, adjpar,tr("Must be from interval 0 and 1"));
 
     lineEdit_conf_pr->setFocus();
-    emit warning(tr("Parameters changed"));
 }
 
 void ParameterEditor::par_tol_abs_editingFinished()
@@ -269,7 +268,6 @@ void ParameterEditor::par_tol_abs_editingFinished()
     else     QMessageBox::critical(this, adjpar,tr("Must be greater than 0"));
 
     lineEdit_tol_abs->setFocus();
-    emit warning(tr("Parameters changed"));
 }
 
 void ParameterEditor::par_iterations_editingFinished()
@@ -297,6 +295,7 @@ void ParameterEditor::par_epoch_editingFinished()
     if (lineEdit_epoch->text().simplified().isEmpty())
     {
         lnet->set_epoch(0);
+        emit warning(tr("Parameters changed"));
         return;
     }
 
@@ -374,6 +373,7 @@ void ParameterEditor::par_angles_currentTextChanged(const QString &arg1)
 void ParameterEditor::par_algorithm_currentTextChanged(const QString &arg1)
 {
     lnet->set_algorithm(arg1.toStdString());
+    lnet->update_points();
     emit warning(tr("Parameters changed"));
 }
 
