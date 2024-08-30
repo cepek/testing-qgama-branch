@@ -299,12 +299,11 @@ void ObservationEditor::reactivateNetworkObservations()
   bool updated = false;
 
   int indActive = ObservationTableModel::indActive;
-  int rowCount = static_cast<const QAbstractTableModel*>(model)->rowCount();
+  int rowCount = model->rowCount();
   for (int row=0; row<rowCount; row++)
   {
     auto cell = model->data(model->index(row, indActive), Qt::DisplayRole);
     if (cell.toString() == "0") {
-      // qDebug() << "Row:" << row << " Column:" << indActive << " Data:" << cell;
       model->setData(model->index(row, indActive), 1, Qt::EditRole);
 
       updated = true;

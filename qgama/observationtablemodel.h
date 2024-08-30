@@ -46,8 +46,8 @@ public:
                           QObject *parent=nullptr);
 
     // abstract methods from QAbstractTableModel
-    int        rowCount   (const QModelIndex &parent) const;
-    int        columnCount(const QModelIndex &parent) const;
+    int        rowCount   (const QModelIndex &parent = QModelIndex() ) const;
+    int        columnCount(const QModelIndex &parent = QModelIndex() ) const;
     QVariant   data       (const QModelIndex &index, int role) const;
 
     // implementation of header section
