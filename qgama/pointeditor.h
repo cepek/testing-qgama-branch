@@ -42,7 +42,7 @@ public:
 private:
     GNU_gama::local::LocalNetwork* lnet {nullptr};
     QTableView* tableView;
-    PointTableModel* model;
+    PointTableModel* pointModel;
     QMenu* pointMenu;
     bool   readonly;
     int    pointLogicalIndex;
@@ -53,6 +53,7 @@ signals:
 private slots:
     void pointContextMenu(QPoint p);
     void pointDelete();
+    void pointChanged();
 };
 
 #endif // POINTEDITOR_H

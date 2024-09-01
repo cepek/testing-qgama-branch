@@ -7,12 +7,25 @@ file database, which does not need any special knowledge from the user.
 
 http://www.gnu.org/software/gama/qgama
 
+## 2.07
+
+Add two function to Observation editor
+
+* Reactivate cluster observations
+* Reactivate network observations
+
+to set all observation active status to 1 in the cluster or the
+network respectively. Observation status can be change to 0 during
+adjustment, for example when an observation target point is set to
+'unused' in the Points editor.
+
+
 ## 2.06.1
 
 New build with Qt version 6.6.0
 
 * The only major change is build with higher version of Qt.
-* New PowerShel script `deploy-qgama-2.06.1.ps1` in directory `deploy-win64`. 
+* New PowerShel script `deploy-qgama-2.06.1.ps1` in directory `deploy-win64`.
   Two older deploy *.bat files are still kept there.
 * Builds for Windows are produce by QtCreator, with Visual Studio used as a generator
   and `windeployqt.exe` for creating binary distribution (*.zip file).

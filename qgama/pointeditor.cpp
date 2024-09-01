@@ -34,7 +34,7 @@
 PointEditor::PointEditor(QWidget *parent) :
     QWidget(parent),
     tableView(new QTableView),
-    model(nullptr), readonly(true)
+    pointModel(nullptr), readonly(true)
 {
     LineEditDelegate* item = new LineEditDelegate(tableView);
     tableView->setItemDelegate(item);
@@ -72,7 +72,7 @@ void PointEditor::pointContextMenu(QPoint p)
 
 void PointEditor::pointDelete()
 {
-    QModelIndex index = model->index(pointLogicalIndex, 0);
+    QModelIndex index = pointModel->index(pointLogicalIndex, 0);
     if (!index.isValid()) return;
 
     QString ID = index.data().toString();
@@ -85,8 +85,15 @@ void PointEditor::pointDelete()
              QMessageBox::Ok|QMessageBox::Cancel);
     if (q != QMessageBox::Ok) return;
 
-    model->removeRows(pointLogicalIndex,1, QModelIndex());
+    pointModel->removeRows(pointLogicalIndex,1, QModelIndex());
     lnet->update_points();
+    emit warning(tr("Points changed"));
+}
+
+void PointEditor::pointChanged()
+{
+    lnet->update_points();
+    emit warning(tr("Points changed"));
 }
 
 PointEditor::~PointEditor()
@@ -98,12 +105,13 @@ void PointEditor::connectPointData(GNU_gama::local::LocalNetwork* plnet)
     lnet = plnet;
     GNU_gama::local::PointData* pd = &lnet->PD;
 
-    PointTableModel* old = model;
-    model = new PointTableModel(*pd, this);
-    tableView->setModel(model);
+    PointTableModel* old = pointModel;
+    pointModel = new PointTableModel(*pd, this);
+    tableView->setModel(pointModel);
     delete old;
 
-    connect(model, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
+    connect(pointModel, SIGNAL(warning(QString)), this, SIGNAL(warning(QString)));
+    connect(pointModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(pointChanged()));
 }
 
 void PointEditor::enableEdit(bool edit)

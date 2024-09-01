@@ -382,12 +382,13 @@ void NetworkAdjustmentPanel::getConfigurationName(QString conf, bool tabbed)
     connect(par,  SIGNAL(angular_units_changed()), this, SLOT(update_observation_editor_table()));
     connect(par,  SIGNAL(angular_units_changed()), res,  SLOT(update_adjustment_results()));
 
+    connect(par,  SIGNAL(warning(QString)), this,  SLOT(status_bar(QString)));
     connect(ped,  SIGNAL(warning(QString)), this,  SLOT(status_bar(QString)));
     connect(obs,  SIGNAL(warning(QString)), this,  SLOT(status_bar(QString)));
 
     connect(&adj, SIGNAL(acord_signal()),          this, SLOT(update_point_editor_table()));
     connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(draw_network_configuration()));
-    connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_adjustment_results (bool)));
+    connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_adjustment_results(bool)));
     connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_point_editor_table()));
     connect(&adj, SIGNAL(adjustment_signal(bool)), this, SLOT(update_observation_editor_table()));
 
@@ -712,11 +713,11 @@ void NetworkAdjustmentPanel::action_Parameters_changed()
     QString text;
     if (edit)
     {
-        text = tr("Editing of Parameters is enabled");
+        text = tr("Editing Parameters is enabled");
     }
     else
     {
-        text = tr("Editing of Parameters is disabled");
+        text = tr("Editing Parameters is disabled");
     }
     par->enableEdit(edit);
 
@@ -729,11 +730,11 @@ void NetworkAdjustmentPanel::action_Points_changed()
     QString text;
     if (edit)
     {
-        text = tr("Editing of Points is enabled");
+        text = tr("Editing Points is enabled");
     }
     else
     {
-        text = tr("Editing of Points is disabled");
+        text = tr("Editing Points is disabled");
     }
     ped->enableEdit(edit);
 
@@ -746,11 +747,11 @@ void NetworkAdjustmentPanel::action_Observations_changed()
     QString text;
     if (edit)
     {
-        text = tr("Editing of Observations is enabled");
+        text = tr("Editing Observations is enabled");
     }
     else
     {
-        text = tr("Editing of Observations is disabled");
+        text = tr("Editing Observations is disabled");
     }
     obs->enableEdit(edit);
 

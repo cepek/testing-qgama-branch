@@ -207,6 +207,7 @@ void ParameterEditor::connectParameters(GNU_gama::local::LocalNetwork *ln)
 void ParameterEditor::par_description_editingFinished()
 {
     lnet->description = par_description->toPlainText().toUtf8().data();
+    emit warning(tr("Parameters changed"));
 }
 
 void ParameterEditor::par_sigma_apr_editingFinished()
@@ -218,6 +219,7 @@ void ParameterEditor::par_sigma_apr_editingFinished()
     {
         lnet->apriori_m_0(value);
         lnet->update_adjustment();
+        emit warning(tr("Parameters changed"));
         return;
     }
 
@@ -237,6 +239,7 @@ void ParameterEditor::par_conf_pr_editingFinished()
     {
         lnet->conf_pr(value);
         lnet->update_adjustment();
+        emit warning(tr("Parameters changed"));
         return;
     }
 
@@ -256,6 +259,7 @@ void ParameterEditor::par_tol_abs_editingFinished()
     {
         lnet->tol_abs(value);
         lnet->update_residuals();
+        emit warning(tr("Parameters changed"));
         return;
     }
 
@@ -275,6 +279,7 @@ void ParameterEditor::par_iterations_editingFinished()
     {
         lnet->set_max_linearization_iterations(value);
         lnet->update_residuals();
+        emit warning(tr("Parameters changed"));
         return;
     }
 
@@ -290,6 +295,7 @@ void ParameterEditor::par_epoch_editingFinished()
     if (lineEdit_epoch->text().simplified().isEmpty())
     {
         lnet->set_epoch(0);
+        emit warning(tr("Parameters changed"));
         return;
     }
 
@@ -299,6 +305,7 @@ void ParameterEditor::par_epoch_editingFinished()
     if (ok)
     {
         lnet->set_epoch(value);
+        emit warning(tr("Parameters changed"));
         return;
     }
 
@@ -322,6 +329,7 @@ void ParameterEditor::par_sigma_act_currentTextChanged(const QString &arg1)
         lnet->set_m_0_apriori();
 
     lnet->update_adjustment();
+    emit warning(tr("Parameters changed"));
 }
 
 void ParameterEditor::par_axes_xy_currenTextChanged(const QString &arg1)
@@ -345,6 +353,7 @@ void ParameterEditor::par_axes_xy_currenTextChanged(const QString &arg1)
 
     lnet->remove_inconsistency();
     lnet->update_points();
+    emit warning(tr("Parameters changed"));
 }
 
 void ParameterEditor::par_angles_currentTextChanged(const QString &arg1)
@@ -358,11 +367,14 @@ void ParameterEditor::par_angles_currentTextChanged(const QString &arg1)
 
     lnet->remove_inconsistency();
     lnet->update_points();
+    emit warning(tr("Parameters changed"));
 }
 
 void ParameterEditor::par_algorithm_currentTextChanged(const QString &arg1)
 {
     lnet->set_algorithm(arg1.toStdString());
+    lnet->update_points();
+    emit warning(tr("Parameters changed"));
 }
 
 void ParameterEditor::par_ang_units_currentTextChanged(const QString &arg1)
@@ -373,6 +385,7 @@ void ParameterEditor::par_ang_units_currentTextChanged(const QString &arg1)
         lnet->set_gons();
 
     emit angular_units_changed();
+    emit warning(tr("Parameters changed"));
 }
 
 void ParameterEditor::par_ellipsoid_currentTextChanged(const QString &/*arg1*/)
@@ -389,4 +402,5 @@ void ParameterEditor::par_adj_covband_editingFinished()
     lineEdit_adj_covband->setText(s);
 
     lnet->set_adj_covband(n);
+    emit warning(tr("Parameters changed"));
 }
