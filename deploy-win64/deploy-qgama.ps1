@@ -2,9 +2,9 @@
 # Original script by Ales Cepek
 
 param (
-    [string]$ver = "2.06.X",  # release version
-    [string]$rel = "",       # optional release directory
-    [string]$windeployqt = "C:\Qt\6.2.2\msvc2019_64\bin\windeployqt.exe"
+    [string]$ver = "2.07",  # release version
+    [string]$rel = "",      # optional release directory
+    [string]$windeployqt = "C:\Qt\6.7.0\msvc2019_64\bin\windeployqt.exe"
 )
 
 # Initialize an array to store error messages
