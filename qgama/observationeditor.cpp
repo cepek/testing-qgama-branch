@@ -238,6 +238,9 @@ void ObservationEditor::deleteObservation()
     if (q != QMessageBox::Ok) return;
 
     model->deleteObservation(observationLogicalIndex);
+
+    emit warning(tr("Observations deleted"));
+    // xxxxxx lnet->update_points();  // after deleting an observation a point may become singular
 }
 
 void ObservationEditor::insertObservation()
@@ -260,6 +263,9 @@ void ObservationEditor::insertObservation()
 
     model->insertObservation(observationLogicalIndex, dialog);
     tableView->clearSelection();
+
+    emit warning(tr("Observations inserted"));
+    // xxxxxx lnet->update_observations();
 }
 
 void ObservationEditor::reactivateClusterObservations()
@@ -286,7 +292,7 @@ void ObservationEditor::reactivateClusterObservations()
   }
 
   if (updated) {
-    emit warning(tr("Reactivated cluster observations"));
+    emit warning(tr("Cluster observations reactivated"));
     lnet->update_observations();
   }
 }
@@ -311,7 +317,7 @@ void ObservationEditor::reactivateNetworkObservations()
   }
 
   if (updated) {
-    emit warning(tr("Reactivated network observations"));
+    emit warning(tr("Network observations reactivated"));
     lnet->update_observations();
   }
 }
