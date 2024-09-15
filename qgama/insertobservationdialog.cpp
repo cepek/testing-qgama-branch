@@ -43,7 +43,7 @@ InsertObservationDialog::InsertObservationDialog(QString cluster_name, QWidget *
 
     comboPosition = new QComboBox(this);
     comboPosition->addItem(tr("Last Observation in the Cluster"));
-    comboPosition->addItem(tr("After the Selected Obesrvation"));
+    comboPosition->addItem(tr("After the Selected Observation"));
     comboPosition->addItem(tr("Before the Slecter Observation"));
     comboPosition->addItem(tr("First observation in the Cluster"));
 
