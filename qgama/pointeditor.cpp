@@ -86,13 +86,11 @@ void PointEditor::pointDelete()
     if (q != QMessageBox::Ok) return;
 
     pointModel->removeRows(pointLogicalIndex,1, QModelIndex());
-    lnet->update_points();
     emit warning(tr("Points changed"));
 }
 
 void PointEditor::pointChanged()
 {
-    lnet->update_points();
     emit warning(tr("Points changed"));
 }
 

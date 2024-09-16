@@ -238,6 +238,8 @@ void ObservationEditor::deleteObservation()
     if (q != QMessageBox::Ok) return;
 
     model->deleteObservation(observationLogicalIndex);
+
+    emit warning(tr("Observations deleted"));
 }
 
 void ObservationEditor::insertObservation()
@@ -260,6 +262,8 @@ void ObservationEditor::insertObservation()
 
     model->insertObservation(observationLogicalIndex, dialog);
     tableView->clearSelection();
+
+    emit warning(tr("Observations inserted"));
 }
 
 void ObservationEditor::reactivateClusterObservations()
@@ -286,8 +290,7 @@ void ObservationEditor::reactivateClusterObservations()
   }
 
   if (updated) {
-    emit warning(tr("Reactivated cluster observations"));
-    lnet->update_observations();
+    emit warning(tr("Cluster observations reactivated"));
   }
 }
 
@@ -311,7 +314,6 @@ void ObservationEditor::reactivateNetworkObservations()
   }
 
   if (updated) {
-    emit warning(tr("Reactivated network observations"));
-    lnet->update_observations();
+    emit warning(tr("Network observations reactivated"));
   }
 }
